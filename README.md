@@ -6,11 +6,14 @@ Welcome to the **Rippling Intern Bootcamp 2025** repository! This serves as a mi
 - **MongoDB** (via Docker Compose)
 - Development environment in **VSCode** (recommended)
 
+**Important:** Use the **same email** you shared during onboarding when configuring Git and related tools. That ensures consistency across all internal systems.
+
+
 ---
 
 ## Table of Contents
 
-1. [Getting Started](#getting-started)
+1. [Getting Started with Git & Forking](#getting-started-with-git-and-forking)
 2. [Prerequisites & Tooling](#prerequisites--tooling)
 3. [Setting Up the Project](#setting-up-the-project)
 4. [Running Services](#running-services)
@@ -22,12 +25,15 @@ Welcome to the **Rippling Intern Bootcamp 2025** repository! This serves as a mi
    - [Recommended VSCode Extensions](#recommended-vscode-extensions)
    - [Making Changes & Verifying](#making-changes--verifying)
    - [Pushing Your First Change](#pushing-your-first-change)
-7. [Running Tests (Optional)](#running-tests-optional)
-8. [Further Reading](#further-reading)
+7. [Making your first change and running it](#making-your-first-change)
+   - [Code changes](#code-changes)
+   - [Running server and testing them](#running-server-and-testing-them)
+8. [Running Tests (Optional)](#running-tests-optional)
+9. [Further Reading](#further-reading)
 
 ---
 
-## Getting Started
+## Getting Started with Git and Forking
 
 ### 1. Setting up Git and the Repo
 
@@ -40,8 +46,12 @@ Welcome to the **Rippling Intern Bootcamp 2025** repository! This serves as a mi
    ```bash
    git config --global user.name "Your Name"
    git config --global user.email "your.email@example.com"
-3. **Fork** the Rippling/intern-bootcamp-2025(you should have access to this repo) repository on GitHub.
-4. **Clone** your forked repo:
+3. What is Forking?
+
+   Forking a repository on GitHub creates your own copy under your GitHub account, where you can make changes independently without affecting the original repo. Later, you can make pull requests to merge changes back if needed.
+
+4. Fork the Rippling/intern-bootcamp-2025 repository (ensure you’re in the correct org or your personal GitHub account, as directed).
+5. **Clone** your forked repo:
     ```
     git clone git@github.com:<YourUsername>/intern-bootcamp-2025.git
     cd intern-bootcamp-2025
@@ -51,38 +61,108 @@ Welcome to the **Rippling Intern Bootcamp 2025** repository! This serves as a mi
 
 These are the essential tools you need:
 
-1. **Python 3**  
-   - Check via `python3 --version`  
+1. **Homebrew (macOS Only)**
+
+   **Why?** 
+   
+   Homebrew is a popular package manager for macOS, making it easy to install and update software (like Python, Node, Yarn, etc.).
+   
+   **Install**:  
+   ```bash
+   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"```
+
+2. **Python 3**  
+
+   **Why**
+   Django (our backend framework) requires Python 3.
+
+   **Install**
+
    - On macOS (with Homebrew): `brew install python3`  
    - [Windows Install Guide](https://www.python.org/downloads/)
 
-2. **virtualenv** or built-in `venv`  
+   **Verify**
+   You can verify for installation and version with 
+   ```
+   python --version
+   ```
+
+   It should return something like `Python 3.x.x`
+
+
+3. **virtualenv** or built-in `venv`  
+
+   **Why?**
+   
+   A virtual environment keeps project dependencies isolated from your system Python.
+
+   **Install**
    - `pip install virtualenv` (if needed)  
    - or use `python3 -m venv venv`
 
-3. **Docker** & **Docker Compose**  
+   **Tutorial**
+   Refer to the [Virtualenv Tutorial](https://www.youtube.com/watch?v=eDe-z2Qy9x4) to learn more about why virtual environments matter.
+
+   **Verify**
+
+   In most of the machines, your terminal prompt will be prefixed with something like (venv) (or whatever you named the virtual environment).
+
+   ![alt text](image.png)
+
+   Check Which Python Is Being Used:
+
+   1. macOS/Linux
+      
+      ```which python```
+
+      This should return a path inside the venv/ directory (e.g., .../my-project/venv/bin/python
+   
+   2. Windows
+
+      ```where python```
+
+      This should return a path inside `venv\Scripts\python.exe`.
+   
+
+4. **Docker** & **Docker Compose**  
+
+   **Why**
+
+   We use Docker to run MongoDB (and potentially other services) in containers, preventing “works on my machine” issues.
+
+   **Install**
+
    - [Docker Desktop for Mac](https://www.docker.com/products/docker-desktop/)  
    - [Docker Desktop for Windows](https://www.docker.com/products/docker-desktop/)  
-   - Verify with `docker --version` and `docker compose version`
+   
+   **Verify**
+   
+   Verify verison and successfull installation with `docker --version` and `docker compose version`
 
-4. **Node.js** & **Yarn**  
+
+5. **Node.js** & **Yarn**  
+   
+   **Why?**
+
+   We use Next.js for our frontend, which requires Node.js. Yarn is a popular package manager for Node.
+
+   **Install**
+
    - [Node.js Downloads](https://nodejs.org/en/download/)  
    - [Yarn Install Docs](https://classic.yarnpkg.com/lang/en/docs/install/)  
-   - Check with `node --version` and `yarn --version`
 
-5. *(Optional)* **Homebrew** (macOS)  
-   - ```bash
-     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-     ```
+   **Verify**
+   - Check version and installation completion with `node --version` and `yarn --version` 
 
 6. *(Optional)* **API & MongoDB Tools**  
-   - **Postman**, **Insomnia**, or **Paw** for API testing  
-   - **MongoDB Compass** or a **VSCode MongoDB** extension
+   - **[Postman](https://www.postman.com/downloads/)**, **[Insomnia](https://insomnia.rest/download)**, or **[Paw](https://paw.cloud/client) (only for mac)** for API testing  
+   - **[MongoDB Compass](https://www.mongodb.com/try/download/compass)** or a **[VSCode MongoDB](https://code.visualstudio.com/docs/azure/mongodb)** extension
 
 ## Setting Up the Project
 
 ### Create a Python Virtual Environment
 
+The python virtual env should be created inside the /bootcamp_backend directory. Run the following commands inside the `bootcamp_backend` directory. 
 ```bash
 python3 -m venv venv
 source venv/bin/activate   # macOS/Linux or, 
@@ -215,7 +295,6 @@ Confirm that all meet any minimum version requirements.
 - *(Optional)* **MongoDB for VSCode**
 
 ---
-
 ### Making Changes & Verifying
 
 #### Backend (Django):
