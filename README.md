@@ -26,8 +26,10 @@ Welcome to the **Rippling Intern Bootcamp 2025** repository! This serves as a mi
    - [Making Changes & Verifying](#making-changes--verifying)
    - [Pushing Your First Change](#pushing-your-first-change)
 7. [Making your first change and running it](#making-your-first-change)
-   - [Code changes](#code-changes)
-   - [Running server and testing them](#running-server-and-testing-them)
+   - [Backend](#backend)
+      - [Starter 0](#starter-0-changes)
+      - [Starter 1](#starter-1-changes)
+   - [Frontend](#frontend-nextjs-1)
 8. [Running Tests (Optional)](#running-tests-optional)
 9. [Further Reading](#further-reading)
 
@@ -154,7 +156,7 @@ These are the essential tools you need:
    **Verify**
    - Check version and installation completion with `node --version` and `yarn --version` 
 
-6. *(Optional)* **API & MongoDB Tools**  
+6. **API & MongoDB Tools**  
    - **[Postman](https://www.postman.com/downloads/)**, **[Insomnia](https://insomnia.rest/download)**, or **[Paw](https://paw.cloud/client) (only for mac)** for API testing  
    - **[MongoDB Compass](https://www.mongodb.com/try/download/compass)** or a **[VSCode MongoDB](https://code.visualstudio.com/docs/azure/mongodb)** extension
 
@@ -287,19 +289,113 @@ Confirm that all meet any minimum version requirements.
 
 ### Recommended VSCode Extensions
 
-- **Python** (Microsoft)
-- **Django** (optional but helpful)
-- **ESLint** (JavaScript/TypeScript linting)
-- **Prettier** (optional, for code formatting)
-- **Docker** (to visualize/manage containers)
-- *(Optional)* **MongoDB for VSCode**
+- **Python (Microsoft)**  
+  Provides language server support, debugging, linting, and IntelliSense for Python code.
+
+- **Django** (optional but helpful)  
+  Offers syntax highlighting and code snippets tailored for Django projects.
+
+- **ESLint (JavaScript/TypeScript linting)**  
+  Helps maintain consistent coding style and catches errors in JavaScript/TypeScript.
+
+- **Prettier (optional, for code formatting)**  
+  Automatically formats your code, keeping it clean and consistent.
+
+- **Docker**  
+  Allows you to visualize, manage, and interact with Docker containers and images directly in VSCode.
+
+- *(Optional)* **MongoDB for VSCode**  
+  Lets you connect to and browse your MongoDB databases, run queries, and view results without leaving VSCode.
 
 ---
-### Making Changes & Verifying
+### Making your first change
 
-#### Backend (Django):
+## Backend:
+
+### Starter 0 changes:
+
 1. Edit the `hello_world` function in `urls.py` (or your views).
 2. Refresh your browser at [http://127.0.0.1:8001/hello/](http://127.0.0.1:8001/hello/).
+
+### Starter 1 changes:
+
+##### Creating and Testing a Simple "Hello, {name}" API (via Query Parameters)
+
+This section explains how to create a Django endpoint that reads a `name` parameter from the **query string** (e.g., `/?name=Bob`).
+
+---
+
+#### 1. Define the View Function
+
+Open your Django project’s `urls.py` (or `views.py`, depending on your structure). Below, we’ll define a function that looks for a `name` query parameter in `request.GET`:
+
+```python
+# bootcamp_backend/urls.py
+
+from django.contrib import admin
+from django.urls import path
+from django.http import JsonResponse
+
+def hello_name(request):
+    """
+    A simple view that returns 'Hello, {name}' in JSON format.
+    Uses a query parameter named 'name'.
+    """
+    # Get 'name' from the query string, default to 'World' if missing
+    name = request.GET.get("name", "World")
+    return JsonResponse({"message": f"Hello, {name}!"})
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('hello/', hello_name), 
+    # Example usage: /hello/?name=Bob
+    # returns {"message": "Hello, Bob!"}
+]
+
+```
+---
+#### 2. Run the Django Server
+
+Activate your virtual environment (if not already active):
+
+```
+source venv/bin/activate         # macOS/Linux
+.\venv\Scripts\activate          # Windows
+```
+
+Install dependencies (if you haven't):
+```
+pip install -r requirements.txt
+```
+Navigate to your Django project folder (e.g., cd bootcamp_backend) and run the server on port 8001:
+```
+python manage.py runserver 8001
+```
+
+You should see:
+```
+Starting development server at http://127.0.0.1:8001/
+```
+
+#### Test the Endpoint with Postman (or Insomnia/Paw)
+
+Install a REST client like Postman (if you haven’t already).
+
+Create a new GET request.
+
+Enter the endpoint, for example:
+```
+http://127.0.0.1:8001/hello/?name=Bob
+```
+
+Send the request. You should see a JSON response:
+```
+{
+  "message": "Hello, Bob!"
+}
+```
+
+#### Congratulations! you wrote your first own API. 
 
 #### Frontend (Next.js):
 1. Edit a component in `pages/index.js`.
