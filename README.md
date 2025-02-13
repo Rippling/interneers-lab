@@ -398,8 +398,11 @@ Send the request. You should see a JSON response:
 #### Congratulations! you wrote your first own API. 
 
 #### Frontend (Next.js):
-1. Edit a component in `pages/index.js`.
-2. Save and see the changes immediately at [http://localhost:3001](http://localhost:3001).
+1. Edit a component in `bootcamp_frontend/app/page.tsx` to include your name.
+![alt text](image-1.png)
+2. Save and see the changes immediately at [http://localhost:3001](http://localhost:3001). 
+
+
 
 ---
 
