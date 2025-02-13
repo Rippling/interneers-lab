@@ -226,12 +226,6 @@ yarn dev --port 3001
 
 The app should be accessible at [http://localhost:3001](http://localhost:3001).
 
-If you haven’t created a Next.js project yet, you can do so with:
-
-```bash
-yarn create next-app frontend
-```
-
 ---
 
 ### Database: MongoDB via Docker Compose
