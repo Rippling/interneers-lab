@@ -78,7 +78,7 @@ These are the essential tools you need:
    - **Install or Upgrade**:  
      
      - macOS (with Homebrew): `brew install python@3.11`  
-     - Windows: [Download from python.org](https://www.python.org/downloads/) (ensure it’s 3.13)  
+     - Windows: [Download from python.org](https://www.python.org/downloads/) (ensure it’s 3.11)  
    - **Verify**:
      
      ```bash
