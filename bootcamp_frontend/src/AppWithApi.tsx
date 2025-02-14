@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import './App.scss';
+import React, { useState, useEffect } from "react";
+import "./App.scss";
 
 interface Todo {
   userId: number;
@@ -17,7 +17,9 @@ function App() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch('https://jsonplaceholder.typicode.com/todos/1');
+        const response = await fetch(
+          "https://jsonplaceholder.typicode.com/todos/1",
+        );
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -25,8 +27,7 @@ function App() {
 
         const json: Todo = await response.json();
         setData(json);
-
-      } catch (err : any) {
+      } catch (err: any) {
         setError(err);
       } finally {
         setLoading(false);
@@ -34,7 +35,7 @@ function App() {
     };
 
     fetchData();
-  },[]);
+  }, []);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -51,7 +52,7 @@ function App() {
           <h1>API Data</h1>
           <p>User ID: {data.userId}</p>
           <p>Title: {data.title}</p>
-          <p>Completed: {data.completed? 'Yes': 'No'}</p>
+          <p>Completed: {data.completed ? "Yes" : "No"}</p>
         </header>
       </div>
     );
