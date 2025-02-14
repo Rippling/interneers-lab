@@ -174,7 +174,7 @@ This section describes how to run the project's tests. There are two types of te
     *   **Run a specific test file:**
 
         ```bash
-        yarn test src/__tests__App.test.tsx  # Replace with the actual path
+        yarn test src/__tests__/App.test.tsx  # Replace with the actual path
         ```
 
         This command allows you to run a single test file.
