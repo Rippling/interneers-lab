@@ -2,7 +2,7 @@
 
 Welcome to the **Rippling Intern Bootcamp 2025** repository! This serves as a minimal starter kit for learning and experimenting with:
 - **Django** (Python)
-- **Next.js** (React)
+- **React**  (with TypeScript)
 - **MongoDB** (via Docker Compose)
 - Development environment in **VSCode** (recommended)
 
@@ -18,7 +18,7 @@ Welcome to the **Rippling Intern Bootcamp 2025** repository! This serves as a mi
 3. [Setting Up the Project](#setting-up-the-project)
 4. [Running Services](#running-services)
    - [Backend: Django](#backend-django)
-   - [Frontend: Next.js](#frontend-nextjs)
+   - [Frontend: Create-React-App](#frontend-create-react-app)
    - [Database: MongoDB via Docker Compose](#database-mongodb-via-docker-compose)
 5. [Verification of Installation](#verification-of-installation)
 6. [Development Workflow](#development-workflow)
@@ -29,7 +29,7 @@ Welcome to the **Rippling Intern Bootcamp 2025** repository! This serves as a mi
    - [Backend](#backend)
       - [Starter 0](#starter-0-changes)
       - [Starter 1](#starter-1-changes)
-   - [Frontend](#frontend-nextjs-1)
+   - [Frontend](#frontend)
 8. [Running Tests (Optional)](#running-tests-optional)
 9. [Further Reading](#further-reading)
 
@@ -146,7 +146,7 @@ These are the essential tools you need:
    
    **Why?**
 
-   We use Next.js for our frontend, which requires Node.js. Yarn is a popular package manager for Node.
+   We use React.js for our frontend, which requires Node.js. Yarn is a popular package manager for Node.
 
    **Install**
 
@@ -182,10 +182,10 @@ By default, **requirements.txt** includes:
 - **Django**
 - **pymongo** (MongoDB driver)
 
-### Install Frontend Dependencies (if you have a Next.js project)
+### Install Frontend Dependencies
 
 ```bash
-cd frontend
+cd bootcamp_frontend
 yarn install
 cd ..
 ```
@@ -215,22 +215,16 @@ Open [http://127.0.0.1:8001/hello/](http://127.0.0.1:8001/hello/) to see the **"
 
 ---
 
-### Frontend: Next.js
+### Frontend: Create-React-App
 
-If your Next.js app is in `frontend/`, navigate to it:
-
-```bash
-cd frontend
-yarn dev --port 3001
-```
-
-The app should be accessible at [http://localhost:3001](http://localhost:3001).
-
-If you haven’t created a Next.js project yet, you can do so with:
+If your react app is in `bootcamp_frontend/`, navigate to it:
 
 ```bash
-yarn create next-app frontend
+cd bootcamp_frontend
+yarn start
 ```
+
+The app should be accessible at [http://localhost:3000](http://localhost:3000).
 
 ---
 
@@ -397,9 +391,11 @@ Send the request. You should see a JSON response:
 
 #### Congratulations! you wrote your first own API. 
 
-#### Frontend (Next.js):
-1. Edit a component in `pages/index.js`.
-2. Save and see the changes immediately at [http://localhost:3001](http://localhost:3001).
+## Frontend:
+1. Edit a component in `bootcamp_frontend/src/App.tsx`.
+2. Save and see the changes immediately at [http://localhost:3000](http://localhost:3000).
+
+![alt text](image-app.png)
 
 ---
 
@@ -425,10 +421,10 @@ cd bootcamp_backend
 python manage.py test
 ```
 
-### Next.js Tests
+### Frontend unit Tests
 
 ```
-cd frontend
+cd bootcamp_frontend
 yarn test
 ```
 
@@ -442,7 +438,8 @@ docker compose ps
 ## Further Reading
 
 - Django: https://docs.djangoproject.com/en/3.2/
-- Next.js: https://nextjs.org/docs
+- React: https://react.dev/learn
+- Create react app: https://create-react-app.dev/docs/getting-started
 - MongoDB: https://docs.mongodb.com/
 - Docker Compose: https://docs.docker.com/compose/
 
