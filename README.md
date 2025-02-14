@@ -18,7 +18,6 @@ Welcome to the **Rippling Intern Bootcamp 2025** repository! This serves as a mi
 3. [Setting Up the Project](#setting-up-the-project)
 4. [Running Services](#running-services)
    - [Backend: Django](#backend-django)
-   - [Frontend: Create-React-App](#frontend-create-react-app)
    - [Database: MongoDB via Docker Compose](#database-mongodb-via-docker-compose)
 5. [Verification of Installation](#verification-of-installation)
 6. [Development Workflow](#development-workflow)
@@ -29,9 +28,9 @@ Welcome to the **Rippling Intern Bootcamp 2025** repository! This serves as a mi
    - [Backend](#backend)
       - [Starter 0](#starter-0-changes)
       - [Starter 1](#starter-1-changes)
-   - [Frontend](#frontend)
 8. [Running Tests (Optional)](#running-tests-optional)
-9. [Further Reading](#further-reading)
+9. [Frontend Setup](#frontend-setup)
+10. [Further Reading](#further-reading)
 
 ---
 
@@ -182,13 +181,6 @@ By default, **requirements.txt** includes:
 - **Django**
 - **pymongo** (MongoDB driver)
 
-### Install Frontend Dependencies
-
-```bash
-cd bootcamp_frontend
-yarn install
-cd ..
-```
 
 **Check your `.gitignore`**  
 Make sure `venv/` and other temporary files aren’t committed.
@@ -212,19 +204,6 @@ python manage.py runserver 8001
 ```
 
 Open [http://127.0.0.1:8001/hello/](http://127.0.0.1:8001/hello/) to see the **"Hello World"** endpoint.
-
----
-
-### Frontend: Create-React-App
-
-If your react app is in `bootcamp_frontend/`, navigate to it:
-
-```bash
-cd bootcamp_frontend
-yarn start
-```
-
-The app should be accessible at [http://localhost:3000](http://localhost:3000).
 
 ---
 
@@ -391,12 +370,6 @@ Send the request. You should see a JSON response:
 
 #### Congratulations! you wrote your first own API. 
 
-## Frontend:
-1. Edit a component in `bootcamp_frontend/src/App.tsx`.
-2. Save and see the changes immediately at [http://localhost:3000](http://localhost:3000).
-
-![alt text](image-app.png)
-
 ---
 
 ### Pushing Your First Change
@@ -421,19 +394,20 @@ cd bootcamp_backend
 python manage.py test
 ```
 
-### Frontend unit Tests
-
-```
-cd bootcamp_frontend
-yarn test
-```
-
 ### Docker
 ```
 docker compose ps
 ```
 
 ---
+
+## Frontend Setup
+
+The frontend setup instructions are located in the `frontend` directory. You don't need to set up the frontend until later parts of the course, but feel free to try it earlier and play around.
+
+Head over to the frontend README to check it out:
+[Frontend README](frontend/README.md)
+
 
 ## Further Reading
 
