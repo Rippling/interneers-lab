@@ -1,0 +1,60 @@
+// App.scss
+
+// Variables
+$primary-color: #240b36; // A deep purple
+$secondary-color: #ff7f50; // Coral
+$app-background-color: #f0f0f5; // Very light gray
+$app-link-color: #007bff; // Standard blue
+
+// Mixin for the logo animation
+@mixin app-logo-spin {
+  animation: App-logo-spin infinite 20s linear;
+}
+
+// App Styles
+.App {
+  text-align: center;
+  background-color: $primary-color; // Light gray background
+  padding: 2rem;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+
+  @media (prefers-reduced-motion: no-preference) {
+    @include app-logo-spin;
+  }
+}
+
+.App-header {
+  background-color: $primary-color; // Deep purple header
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  padding: 20px;
+}
+
+.App-link {
+  color: $app-link-color;
+  text-decoration: none;
+
+  &:hover { // Hover effect
+    text-decoration: underline;
+    color: darken($app-link-color, 20%); // Darker blue on hover
+  }
+}
+
+// Keyframes (unchanged)
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
