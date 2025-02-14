@@ -113,7 +113,7 @@ This section describes how to run the project's tests. There are two types of te
 1.  **Unit Tests (Jest):**
 
     ```bash
-    yarn test:unit  # Or just 'yarn test' - it often runs both types
+    yarn test
     ```
 
     These tests verify the functionality of individual components or functions in isolation. They are typically located in the `src/__tests__` directory (or alongside the components they test).
@@ -146,19 +146,21 @@ This section describes how to run the project's tests. There are two types of te
 
 2.  **End-to-End Tests (Playwright):**
 
+    These tests simulate user interactions with the application in a real browser environment.
+
+    Before running Playwright tests, ensure Playwright browsers are installed:
+
     ```bash
-    yarn test:e2e
+    yarn playwright install
     ```
 
-    These tests simulate user interactions with the application in a real browser environment. They are typically located in the `e2e` or `tests` directory.
+    Now you can run the tests:
+
+    ```bash
+    yarn playwright test
+    ```
 
     Here are some additional commands for Playwright tests:
-
-    *   **Run Playwright tests:**
-
-        ```bash
-        yarn playwright test
-        ```
 
     *   **Run Playwright tests in headed mode (visible browser):**
 
