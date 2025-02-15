@@ -79,7 +79,9 @@ This section explains how to start the development server.
     Alternatively, you can use the following command to start the server on a different port directly:
 
     ```bash
-    PORT=3001 yarn start  # Replace 3001 with your desired port
+    PORT=3001 yarn start   # macOS
+    $env:PORT = 3001; yarn start # Windows Powershell
+    # Replace 3001 with your desired port
     ```
 
     The development server will now attempt to start on the new port you specified.
@@ -194,7 +196,7 @@ This section describes how to run the project's tests. There are two types of te
     Before running Playwright tests, ensure Playwright browsers are installed:
 
     ```bash
-    yarn playwright install
+    yarn playwright install # One time setup
     ```
 
     Now you can run the tests:

@@ -20,10 +20,14 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "baseUrl": "src",
-    "types": ["node"]
+    "types": [
+      "node"
+    ]
   },
   "include": [
     "src"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }
