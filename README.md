@@ -71,25 +71,25 @@ These are the essential tools you need:
    ```bash
    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-2. **Python 3.11** (if you need Python scripts or a backend environment)
-   - **Why 3.11?**
+2. **Python 3.13** (if you need Python scripts or a backend environment)
+   - **Why 3.13?**
 
       This is the recommended version for the intern bootcamp’s Python-related tasks, ensuring consistency across projects.
    - **Install or Upgrade**:  
      
-     - macOS (with Homebrew): `brew install python@3.11`  
-     - Windows: [Download from python.org](https://www.python.org/downloads/) (ensure it’s 3.11)  
+     - macOS (with Homebrew): `brew install python`  
+     - Windows: [Download from python.org](https://www.python.org/downloads/) (ensure it’s 3.13)  
    - **Verify**:
      
      ```bash
      python3 --version
      ```
-     You should see something like `Python 3.11.x`.
+     You should see something like `Python 3.13.x`.
 
    If you are getting something else , please update `/.bashrc` or `/.zshrc` to have alias with following
    ```
    vim ~/.zshrc   # or any preferred editor of your choice
-   alias python3 = "/opt/homebrew/bin/python3.11"
+   alias python3 = "/opt/homebrew/bin/python3.13"
    :wq      # save the file with any equivalent command
    source ~/.zshrc # or ~/.bashrc
    ```
