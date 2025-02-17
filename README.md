@@ -173,7 +173,7 @@ These are the essential tools you need:
 
 ### Create a Python Virtual Environment
 
-The python virtual env should be created inside the `./backend` directory. Run the following commands inside the `backend` directory to create virtual environment.
+The python virtual env should be created inside the backend directory. Run the following commands inside the `backend` directory to create virtual environment.
 ```bash
 cd backend
 python3.13 -m venv venv
