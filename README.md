@@ -168,6 +168,7 @@ The python virtual env should be created inside the /bootcamp_backend directory.
 python3 -m venv venv
 source venv/bin/activate   # macOS/Linux or, 
 # on Windows:
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 .\venv\Scripts\activate
 ```
 
