@@ -1,4 +1,4 @@
-# Intern Bootcamp 2025
+# Interneers Lab
 
 Welcome to the **Interneers Lab 2025** repository! This serves as a minimal starter kit for learning and experimenting with:
 - **Django** (Python)
@@ -51,11 +51,11 @@ Welcome to the **Interneers Lab 2025** repository! This serves as a minimal star
 
    Forking a repository on GitHub creates your own copy under your GitHub account, where you can make changes independently without affecting the original repo. Later, you can make pull requests to merge changes back if needed.
 
-4. Fork the Rippling/intern-bootcamp-2025 repository (ensure you’re in the correct org or your personal GitHub account, as directed).
+4. Fork the Rippling/interneers-lab repository (ensure you’re in the correct org or your personal GitHub account, as directed).
 5. **Clone** your forked repo:
     ```
-    git clone git@github.com:<YourUsername>/intern-bootcamp-2025.git
-    cd intern-bootcamp-2025
+    git clone git@github.com:<YourUsername>/interneers-lab.git
+    cd interneers-lab
     ```
 
 ## Prerequisites & Tooling
@@ -75,7 +75,7 @@ These are the essential tools you need:
 2. **Python 3.13** (if you need Python scripts or a backend environment)
    - **Why 3.13?**
 
-      This is the recommended version for the intern bootcamp’s Python-related tasks, ensuring consistency across projects.
+      This is the recommended version for the module’s Python-related tasks, ensuring consistency across projects.
    - **Install or Upgrade**:  
      
      - macOS (with Homebrew): `brew install python`  
@@ -337,7 +337,7 @@ source venv/bin/activate         # macOS/Linux
 
 Install dependencies (if you haven't):
 ```bash
-cd backend  # if you are not inside bootcamp backend already.
+cd backend  # if you are not inside  /backend already.
 pip3 install -r requirements.txt
 ```
 Navigate to your Django project folder (e.g., cd backend) and run the server on port 8001:
