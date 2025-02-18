@@ -1,6 +1,6 @@
 # Interneers Lab 2025 - Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), along with a few additional pacakges like SCSS, TypeScript, React router and Playwright.
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), along with a few additional packages like SCSS, TypeScript, React router and Playwright.
 
 ## Table of Contents
 
@@ -36,6 +36,7 @@ This section describes how to set up the project locally. Since the project file
 1.  **Navigate to the Project Directory:**
 
     ```bash
+    # All frontend commands should be run from the "frontend" directory
     cd frontend
     ```
 

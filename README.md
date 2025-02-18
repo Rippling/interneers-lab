@@ -46,7 +46,7 @@ Welcome to the **Interneers Lab 2025** repository! This serves as a minimal star
 2. **Configure Git** with your name and email:
    ```bash
    git config --global user.name "Your Name"
-   git config --global user.email "your.email@example.com"
+   git config --global user.email "your.email@example.com" # Use the same email you shared during onboarding
 3. What is Forking?
 
    Forking a repository on GitHub creates your own copy under your GitHub account, where you can make changes independently without affecting the original repo. Later, you can make pull requests to merge changes back if needed.
