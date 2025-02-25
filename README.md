@@ -299,7 +299,7 @@ This section explains how to create a Django endpoint that reads a `name` parame
 
 #### 1. Define the View Function
 
-Open your Django project’s `urls.py` (or `views.py`, depending on your structure). Below, we’ll define a function that looks for a `name` query parameter in `request.GET`:
+-Open your Django project’s `urls.py` (or `views.py`, depending on your structure). Below, we’ll define a function that looks for `name`,`age` and `city` as query parameters in `request.GET`:
 
 ```python
 # django_app/urls.py
@@ -308,24 +308,157 @@ from django.contrib import admin
 from django.urls import path
 from django.http import JsonResponse
 
+from django.contrib import admin
+from django.urls import path
+from django.http import HttpResponse
+from django.http import JsonResponse
+
 def hello_name(request):
     """
-    A simple view that returns 'Hello, {name}' in JSON format.
-    Uses a query parameter named 'name'.
+    A simple view that returns 'Hello, I am {name}.I am {age} years old! I am from {city}.' in JSON format.
+    Uses a query parameter named 'name','age' and 'city'.
     """
     # Get 'name' from the query string, default to 'World' if missing
-    name = request.GET.get("name", "World")
-    return JsonResponse({"message": f"Hello, {name}!"})
+    name = request.GET.get("name", "unknown")
+    age = request.GET.get("age", "unknown") 
+    city = request.GET.get("city", None)
+
+    response_data = {
+        "message": f"Hello, I am {name}. I am {age} years old!"
+    }
+
+    if city:
+        response_data["city_info"] = f"I am from {city}."
+
+    return JsonResponse(response_data)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('hello/', hello_name), 
-    # Example usage: /hello/?name=Bob
-    # returns {"message": "Hello, Bob!"}
+    # Example usage: /hello/?name=Bob&age=25&city=NewYork
+    # returns {"message": "Hello, I am Bob.I am 25 years old! I am from New York."}
 ]
 
+
 ```
+-It returns a JSON response with a message.
+-Checks `age` to ensure it is numeric.
+-Gives error messages for invalid inputs.
+-Gives default values when parameters are missing.
+
 ---
+
+#### Different test scenarios for the API
+1.GET Request:Valid Input
+/hello/?name=Bon&age=19&city=Paris
+Expected Response (200 OK):
+
+```json
+
+{
+  "message": "Hello, I am Bob. I am 19 years old!",
+  "city_info": "I am from Paris."
+}
+
+```
+Ensures that valid input parameters return the correct output.
+
+2.GET Request:Missing age Parameter
+/hello/?name=Bob&city=Paris
+
+```json
+
+{
+  "message": "Hello, I am Bob. I am unknown years old!",
+  "city_info": "I am from Paris."
+}
+
+```
+
+Ensures that missing age defaults to "unknown" instead of causing errors.
+
+3.GET Request:Missing Both name and age
+/hello/?city=Paris
+
+```json
+
+{
+  "message": "Hello, I am unknown. I am unknown years old!",
+  "city_info": "I am from Paris."
+}
+
+```
+Confirms default values are applied when both name and age are missing.
+
+
+
+4.GET Request:No Parameters Provided
+/hello/
+
+```json
+
+{
+  "message": "Hello, I am unknown. I am unknown years old!",
+  
+}
+
+```
+Ensures the API works without any query parameters.
+
+5.GET Request:Invalid `age` (Non-Numeric)
+/hello/?name=Rishi&age=twenty&city=Mumbai
+
+Expected Response (400 Bad Request)
+
+```json
+
+{
+  "error": "Invalid age. Age must be a number."
+}
+
+```
+
+5.GET Request:Extra Parameters (Ignored)
+/hello/?name=Rishi&age=20&city=Mumbai&country=India
+
+```json
+
+{
+  "message": "Hello, I am Rishi. I am 20 years old!",
+  "city_info": "I am from Mumbai."
+}
+
+```
+Ensures the API ignores extra parameters like country.
+
+6.GET Request:Special Characters in `name`
+/hello/?name=Rishi@&age=20&city=Mumbai
+
+```json
+
+{
+  "message": "Hello, I am Rishi. I am 20 years old!",
+  "city_info": "I am from Mumbai."
+}
+
+```
+Confirms the API correctly handles special characters.
+
+7.GET Request:URL Encoding Test
+
+/hello/?name=Mr%20Rishi&age=40&city=San%20Francisco
+
+```json
+
+{
+  "message": "Hello, I am Rishi. I am 20 years old!",
+  "city_info": "I am from San Francisco."
+}
+
+```
+Ensures the API supports URL-encoded characters (%20 for space).
+
+
 #### 2. Run the Django Server
 
 Activate your virtual environment (if not already active):
