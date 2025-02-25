@@ -341,17 +341,16 @@ urlpatterns = [
 
 
 ```
--It returns a JSON response with a message.
--Checks `age` to ensure it is numeric.
--Gives error messages for invalid inputs.
--Gives default values when parameters are missing.
+- It returns a JSON response with a message.
+- Checks `age` to ensure it is numeric.
+- Gives error messages for invalid inputs.
+- Gives default values when parameters are missing.
 
 ---
 
 #### Different test scenarios for the API
-1.GET Request:Valid Input
+1.GET Request:Valid Input  
 /hello/?name=Bon&age=19&city=Paris
-Expected Response (200 OK):
 
 ```json
 
@@ -363,7 +362,7 @@ Expected Response (200 OK):
 ```
 Ensures that valid input parameters return the correct output.
 
-2.GET Request:Missing age Parameter
+2.GET Request:Missing age Parameter  
 /hello/?name=Bob&city=Paris
 
 ```json
@@ -377,7 +376,7 @@ Ensures that valid input parameters return the correct output.
 
 Ensures that missing age defaults to "unknown" instead of causing errors.
 
-3.GET Request:Missing Both name and age
+3.GET Request:Missing Both name and age  
 /hello/?city=Paris
 
 ```json
@@ -392,7 +391,7 @@ Confirms default values are applied when both name and age are missing.
 
 
 
-4.GET Request:No Parameters Provided
+4.GET Request:No Parameters Provided  
 /hello/
 
 ```json
@@ -405,7 +404,7 @@ Confirms default values are applied when both name and age are missing.
 ```
 Ensures the API works without any query parameters.
 
-5.GET Request:Invalid `age` (Non-Numeric)
+5.GET Request:Invalid `age` (Non-Numeric)  
 /hello/?name=Rishi&age=twenty&city=Mumbai
 
 Expected Response (400 Bad Request)
@@ -418,7 +417,7 @@ Expected Response (400 Bad Request)
 
 ```
 
-5.GET Request:Extra Parameters (Ignored)
+6.GET Request:Extra Parameters (Ignored)  
 /hello/?name=Rishi&age=20&city=Mumbai&country=India
 
 ```json
@@ -431,7 +430,7 @@ Expected Response (400 Bad Request)
 ```
 Ensures the API ignores extra parameters like country.
 
-6.GET Request:Special Characters in `name`
+7.GET Request:Special Characters in `name`  
 /hello/?name=Rishi@&age=20&city=Mumbai
 
 ```json
@@ -444,8 +443,7 @@ Ensures the API ignores extra parameters like country.
 ```
 Confirms the API correctly handles special characters.
 
-7.GET Request:URL Encoding Test
-
+8.GET Request:URL Encoding Test  
 /hello/?name=Mr%20Rishi&age=40&city=San%20Francisco
 
 ```json
