@@ -296,22 +296,18 @@ Confirm that all meet any minimum version requirements.
 This section explains how to create a Django endpoint that reads a `name` parameter from the **query string** (e.g., `/?name=Bob`).
 
 ---
+## Defining URL configurations (View Function)
 
-#### 1. Define the View Function
+Defines multiple API endpoints in `urls.py` that return JSON responses.
 
-Defines multiple API endpoints in urls.py that return JSON responses.
+### Endpoints
 
-Endpoints
-
-/hello/ - Returns {"message": "Hello, {username}!"} (Default: World).
-
-Example: /hello/?username=Gargi → {"message": "Hello, Gargi!"}
-
-/try/ - Returns {"company": "Hello, {who}!"} (Default: Rippling).
-
-Example: /try/?who=OpenAI → {"company": "Hello, OpenAI!"}
-
-/gargi/ - Returns {"My message": "Hello Django World, this is Gargi trying to learn Django"}
+- **`/admin/`** - Django admin panel.
+- **`/hello/`** - Returns `{"message": "Hello, {username}!"}` (Default: `World`).
+  - Example: `/hello/?username=Gargi` → `{"message": "Hello, Gargi!"}`
+- **`/try/`** - Returns `{"company": "Hello, {who}!"}` (Default: `Rippling`).
+  - Example: `/try/?who=OpenAI` → `{"company": "Hello, OpenAI!"}`
+- **`/gargi/`** - Returns `{"My message": "Hello Django World, this is Gargi trying to learn Django"}`
 
 ```python
 # django_app/urls.py
@@ -323,31 +319,37 @@ from django.http import JsonResponse
 def hello_name(request):
     """
     A simple view that returns 'Hello, {name}' in JSON format.
-    Uses a query parameter named 'name'.
+    Uses a query parameter named 'name', default to 'World' if missing.
     """
-    # Get 'username' from the query string, default to 'World' if missing
     name = request.GET.get("username", "World")
     return JsonResponse({"message": f"Hello, {name}!"})
 
-    # Get 'who' from the query string, default to 'Rippling' if missing
 def new_fun_to_say_hello(request):
+    """
+    A view that returns 'Hello, {who}' in JSON format.
+    Uses a query parameter named 'who', default to "Rippling"
+    """
     company = request.GET.get("who", "Rippling")
     return JsonResponse({"company": f"Hello, {company}!"})
 
 def gargi_s_function(request):
-    return JsonResponse({"My message":"Hello Django World, this is Gargi trying to learn Django"})
-
+    """
+    A view that returns a static message.
+    """
+    return JsonResponse({"My message": "Hello Django World, this is Gargi trying to learn Django"})
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('hello/', hello_name), 
-    # Example usage: /hello/?username = Gargi
+    # Example usage: /hello/?username=Gargi
     # returns {"message": "Hello, Gargi!"}
+
     path('try/', new_fun_to_say_hello),
-    # Example usage: /try/?who = new_company
-    # returns {"message": "Hello, new_company!"}
+    # Example usage: /try/?who=new_company
+    # returns {"company": "Hello, new_company!"}
+
     path('gargi/', gargi_s_function),
-     # Example usage: /gargi/ 
+    # Example usage: /gargi/
 ]
 
 ```
@@ -384,13 +386,24 @@ Create a new GET request.
 
 Enter the endpoint, for example:
 ```
-http://127.0.0.1:8001/hello/?name=Bob
+1. http://127.0.0.1:8000/hello/?username=Gargi
+2. http://127.0.0.1:8000/try/?who=OpenAI
+3. http://127.0.0.1:8000/gargi/
 ```
 
 Send the request. You should see a JSON response:
 ```
+1.
 {
-  "message": "Hello, Bob!"
+  "message": "Hello, Gargi!"
+}
+2.
+{
+  "company": "Hello, OpenAI!"
+}
+3.
+{
+  "My message": "Hello Django World, this is Gargi trying to learn Django"
 }
 ```
 
