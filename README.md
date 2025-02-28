@@ -286,7 +286,7 @@ Confirm that all meet any minimum version requirements.
 
 ### Starter 0 changes:
 
-1. Edit the `hello_world` function in `urls.py` (or your views).
+1. Edited `hello_world` function in `urls.py`.
 2. Refresh your browser at [http://127.0.0.1:8001/hello/](http://127.0.0.1:8001/hello/).
 
 ### Starter 1 changes:
@@ -299,7 +299,19 @@ This section explains how to create a Django endpoint that reads a `name` parame
 
 #### 1. Define the View Function
 
-Open your Django project’s `urls.py` (or `views.py`, depending on your structure). Below, we’ll define a function that looks for a `name` query parameter in `request.GET`:
+Defines multiple API endpoints in urls.py that return JSON responses.
+
+Endpoints
+
+/hello/ - Returns {"message": "Hello, {username}!"} (Default: World).
+
+Example: /hello/?username=Gargi → {"message": "Hello, Gargi!"}
+
+/try/ - Returns {"company": "Hello, {who}!"} (Default: Rippling).
+
+Example: /try/?who=OpenAI → {"company": "Hello, OpenAI!"}
+
+/gargi/ - Returns {"My message": "Hello Django World, this is Gargi trying to learn Django"}
 
 ```python
 # django_app/urls.py
