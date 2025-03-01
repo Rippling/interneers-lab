@@ -299,32 +299,137 @@ This section explains how to create a Django endpoint that reads a `name` parame
 
 #### 1. Define the View Function
 
-Open your Django project’s `urls.py` (or `views.py`, depending on your structure). Below, we’ll define a function that looks for a `name` query parameter in `request.GET`:
+Open your Django project’s `urls.py` (or `views.py`, depending on your structure). Below, we’ll define a function that looks for `name` and `city` as query parameters in `request.GET`:
 
 ```python
 # django_app/urls.py
 
 from django.contrib import admin
 from django.urls import path
+from django.http import HttpResponse
 from django.http import JsonResponse
 
-def hello_name(request):
+import requests
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+
+# def hello_world(request):
+#     return HttpResponse("Hello, world! This is our interneers-lab Django server.")
+
+def hello_world(request):
     """
     A simple view that returns 'Hello, {name}' in JSON format.
     Uses a query parameter named 'name'.
     """
     # Get 'name' from the query string, default to 'World' if missing
     name = request.GET.get("name", "World")
+    
     return JsonResponse({"message": f"Hello, {name}!"})
+        
+def get_current_weather(request):
+    '''
+    Uses query parameter named 'city' to get weather related information using OpenWeather's API.
+    '''
+
+    API_KEY = os.getenv("API_KEY")
+
+    name = request.GET.get("name", "User")
+    city = request.GET.get("city")
+
+    if city == None:
+        return JsonResponse({"message": f"Hello, {name}!"})
+
+    request_url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"
+
+    weather_data = requests.get(request_url).json()
+
+    if weather_data["cod"]!=200:
+        '''
+        User entered an invalid city name.
+        '''
+
+        return JsonResponse({"message": f"Hello, {name}! Please enter a valid city name."})
+    
+    temperature = weather_data["main"]["temp"]
+    weather_description = weather_data["weather"][0]["description"]
+
+    return JsonResponse({
+            "message": f"Hello, {name}! Current temperature in {city} is {temperature}°C with {weather_description}."
+        })
+    
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('hello/', hello_name), 
-    # Example usage: /hello/?name=Bob
-    # returns {"message": "Hello, Bob!"}
+    path('hello/', hello_world),
+    path('weather/', get_current_weather),
+
 ]
 
 ```
+
+- Calls OpenWeather API with the city name and an API key.
+- Extracts temperature and weather description from the API response.
+- Returns a JSON response with weather details.
+
+---
+#### Week 1 : Different test scenarios for the API
+
+**1. Valid Input**
+
+GET Request: http://127.0.0.1:8001/weather/?name=Bob&city=Hyderabad
+
+Expected Response:
+```json
+{
+    "message": "Hello, Bob! Current temperature in Hyderabad is 21.73°C with overcast clouds."
+} 
+```
+
+**2. Missing `city` Parameter**
+
+GET Request: http://127.0.0.1:8001/weather/?name=Bob
+
+Expected Response:
+```json
+{
+    "message": "Hello, Bob!"
+} 
+```
+
+**3. Missing `name` Parameter**
+
+GET Request: http://127.0.0.1:8001/weather/city=Hyderabad
+
+Expected Response:
+```json
+{
+    "message": "Hello, User! Current temperature in Hyderabad is 21.73°C with overcast clouds."
+} 
+```
+**4. Missing both Parameter**
+
+GET Request: http://127.0.0.1:8001/weather/
+
+Expected Response:
+```json
+{
+    "message": "Hello, User!"
+} 
+```
+
+**5. Invalid `city` Parameter**
+
+GET Request: http://127.0.0.1:8001/weather/?name=Bob&city=xyz
+
+Expected Response:
+```json
+{
+    "message": "Hello, Bob! Please enter a valid city name."
+} 
+```
+
 ---
 #### 2. Run the Django Server
 
