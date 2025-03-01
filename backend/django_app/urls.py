@@ -28,5 +28,6 @@ def hello_name(request):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('hello/', hello),
-    path('hello_name/', hello_name),    #test this using -> http://127.0.0.1:8001/hello_name/?name=Vedanshi
+    path('hello_name/', hello_name),    #test this using -> hello_name/?name=Vedanshi
+    #tested with few more apis like http://127.0.0.1:8000/hello_name/?name=John%20Doe!@#   , etc
 ]
