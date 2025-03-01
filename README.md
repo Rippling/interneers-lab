@@ -427,7 +427,7 @@ Head over to the frontend README to check it out:
 ---
 
 
-
-
-
-
+![GitHub Repo stars](https://img.shields.io/github/stars/VedanshiAwasthi/interneers-lab?style=social)  
+![GitHub forks](https://img.shields.io/github/forks/VedanshiAwasthi/interneers-lab?style=social)  
+![GitHub last commit](https://img.shields.io/github/last-commit/VedanshiAwasthi/interneers-lab)  
+![GitHub license](https://img.shields.io/github/license/VedanshiAwasthi/interneers-lab)
