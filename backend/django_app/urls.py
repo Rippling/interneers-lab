@@ -10,7 +10,6 @@ def hello_world(request):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('hello/', hello_world),
-    path('addProduct/', addProduct),
-    path('getProduct/', getProduct),
-    path('updateProduct/', updateProduct),
+    path('products', productEndpoint),
+    path('products/<int:request_id>', productEndpoint),
 ]
