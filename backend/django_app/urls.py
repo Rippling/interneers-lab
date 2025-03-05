@@ -11,4 +11,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('hello/', hello_world),
     path('addProduct/', addProduct),
+    path('getProduct/', getProduct),
+    path('updateProduct/', updateProduct),
 ]
