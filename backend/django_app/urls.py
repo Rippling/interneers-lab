@@ -13,7 +13,7 @@ def hello_name(request):
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('hello/', hello_name), 
+    path('hello/', hello_name, name='hello_name'), 
     # Example usage: /hello/?name=Bob
     # returns {"message": "Hello, Bob!"}
 ]
