@@ -33,31 +33,59 @@ The product model is the primary resource managed by this API. It described a pr
 ### List All products [GET]
 
 Returns a list of all products currently in the system. The list is guarenteed to be sorted by ID.
+The list returned is paginated, and the "navigation" payload gives information about going to the 
+next or previous page. The default limit for the page is 100. 
+The intented way to use this endpoint is to send a GET request with just the limit parameter set to get the first page, then navigate using the navigation URIs provided in the response. Start parameter can be provided, although 
+this means that certain items might be repeated when the first page is reached. Item uniqueness can be checked
+via the id field.
+
+|Parameter|Type|Required/Optional|Description|
+|---      |--- |---              |---        |
+|start    |int |Optional         |The start offset of the page, (the id of the product to start from). This has to be a valid id.|
+|limit    |int |Optional         |The maximum number of entries in a page.|
 
 Successful request:
 
-+ Response 200 (application/json)
++ Response 206 (application/json)
 
-        [        
-            {
-                "name": "Bajaj DMH90 Neo 90L Desert Air Cooler",
-                "price": 10999,
-                "brand": "Bajaj",
-                "category": "Appliances",
-                "description": "Air Cooler for Home|For Larger Room|BIG ICE Chamber|Anti-Bacterial Honeycomb Pads",
-                "quantity": 25,
-                "id": 1
-            },
-            {
-                "name": "Orient Electric 9W High Glow LED bulb| Pack of 2",
-                "price": 108,
-                "brand": "Orient Electric",
-                "category": "Appliances",
-                "description": "180-degree wide beam angle| Voltage surge protection up to 4 kV| 6500K, Cool White",
-                "quantity": 205,
-                "id": 2
+        {
+            "data": [
+                {
+                    "name": "Bajaj DMH90 Neo 90L Desert Air Cooler",
+                    "price": 10999,
+                    "brand": "Bajaj",
+                    "category": "Appliances",
+                    "description": "Air Cooler for Home|For Larger Room|BIG ICE Chamber|Anti-Bacterial Honeycomb Pads",
+                    "quantity": 25,
+                    "id": 1
+                },
+                {
+                    "name": "Orient Electric 9W High Glow LED bulb| Pack of 2",
+                    "price": 108,
+                    "brand": "Orient Electric",
+                    "category": "Appliances",
+                    "description": "180-degree wide beam angle| Voltage surge protection up to 4 kV| 6500K, Cool White",
+                    "quantity": 205,
+                    "id": 2
+                },
+                {
+                    "name": "Apple AirPods Pro 2nd Generation",
+                    "price": 24900,
+                    "brand": "Apple",
+                    "category": "Gadgets",
+                    "description": "The speakers inside the EarPods have been engineered to maximise sound output.",
+                    "quantity": 102,
+                    "id": 3
+                }
+            ],
+            "navigation": {
+                "self": "/products/?start=1&limit=3",
+                "next": "/products/?start=4&limit=3",
+                "prev": "/products/?start=1&limit=3",
+                "pages": 5,
+                "current": 1
             }
-        ]
+        }
 
 
 ### Create a New Product [POST]
