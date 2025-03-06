@@ -1,7 +1,7 @@
-from django.http import HttpResponse, HttpRequest, JsonResponse
 import json
 from datetime import datetime
 import math
+from django.http import HttpRequest, JsonResponse
 
 products= []
 
@@ -68,7 +68,31 @@ def getProduct(request: HttpRequest, request_id: int):
 
         return JsonResponse(products[index])
     
-        return JsonResponse(products, safe= False)
+    return getProductPaginated(request)
+
+def getProductPaginated(request: HttpRequest):
+    start_id= int(request.GET.get("start", "1"))
+    limit= int(request.GET.get("limit", "100"))
+
+    start_index= findProduct(start_id)
+
+    end_index= start_index+ limit if start_index+limit<len(products) else len(products)+1
+    pages= math.ceil(len(products)/limit)
+
+    prev_index= start_index- limit if start_index>=limit else 0
+
+    response= JsonResponse({
+        "data":products[start_index:end_index],
+        "navigation":{
+            "self": f"{request.path}/?start={start_id}&limit={limit}",
+            "next": f"{request.path}/?start={products[end_index]["id"]}&limit={limit}" if end_index<len(products) else None,
+            "prev": f"{request.path}/?start={products[prev_index]["id"]}&limit={limit}" if prev_index>-1 else None,
+            "pages": pages,
+            "current": math.ceil((start_index+1)/limit)
+        }
+    }, safe= False)
+    response.status_code= 206  # Partial content
+    return response
 
 
 def updateProduct(request: HttpRequest, request_id: int):

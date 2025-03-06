@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from django.http import HttpResponse
 
-from .controllers.productController import *
+from .controllers.productController import productEndpoint
 
 def hello_world(request):
     return HttpResponse("Hello, world! This is our interneers-lab Django server.")
