@@ -398,6 +398,7 @@ python manage.py test
 ```
 docker compose ps
 ```
+Note: This command displays the status of the containers, including whether they are running, their assigned ports, and their names, as defined in the docker-compose.yaml file. If you have set up a MongoDB server using Docker and connected it to your Django application, you can use this command to verify that the MongoDB container is running properly.
 
 ---
 
