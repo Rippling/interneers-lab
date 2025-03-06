@@ -80,7 +80,7 @@ def add_product(request: HttpRequest):
             "request": f"{request.method} {request.path}",
             "suggestion": validation["suggestion"],
             })
-        error_response.status_code= 400
+        error_response.status_code= 400  # TODO: Change this to a 405 Method not found error
         return error_response
 
     data["id"]= len(products)+1
@@ -137,7 +137,7 @@ def get_product_paginated(request: HttpRequest):
         request: An HttpRequest instance created by django. Query params can be used to specify
         pagination attributes for collection request. 'start' denotes the offset of the page,
         which must be a valid product id. 'limit' denotes the maximum number of products in a 
-        page.
+        page. 'limit' cannot be more than 250.
     
     Returns:
         JsonResponse instance, with payload containing json representation of requested object.
@@ -151,11 +151,68 @@ def get_product_paginated(request: HttpRequest):
         }
     """
 
-    start_id= int(request.GET.get("start", "0"))
-    limit= int(request.GET.get("limit", "100"))
+    try:
+        start_id= int(request.GET.get("start", "0"))
+    except ValueError:
+        error_response= JsonResponse({
+            "code": "BAD_REQUEST",
+            "message": "The requested resource was not found",
+            "details": f"start parameter {request.GET.get("start", "0")} could not be " \
+                "converted to integer",
+            "timestamp": f"{datetime.now()} GMT+0:00",
+            "request": f"{request.method} {request.path}",
+            "suggestion": "Check if start parameter is an integer, or omit the start parameter " \
+                "and use response navigation URIs to navigate",
+            })
+        error_response.status_code= 400
+        return error_response
 
+    try:
+        limit= int(request.GET.get("limit", "100"))
+    except ValueError:
+        error_response= JsonResponse({
+            "code": "BAD_REQUEST",
+            "message": "The server cannot process this request",
+            "details": f"limit parameter {request.GET.get("limit", "100")} could not be " \
+                "converted to integer",
+            "timestamp": f"{datetime.now()} GMT+0:00",
+            "request": f"{request.method} {request.path}",
+            "suggestion": "Check if limit parameter is an integer, or omit the limit parameter " \
+                "to use default 100 limit",
+            })
+        error_response.status_code= 400
+        return error_response
+
+    if limit>250:
+        error_response= JsonResponse({
+            "code": "BAD_REQUEST",
+            "message": "The server cannot process this request",
+            "details": f"limit parameter {request.GET.get("limit", "100")} is larger " \
+                "than the maximum allowed value (250)",
+            "timestamp": f"{datetime.now()} GMT+0:00",
+            "request": f"{request.method} {request.path}",
+            "suggestion": "Resubmit request with smaller limit",
+            })
+        error_response.status_code= 400
+        return error_response
+
+    # Find the index in the list to start from (if the ID exists)
     start_index= find_product(start_id) if start_id>0 else 0
+    if start_index==-1:
+        error_response= JsonResponse({
+            "code": "NOT_FOUND",
+            "message": "The server cannot process this request",
+            "details": f"start parameter {request.GET.get("start", "0")} is not a ID " \
+                "that exists in the database",
+            "timestamp": f"{datetime.now()} GMT+0:00",
+            "request": f"{request.method} {request.path}",
+            "suggestion": "Check if the you have deleted the product, or omit the start " \
+                "parameter and use response navigation URIs to navigate",
+            })
+        error_response.status_code= 404
+        return error_response
 
+    # Range ends at end_index-1
     end_index= start_index+ limit if start_index+limit<len(products) else len(products)+1
     pages= math.ceil(len(products)/limit)
 

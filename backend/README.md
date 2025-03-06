@@ -34,7 +34,7 @@ The product model is the primary resource managed by this API. It described a pr
 
 Returns a list of all products currently in the system. The list is guarenteed to be sorted by ID.
 The list returned is paginated, and the "navigation" payload gives information about going to the 
-next or previous page. The default limit for the page is 100. 
+next or previous page. The default limit for the page is 100, and maximum is 250. 
 The intented way to use this endpoint is to send a GET request with just the limit parameter set to get the first page, then navigate using the navigation URIs provided in the response. Start parameter can be provided, although 
 this means that certain items might be repeated when the first page is reached. Item uniqueness can be checked
 via the id field.
