@@ -12,6 +12,14 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 
+'''
+import pymongo
+
+# MongoDB connection
+MONGO_CLIENT = pymongo.MongoClient("mongodb://root:example@localhost:27018")
+MONGO_DB = MONGO_CLIENT.bmi_db  # Use your MongoDB database name
+'''
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
