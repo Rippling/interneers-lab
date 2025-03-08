@@ -306,26 +306,121 @@ Open your Django project’s `urls.py` (or `views.py`, depending on your structu
 
 from django.contrib import admin
 from django.urls import path
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 
-def hello_name(request):
-    """
-    A simple view that returns 'Hello, {name}' in JSON format.
-    Uses a query parameter named 'name'.
-    """
-    # Get 'name' from the query string, default to 'World' if missing
+def hello_world(request):
+    return HttpResponse("Hello, world! This is our interneers-lab Django server. And this app is running on my local machine..... Let's get started with the project.")
+
+def is_valid_dob(dob):
+    response = {
+        "valid": True,
+        "message": ""
+    }
+
+    try:
+        date = int(dob[:2])
+        month_index = int(dob[2:4])
+        year = int(dob[4:])
+        months = ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'August', 'Sept', 'Oct', 'Nov', 'Dec']
+        if month_index < 1 or month_index > 12:
+            response["valid"] = False
+            response["message"] = "Invalid date format: Month must be between 01 and 12 (MM). Please enter a valid month."
+        elif month_index == 2 and date > 29:
+            response["valid"] = False
+            response["message"] = "Invalid date: February cannot have more than 29 days. Please enter a valid date."
+        elif month_index == 2 and date == 29 and (year % 4 != 0 or (year % 100 == 0 and year % 400 != 0)):
+            response["valid"] = False
+            response["message"] = f"Invalid date: {year} is not a leap year, so February has only 28 days."
+        elif month_index in [1, 3, 5, 7, 8, 10, 12] and date > 31:
+            response["valid"] = False
+            response["message"] = f"Invalid date: {months[month_index - 1]} has only 31 days. Please enter a valid date."
+        elif month_index in [4, 6, 9, 11] and date > 30:
+            response["valid"] = False
+            response["message"] = f"Invalid date: {months[month_index - 1]} has only 30 days. Please enter a valid date."
+        else:
+            response["message"] = f"I will surely wish you a very happy birthday on {date} {months[month_index-1]} every year."
+
+    except ValueError:
+        response["valid"] = False
+        response["message"] = "Invalid input: DOB must be exactly 8 numeric digits (DDMMYYYY). Please enter a valid date."
+
+    return response
+
+def greet(request):
     name = request.GET.get("name", "World")
-    return JsonResponse({"message": f"Hello, {name}!"})
+    dob = request.GET.get("dob")
+    work_id = request.GET.get("workId", None)
+    if not dob:
+        return JsonResponse({
+            "error": "dob is a required paramter in the format DDMMYYYY."
+        })
+    response = is_valid_dob(dob)
+
+    if response["valid"]:
+        return JsonResponse({
+            "message": f"Hello {name}! {response['message']}",
+            "work_id": work_id if work_id != None else "not assigned yet" 
+        })
+    else:
+        return JsonResponse({"error": response["message"]})
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('hello/', hello_name), 
-    # Example usage: /hello/?name=Bob
-    # returns {"message": "Hello, Bob!"}
+    path('hello/', hello_world),
+    path('greet/', greet)
 ]
 
 ```
 ---
+
+#### 1.a) Defined the `greet` endpoint
+   - **Query Parameters**:
+      - name (optional) : User's name (default: "World)
+      - dob (required) : Date of Birth in DDMMYYY format
+      - workId (optional) : User's work ID
+   - **Example Request**: 
+   ```sh
+   curl "http://127.0.0.1:8000/greet/?name=Gaurav&dob=16062003&workId=gaurav@16"
+   ```
+
+#### 1.b) Different test scenerios: 
+   - 1. Valid Input : /greet/?name=Gaurav&dob=16062003&workId=gaurav@16
+   - Response : 
+   ```{
+      "message": "Hello Gaurav! I will surely wish you a very happy birthday on 16 June every year.",
+      "work_id": "gaurav@16"
+   }```
+   - 2. Missing dob Parameter : /greet/?name=Gaurav&workId=gaurav@16
+   - Response: 
+   ```
+   {
+      "error": "dob is a required parameter in the format DDMMYYYY."
+   }
+   ```
+   - 3. Invalid dob Parameter : /greet/?name=Gaurav&dob=161662003&workId=gaurav@16
+   - Response :
+   ```
+   {
+      "error": "Invalid date format: Month must be between 01 and 12 (MM). Please enter a valid month."
+   }
+   ```
+   - 4. Fullname with space (special character encoded) : /greet/?name=Gaurav%20Bhardwaj&dob=16062003&workId=gaurav@16
+   - Response : 
+   ```
+   {
+      "message": "Hello Gaurav Bhardwaj! I will surely wish you a very happy birthday on 16 June every year.",
+      "work_id": "gaurav@16"
+   }
+   ```
+   - 5. Missing work id  : /greet/?name=Gaurav%20Bhardwaj&dob=16062003
+   - Response : 
+   ```
+   {
+      "message": "Hello Gaurav Bhardwaj! I will surely wish you a very happy birthday on 16 June every year.",
+      "work_id": "not assigned yet"
+   }
+   ```
+
 #### 2. Run the Django Server
 
 Activate your virtual environment (if not already active):
