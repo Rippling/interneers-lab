@@ -384,37 +384,40 @@ urlpatterns = [
    ```
 
 #### 1.b) Different test scenerios: 
-   - 1. Valid Input : /greet/?name=Gaurav&dob=16062003&workId=gaurav@16
+   1. Valid Input : /greet/?name=Gaurav&dob=16062003&workId=gaurav@16
    - Response : 
-   ```{
+   ```sh
+   {
       "message": "Hello Gaurav! I will surely wish you a very happy birthday on 16 June every year.",
       "work_id": "gaurav@16"
-   }```
-   - 2. Missing dob Parameter : /greet/?name=Gaurav&workId=gaurav@16
-   - Response: 
+   }
    ```
+
+   2. Missing dob Parameter : /greet/?name=Gaurav&workId=gaurav@16
+   - Response: 
+   ```sh
    {
       "error": "dob is a required parameter in the format DDMMYYYY."
    }
    ```
-   - 3. Invalid dob Parameter : /greet/?name=Gaurav&dob=161662003&workId=gaurav@16
+   3. Invalid dob Parameter : /greet/?name=Gaurav&dob=161662003&workId=gaurav@16
    - Response :
-   ```
+   ```sh
    {
       "error": "Invalid date format: Month must be between 01 and 12 (MM). Please enter a valid month."
    }
    ```
-   - 4. Fullname with space (special character encoded) : /greet/?name=Gaurav%20Bhardwaj&dob=16062003&workId=gaurav@16
+   4. Fullname with space (special character encoded) : /greet/?name=Gaurav%20Bhardwaj&dob=16062003&workId=gaurav@16
    - Response : 
-   ```
+   ```sh
    {
       "message": "Hello Gaurav Bhardwaj! I will surely wish you a very happy birthday on 16 June every year.",
       "work_id": "gaurav@16"
    }
    ```
-   - 5. Missing work id  : /greet/?name=Gaurav%20Bhardwaj&dob=16062003
+   5. Missing work id  : /greet/?name=Gaurav%20Bhardwaj&dob=16062003
    - Response : 
-   ```
+   ```sh
    {
       "message": "Hello Gaurav Bhardwaj! I will surely wish you a very happy birthday on 16 June every year.",
       "work_id": "not assigned yet"
