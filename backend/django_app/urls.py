@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.http import HttpResponse, JsonResponse
 
 def hello_world(request):
@@ -16,6 +16,7 @@ def is_valid_dob(dob):
         month_index = int(dob[2:4])
         year = int(dob[4:])
         months = ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'August', 'Sept', 'Oct', 'Nov', 'Dec']
+
         if month_index < 1 or month_index > 12:
             response["valid"] = False
             response["message"] = "Invalid date format: Month must be between 01 and 12 (MM). Please enter a valid month."
@@ -61,5 +62,6 @@ def greet(request):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('hello/', hello_world),
-    path('greet/', greet)
+    path('greet/', greet),
+    path('inventory/', include("inventory.urls"))
 ]
