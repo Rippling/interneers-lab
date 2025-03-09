@@ -6,9 +6,9 @@ Rest are functions that implement specific method endpoints, or helper functions
 """
 
 import json
-from datetime import datetime
 import math
 from django.http import HttpRequest, JsonResponse
+from src.utils.error import generate_error_response
 
 products= []
 
@@ -39,17 +39,10 @@ def product_endpoint(request: HttpRequest, request_id: int= 0):
     if request.method== "DELETE":
         return delete_product(request, request_id)
     else:
-        error_response= JsonResponse({
-            "code": "BAD_REQUEST",
-            "message": "The server cannot process this request",
-            "details": f"No endpoint for {request.method} request",
-            "timestamp": f"{datetime.now()} GMT+0:00",
-            "request": f"{request.method} {request.path}",
-            "suggestion": "Check the documentation at https://github.com/Alph3ga/interneers-lab " \
-                "for the available API endpoints"
-            })
-        error_response.status_code= 400
-        return error_response
+        details= f"No endpoint for {request.method} request"
+        suggestion= "Check the documentation at https://github.com/Alph3ga/interneers-lab " \
+            "for the available API endpoints"
+        return generate_error_response(request, 405, details, suggestion)
 
 
 def add_product(request: HttpRequest):
@@ -72,16 +65,9 @@ def add_product(request: HttpRequest):
     validation= validate_product(data)  # Validate the product data recieved
 
     if not validation["valid"]:
-        error_response= JsonResponse({
-            "code": "BAD_REQUEST",
-            "message": "The server cannot process this request",
-            "details": validation["details"],
-            "timestamp": f"{datetime.now()} GMT+0:00",
-            "request": f"{request.method} {request.path}",
-            "suggestion": validation["suggestion"],
-            })
-        error_response.status_code= 400  # TODO: Change this to a 405 Method not found error
-        return error_response
+        details= validation["details"]
+        suggestion= validation["suggestion"]
+        return generate_error_response(request, 400, details, suggestion)
 
     data["id"]= len(products)+1
     products.append(data)
@@ -112,16 +98,9 @@ def get_product(request: HttpRequest, request_id: int):
         index= find_product(request_id)
 
         if index== -1:
-            error_response= JsonResponse({
-                "code": "NOT_FOUND",
-                "message": "The requested resource was not found",
-                "details": f"Product with id {request_id} does not exist",
-                "timestamp": f"{datetime.now()} GMT+0:00",
-                "request": f"{request.method} {request.path}",
-                "suggestion": "Use 'GET /products' to get a list of existing products with id",
-                })
-            error_response.status_code= 404
-            return error_response
+            details= f"Product with id {request_id} does not exist"
+            suggestion= "Use 'GET /products' to get a list of existing products with id"
+            return generate_error_response(request, 404, details, suggestion)
         return JsonResponse(products[index])
     return get_product_paginated(request)
 
@@ -154,63 +133,35 @@ def get_product_paginated(request: HttpRequest):
     try:
         start_id= int(request.GET.get("start", "0"))
     except ValueError:
-        error_response= JsonResponse({
-            "code": "BAD_REQUEST",
-            "message": "The requested resource was not found",
-            "details": f"start parameter {request.GET.get("start", "0")} could not be " \
-                "converted to integer",
-            "timestamp": f"{datetime.now()} GMT+0:00",
-            "request": f"{request.method} {request.path}",
-            "suggestion": "Check if start parameter is an integer, or omit the start parameter " \
-                "and use response navigation URIs to navigate",
-            })
-        error_response.status_code= 400
-        return error_response
+        details= f"start parameter {request.GET.get("start", "0")} could not be " \
+            "converted to integer"
+        suggestion= "Check if start parameter is an integer, or omit the start parameter " \
+            "and use response navigation URIs to navigate"
+        return generate_error_response(request, 400, details, suggestion)
 
     try:
         limit= int(request.GET.get("limit", "100"))
     except ValueError:
-        error_response= JsonResponse({
-            "code": "BAD_REQUEST",
-            "message": "The server cannot process this request",
-            "details": f"limit parameter {request.GET.get("limit", "100")} could not be " \
-                "converted to integer",
-            "timestamp": f"{datetime.now()} GMT+0:00",
-            "request": f"{request.method} {request.path}",
-            "suggestion": "Check if limit parameter is an integer, or omit the limit parameter " \
-                "to use default 100 limit",
-            })
-        error_response.status_code= 400
-        return error_response
+        details= f"limit parameter {request.GET.get("limit", "100")} could not be " \
+            "converted to integer"
+        suggestion= "Check if limit parameter is an integer, or omit the limit parameter " \
+            "to use default 100 limit"
+        return generate_error_response(request, 400, details, suggestion)
 
-    if limit>250:
-        error_response= JsonResponse({
-            "code": "BAD_REQUEST",
-            "message": "The server cannot process this request",
-            "details": f"limit parameter {request.GET.get("limit", "100")} is larger " \
-                "than the maximum allowed value (250)",
-            "timestamp": f"{datetime.now()} GMT+0:00",
-            "request": f"{request.method} {request.path}",
-            "suggestion": "Resubmit request with smaller limit",
-            })
-        error_response.status_code= 400
-        return error_response
+    if limit>250:  # Upper limit on the number of items per page
+        details= f"limit parameter {request.GET.get("limit", "100")} is larger " \
+            "than the maximum allowed value (250)"
+        suggestion= "Resubmit request with smaller limit"
+        return generate_error_response(request, 400, details, suggestion)
 
     # Find the index in the list to start from (if the ID exists)
     start_index= find_product(start_id) if start_id>0 else 0
     if start_index==-1:
-        error_response= JsonResponse({
-            "code": "NOT_FOUND",
-            "message": "The server cannot process this request",
-            "details": f"start parameter {request.GET.get("start", "0")} is not a ID " \
-                "that exists in the database",
-            "timestamp": f"{datetime.now()} GMT+0:00",
-            "request": f"{request.method} {request.path}",
-            "suggestion": "Check if the you have deleted the product, or omit the start " \
-                "parameter and use response navigation URIs to navigate",
-            })
-        error_response.status_code= 404
-        return error_response
+        details: f"start parameter {request.GET.get("start", "0")} is not a ID " \
+            "that exists in the database"
+        suggestion: "Check if the you have deleted the product, or omit the start " \
+            "parameter and use response navigation URIs to navigate"
+        return generate_error_response(request, 404, details, suggestion)
 
     # Range ends at end_index-1
     end_index= start_index+ limit if start_index+limit<len(products) else len(products)+1
@@ -256,32 +207,18 @@ def update_product(request: HttpRequest, request_id: int):
 
     index= find_product(request_id)
     if index== -1:
-        error_response= JsonResponse({
-            "code": "NOT_FOUND",
-            "message": "The requested resource was not found",
-            "details": f"Product with id {request_id} does not exist",
-            "timestamp": f"{datetime.now()} GMT+0:00",
-            "request": f"{request.method} {request.path}",
-            "suggestion": "Use 'GET /products' to get a list of existing products with id",
-            })
-        error_response.status_code= 404
-        return error_response
+        details= f"Product with id {request_id} does not exist"
+        suggestion= "Use 'GET /products' to get a list of existing products with id"
+        return generate_error_response(request, 404, details, suggestion)
 
     request_product= products[index]
 
     # Modify each key specified in the request
     for key in data.keys():
         if key=="id":
-            error_response= JsonResponse({
-            "code": "BAD_REQUEST",
-            "message": "The server cannot process this request",
-            "details": "Product ID cannot be updated",
-            "timestamp": f"{datetime.now()} GMT+0:00",
-            "request": f"{request.method} {request.path}",
-            "suggestion": "Remove 'id' field from your request, or check if it matches the URI",
-            })
-            error_response.status_code= 404
-            return error_response
+            details: "Product ID cannot be updated"
+            suggestion: "Remove 'id' field from your request, or check if it matches the URI"
+            return generate_error_response(request, 400, details, suggestion)
         request_product[key]= data[key]
 
     response= JsonResponse({})
@@ -305,16 +242,9 @@ def delete_product(request: HttpRequest, request_id: int):
 
     index= find_product(request_id)
     if index== -1:
-        error_response= JsonResponse({
-            "code": "NOT_FOUND",
-            "message": "The requested resource was not found",
-            "details": f"Product with id {request_id} does not exist",
-            "timestamp": f"{datetime.now()} GMT+0:00",
-            "request": f"{request.method} {request.path}",
-            "suggestion": "Use 'GET /products' to get a list of existing products with id",
-            })
-        error_response.status_code= 404
-        return error_response
+        details= f"Product with id {request_id} does not exist"
+        suggestion= "Use 'GET /products' to get a list of existing products with id"
+        return generate_error_response(request, 404, details, suggestion)
     products.pop(index)
 
     response= JsonResponse({})
