@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.http import HttpResponse
 from django.http import JsonResponse
 
@@ -58,6 +58,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('hello/', hello_world),
     path('weather/', get_current_weather),
+    path('api/', include('products.urls')),
 
 ]
 
