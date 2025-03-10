@@ -13,7 +13,7 @@ Welcome to the **Interneers Lab 2025** repository! This serves as a minimal star
 
 ## Table of Contents
 
-0. [My Leanings, and a developer guide reflecting changes done so far](#my-learnings)
+0. [My Leanings, and a developer guide reflecting changes done so far](#my-leanings-and-a-developer-guide-reflecting-changes-done-so-far)
 1. [Getting Started with Git & Forking](#getting-started-with-git-and-forking)
 2. [Prerequisites & Tooling](#prerequisites--tooling)
 3. [Setting Up the Project](#setting-up-the-project)
