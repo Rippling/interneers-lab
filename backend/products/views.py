@@ -13,7 +13,6 @@ product_id_counter = 1
 class ProductPagination(PageNumberPagination):
     page_size = 2  # Set the number of products per page
     page_size_query_param = 'page_size'
-    
 
 @api_view(['GET', 'POST'])
 def productsView(request):
@@ -34,7 +33,7 @@ def productsView(request):
             products_list.append(product_data)
             return Response(product_data, status=status.HTTP_201_CREATED)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "Invalid data", "details": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def productDetailView(request, id):
@@ -43,7 +42,7 @@ def productDetailView(request, id):
     product = next((p for p in products_list if p['id'] == id), None)
 
     if product is None:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response({"error": "Product not found", "details": f"No product with id {id} exists."}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         serializer = ProductSerializer(product) 
@@ -55,8 +54,8 @@ def productDetailView(request, id):
             product.update(serializer.validated_data)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "Invalid data", "details": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
         products_list = [p for p in products_list if p['id'] != id]
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({"message": "Product deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
