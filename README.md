@@ -13,6 +13,7 @@ Welcome to the **Interneers Lab 2025** repository! This serves as a minimal star
 
 ## Table of Contents
 
+0. [My Leanings, and a developer guide reflecting changes done so far]
 1. [Getting Started with Git & Forking](#getting-started-with-git-and-forking)
 2. [Prerequisites & Tooling](#prerequisites--tooling)
 3. [Setting Up the Project](#setting-up-the-project)
@@ -33,6 +34,109 @@ Welcome to the **Interneers Lab 2025** repository! This serves as a minimal star
 10. [Further Reading](#further-reading)
 
 ---
+# My Leanings, and a developer guide reflecting changes done so far
+
+This part details the steps followed to set up the project changes that I learnt, challenges encountered during the process, and how they were resolved.
+
+## 1. Forking and Cloning
+
+- **Action:** Forked and cloned the repository using:
+
+```bash
+# Fork the repository via GitHub interface.
+# Clone the repository
+git clone <repository-url>
+cd <repository-directory>
+```
+
+- **Status:** Completed successfully as I was already familiar with this process.
+
+---
+
+## 2. Python 3.13 Installation
+
+- **Action:** Installed Python 3.13 using the official installer.
+- **Challenge:** The VS Code terminal was not recognizing `python3 --version`.
+- **Solution:**
+  1. Set a permanent alias in PowerShell:
+
+```powershell
+notepad $PROFILE
+```
+
+  2. Added the following line to the opened notepad:
+
+```powershell
+Set-Alias python3 "C:\\path\\to\\python.exe"
+```
+
+  3. Saved the file and restarted PowerShell. Now `python3 --version` works correctly.
+
+---
+
+## 3. Virtual Environment Setup
+
+- **Action:** Set up the virtual environment using:
+
+```bash
+python3 -m venv venv
+venv\Scripts\activate     # For Windows
+```
+
+- **Status:** Completed successfully without any issues.
+
+---
+
+## 4. Docker Installation & Setup
+
+- **Action:** Installed Docker from the official site.
+- **Challenge:** Faced errors when trying to use Docker post-installation.
+- **Solution:**
+  1. Logged into Docker using the terminal:
+
+```bash
+docker login
+```
+  2. Restarted the system to ensure Docker services initialized correctly.
+  3. Verified the installation with:
+
+```bash
+docker --version
+docker info
+```
+
+> ✅ Docker worked as expected after these steps.
+
+---
+
+## 5. Week 1 Advanced Implementation: Adding Parameters and Testing
+
+- **Action:** Added two new parameters `age` and `city` in the relevant API logic.
+- **Testing:** Used Postman to send various requests and validated the responses.
+
+```json
+{
+  "name": "John",
+  "age": 30,
+  "city": "New York"
+}
+```
+
+- **Result:** All responses were accurate, confirming successful integration.
+
+> 📸 *![Screenshot 2025-03-10 202708](https://github.com/user-attachments/assets/3bfe07a6-9f32-4cf3-ba13-9c0e76c5ffcf)*
+
+
+---
+
+## Summary
+
+- All the setup processes were successfully completed.
+- Documented challenges and respective solutions for future reference.
+
+Feel free to refer to this guide when encountering similar issues in setup or configuration.
+
+> 🚀 *Happy Coding!*
 
 ## Getting Started with Git and Forking
 
