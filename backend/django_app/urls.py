@@ -12,6 +12,10 @@ from django.http import JsonResponse
 # ]
 
 
+def home(request):
+    return HttpResponse("Hi")
+
+
 def hello(request):
     return HttpResponse("Hello, world! This is our interneers-lab Django server, First change made, function name changed from i.e hello_world to hello")
 
@@ -28,6 +32,7 @@ def hello_name(request):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('hello/', hello),
+    path('', home),
     path('hello_name/', hello_name),    #test this using -> hello_name/?name=Vedanshi
     #tested with few more apis like http://127.0.0.1:8000/hello_name/?name=John%20Doe!@#   , etc
 ]
