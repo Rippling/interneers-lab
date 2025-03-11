@@ -1,9 +1,16 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.pagination import PageNumberPagination
 from .models import Product
 from .serializers import ProductSerializer
 from rest_framework import generics
+
+class ProductPagination(PageNumberPagination):
+    page_size = 2
+    page_size_query_param = 'page_size'  
+    max_page_size = 100  
+
 
 class ProductCreate(APIView):
     def post(self, request):
@@ -17,6 +24,7 @@ class ProductCreate(APIView):
 class ProductList(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    pagination_class = ProductPagination
 
 # Retrieve by ID
 class ProductDetail(generics.RetrieveAPIView):
