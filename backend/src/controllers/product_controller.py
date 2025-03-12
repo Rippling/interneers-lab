@@ -5,10 +5,16 @@ All requests to the /product endpoint are to be routed to productEndpoint(reques
 Rest are functions that implement specific method endpoints, or helper functions.
 """
 
+#pylint: disable=no-member
+
 import json
 import math
 from django.http import HttpRequest, JsonResponse
 from src.utils.error import generate_error_response
+
+from src.models.product import create_product, Product
+
+from mongoengine.errors import DoesNotExist, ValidationError
 
 products= []
 
@@ -69,16 +75,17 @@ def add_product(request: HttpRequest):
         suggestion= validation["suggestion"]
         return generate_error_response(request, 400, details, suggestion)
 
-    data["id"]= len(products)+1
-    products.append(data)
+    product= create_product(data)
 
-    response= JsonResponse(data)
+    product.save()  # TODO: validation error
+
+    response= JsonResponse(json.loads(product.to_json()), safe=False)
     response.status_code= 201
-    response.headers["Location"]= f"/products/{data["id"]}"  # Location of resource
+    response.headers["Location"]= f"/products/{product.id}"  # Location of resource
     return response
 
 
-def get_product(request: HttpRequest, request_id: int):
+def get_product(request: HttpRequest, request_id: str):
     """
     Controller to fetch a product from the database.
 
@@ -94,14 +101,14 @@ def get_product(request: HttpRequest, request_id: int):
         Successful response code is 200.
     """
 
-    if request_id!=0: # Reserve 0 id for collection requests
-        index= find_product(request_id)
-
-        if index== -1:
+    if request_id!="0": # Reserve 0 id for collection requests
+        try:
+            product= Product.objects.get(id= request_id)
+        except (DoesNotExist, ValidationError) as _:
             details= f"Product with id {request_id} does not exist"
             suggestion= "Use 'GET /products' to get a list of existing products with id"
-            return generate_error_response(request, 404, details, suggestion)
-        return JsonResponse(products[index])
+            return generate_error_response(request, 404, details, suggestion) 
+        return JsonResponse(json.loads(product.to_json()), safe= False)
     return get_product_paginated(request)
 
 

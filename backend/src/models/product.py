@@ -39,3 +39,7 @@ class Product(Document):
         super().save(force_insert=force_insert, validate=validate, clean=clean, \
             write_concern=write_concern, cascade=cascade, cascade_kwargs=cascade_kwargs, \
             _refs=_refs, save_condition=save_condition, signal_kwargs=signal_kwargs, **kwargs)
+
+def create_product(data: dict)-> Product:
+    return Product(name= data["name"], price= data["price"], quantity= data["quantity"], \
+        description= data["description"])
