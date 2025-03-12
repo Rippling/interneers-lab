@@ -31,3 +31,11 @@ class Product(Document):
     def change_modified_timestamp(self):
         self.modified_at= datetime.datetime.utcnow()
         return
+
+    def save(self, force_insert=False, validate=True, clean=True, write_concern=None, \
+        cascade=None, cascade_kwargs=None, _refs=None, save_condition=None, \
+        signal_kwargs=None, **kwargs):
+        self.change_modified_timestamp()
+        super().save(force_insert=force_insert, validate=validate, clean=clean, \
+            write_concern=write_concern, cascade=cascade, cascade_kwargs=cascade_kwargs, \
+            _refs=_refs, save_condition=save_condition, signal_kwargs=signal_kwargs, **kwargs)
