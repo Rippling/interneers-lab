@@ -6,6 +6,7 @@ from .serializers import ProductSerializer
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
 from .models import Product
+from .errorHandler import handle_exception, ProductNotFound
 
 class ProductPagination(PageNumberPagination):
 
@@ -17,10 +18,12 @@ class ProductPagination(PageNumberPagination):
 class ProductCreate(APIView):
 
     def Post(self, request):
-        data = request.data
-        data1 = ProductService.createProd(data)
-        return Response({"message" : "Product created successfully", "data": ProductSerializer(data1).data} , status = status.HTTP_201_CREATED)
-
+        try:
+            data = request.data
+            data1 = ProductService.createProd(data)
+            return Response({"message" : "Product created successfully", "data": ProductSerializer(data1).data} , status = status.HTTP_201_CREATED)
+        except Exception as e:
+            return handle_exception(e)
 
 class ProductList(generics.ListAPIView):
 
@@ -35,12 +38,13 @@ class ProductDetail(generics.RetrieveAPIView):
     lookup_field = "id"
     
     def get_object(self):
-
-        prod_id = self.kwargs.get("id")
-        prod = ProductService.getProdById(prod_id)
-        print(f"Product Retrieved: {prod}")
-        return prod
-
+        try:
+            prod_id = self.kwargs.get("id")
+            prod = ProductService.getProdById(prod_id)
+            print(f"Product Retrieved: {prod}")
+            return prod
+        except Exception as e:
+            return handle_exception(e)
 
 class ProductUpdate(generics.UpdateAPIView):
     
@@ -61,10 +65,12 @@ class ProductDelete(generics.DestroyAPIView):
     lookup_field = "id"
 
     def delete(self , request, *args, **kwargs):
-        prod_id = kwargs.get("id")
-        resp = ProductService.deleteProd(prod_id)
-        return Response({"mesage": "Product deleted successfully" } , status= status.HTTP_204_NO_CONTENT)
-
+        try:
+            prod_id = kwargs.get("id")
+            resp = ProductService.deleteProd(prod_id)
+            return Response({"mesage": "Product deleted successfully" } , status= status.HTTP_204_NO_CONTENT)
+        except Exception as e:
+            return handle_exception(e)
 
 
 # from rest_framework.views import APIView
