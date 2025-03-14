@@ -5,5 +5,8 @@ from . import views
 
 
 urlpatterns = [
-    path('', views.hello)
+    path('products', views.get_all_products, name = "getall-products"),
+    path('products/page/<int:page_no>', views.get_products, name = "products_page"),
+    path('products/create', views.create_product, name = "create-product"),
+    path('products/<int:id>', views.update_product, name="update-product")
 ]
