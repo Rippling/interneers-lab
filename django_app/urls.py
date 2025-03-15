@@ -27,5 +27,5 @@ urlpatterns = [
     path('hello/', hello_name), 
     # Example usage: /hello/?name=Bob&age=25&city=NewYork
     # returns {"message": "Hello, I am Bob.I am 25 years old! I am from New York."}
-     path('api/', include('product.urls')),
+    path('api/', include('product.urls')),
 ]
