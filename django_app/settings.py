@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "product",
-    "rest_framework"
+    "rest_framework",
+    "django_mongoengine"
 ]
 
 MIDDLEWARE = [
@@ -107,7 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Kolkata"
 
 USE_I18N = True
 
@@ -123,3 +124,19 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# MongoDB connection settings
+
+MONGO_HOST='localhost'
+MONGO_PORT=27017
+MONGO_NAME='product_db'
+MONGO_URI=f'mongodb://{MONGO_HOST}:{MONGO_PORT}/{MONGO_NAME}'
+
+MONGODB_DATABASES = {
+    'default': {
+        'name': MONGO_NAME,
+        'host': MONGO_HOST,
+        'port': MONGO_PORT,
+    }
+}
+
