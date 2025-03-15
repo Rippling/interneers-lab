@@ -4,6 +4,7 @@ class ProductRepository:
     
     @staticmethod
     def createProd(prod_details):
+        prod_details["price"] = float(prod_details["price"])
         prod = Product(**prod_details)
         prod.save()
         return prod 

@@ -34,18 +34,22 @@ class ProductService:
         
         return data
     
+  
     @staticmethod
     def updateProd(prod_id, prod_details):
+        prod = ProductRepository.getProdById(prod_id)
 
-        ser = ProductSerializer(data = prod_details, partial=True)
-
-        if ser.is_valid():
-            data = ProductRepository.updateProd(prod_id,  ser.data )
-
-            if data:
-                return {"success" : True , "data": ProductSerializer(data).data}
+        if not prod:
+            return None  
         
-        return { "success" : False , "error": ser.errors}
+        ser = ProductSerializer(prod, data=prod_details, partial=True)  
+        
+        if ser.is_valid():
+            ser.save()  
+            return prod  
+        
+        raise Exception(ser.errors)  
+
     
 
     @staticmethod

@@ -1,77 +1,76 @@
 from rest_framework.views import APIView
+from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
-from rest_framework import generics
+from rest_framework import generics, status
+from rest_framework.pagination import PageNumberPagination
 from .services import ProductService
 from .serializers import ProductSerializer
-from rest_framework import status
-from rest_framework.pagination import PageNumberPagination
 from .models import Product
-from .errorHandler import handle_exception, ProductNotFound
+from .errorHandler import handle_exception
 
 class ProductPagination(PageNumberPagination):
-
     page_size = 2
     page_size_query_param = 'page_size'
     max_page_size = 100
 
-
 class ProductCreate(APIView):
-
-    def Post(self, request):
+    def post(self, request):
         try:
             data = request.data
-            data1 = ProductService.createProd(data)
-            return Response({"message" : "Product created successfully", "data": ProductSerializer(data1).data} , status = status.HTTP_201_CREATED)
+            result = ProductService.createProd(data)
+            if not result["success"]:
+                return Response({"error": result["data"]}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Product created successfully", "data": ProductSerializer(result["data"]).data}, status=status.HTTP_201_CREATED)
         except Exception as e:
             return handle_exception(e)
 
 class ProductList(generics.ListAPIView):
-
-    queryset= ProductService.getAllProds()
     serializer_class = ProductSerializer
     pagination_class = ProductPagination
 
+    def get_queryset(self):
+        return ProductService.getAllProds()
 
 class ProductDetail(generics.RetrieveAPIView):
-
     serializer_class = ProductSerializer
     lookup_field = "id"
-    
+
     def get_object(self):
-        try:
-            prod_id = self.kwargs.get("id")
-            prod = ProductService.getProdById(prod_id)
-            print(f"Product Retrieved: {prod}")
-            return prod
-        except Exception as e:
-            return handle_exception(e)
+        prod_id = self.kwargs.get("id")
+        prod = ProductService.getProdById(prod_id)
+        if not prod:
+            raise NotFound("Product not found") 
+        return prod
 
 class ProductUpdate(generics.UpdateAPIView):
-    
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = "id"
 
-    def put(self , request, *args, **kwargs):
-        prod_id = kwargs.get("id")
-        updated_prod = ProductService.updateProd(prod_id, request.data)
-        return Response({"message": "Product Updated successfully" , "data" : ProductSerializer(updated_prod).data} , status= status.HTTP_200_OK)
-
+    def put(self, request, *args, **kwargs):
+        try:
+            prod_id = kwargs.get("id")
+            updated_prod = ProductService.updateProd(prod_id, request.data)
+            if not updated_prod:
+                raise NotFound("Product not found") 
+            return Response({"message": "Product Updated successfully", "data": ProductSerializer(updated_prod).data}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return handle_exception(e)
 
 class ProductDelete(generics.DestroyAPIView):
-
     queryset = Product.objects.all() 
     serializer_class = ProductSerializer
     lookup_field = "id"
 
-    def delete(self , request, *args, **kwargs):
+    def delete(self, request, *args, **kwargs):
         try:
             prod_id = kwargs.get("id")
-            resp = ProductService.deleteProd(prod_id)
-            return Response({"mesage": "Product deleted successfully" } , status= status.HTTP_204_NO_CONTENT)
+            success = ProductService.deleteProd(prod_id)
+            if not success:
+                raise Exception("Deletion failed")
+            return Response({"message": "Product deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
             return handle_exception(e)
-
 
 # from rest_framework.views import APIView
 # from rest_framework.response import Response

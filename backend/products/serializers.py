@@ -1,10 +1,11 @@
 from rest_framework import serializers
 from .models import Product
 
-class ProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = '__all__'
+class ProductSerializer(serializers.Serializer):
+    id = serializers.CharField(read_only=True)
+    name = serializers.CharField(max_length=255)
+    price = serializers.FloatField()
+    quantity = serializers.IntegerField()
 
     def validate_name(self, value):
         if not value.strip():
@@ -20,3 +21,12 @@ class ProductSerializer(serializers.ModelSerializer):
         if value < 0:
             raise serializers.ValidationError("Quantity cannot be negative.")
         return value
+
+    def create(self, validated_data):
+        return Product(**validated_data).save()
+
+    def update(self, instance, validated_data):
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+        instance.save()
+        return instance

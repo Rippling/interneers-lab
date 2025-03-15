@@ -7,6 +7,8 @@ class ProductNotFound(NotFound):
     default_code = "not_found"
 
 def handle_exception(exception):
+    print("Exception Caught:", type(exception), exception)
+    
     if isinstance(exception, ProductNotFound):
         return Response(exception.default_detail, status=status.HTTP_404_NOT_FOUND)
     
