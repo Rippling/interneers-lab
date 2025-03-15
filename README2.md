@@ -77,6 +77,7 @@ python manage.py runserver
 **POST: Create a new product**
 ```http
 POST http://127.0.0.1:8000/api/products/
+```
 ![Screenshot 2025-03-15 182213](https://github.com/user-attachments/assets/2cf05329-4736-4194-bdef-9fb237798105)```
 
 **GET: Fetch all products**
