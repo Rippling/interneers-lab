@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from mongoengine import connect
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_app",
 ]
 
 MIDDLEWARE = [
@@ -79,6 +82,12 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+MONGO_DB_NAME = "interneersLab"
+
+connect(
+    db=MONGO_DB_NAME,
+    host=f"mongodb://localhost:27017/{MONGO_DB_NAME}"
+)
 
 
 # Password validation
