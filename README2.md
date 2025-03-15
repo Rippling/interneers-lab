@@ -105,9 +105,8 @@ DELETE http://127.0.0.1:8000/api/products/1/
 ### 2️⃣ Create a Classic App
 ```bash
 python manage.py startapp products_classic
-![Screenshot 2025-03-15 182326](https://github.com/user-attachments/assets/0753e5dd-1797-415e-9d85-8ae867c44277)
-
 ```
+![Screenshot 2025-03-15 182326](https://github.com/user-attachments/assets/0753e5dd-1797-415e-9d85-8ae867c44277)
 
 ### 3️⃣ Configure Settings
 Add `'products_classic'` to `INSTALLED_APPS` in `settings.py`.
