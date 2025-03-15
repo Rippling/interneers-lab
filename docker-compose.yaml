@@ -3,7 +3,7 @@ services:
     image: mongo:latest
     container_name: interneers_lab_mongodb
     ports:
-      - '27018:27017'
+      - '27017:27017'
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
