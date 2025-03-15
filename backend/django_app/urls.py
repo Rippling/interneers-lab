@@ -28,6 +28,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('hello/', hello_name),
     path('details/', hello_details),
-    path('api/drf', include('products.urls')),
+    path('api/drf/', include('products.urls')),
     path('api/classic/', include('products_classic.urls')),
 ]
