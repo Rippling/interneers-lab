@@ -4,6 +4,7 @@ from mongoengine import Document, StringField, IntField, DateTimeField
 class Product(Document):
     name= StringField(required= True)
     price= IntField(required= True)
+    brand= StringField()
     quantity= IntField(required= True)
     description= StringField(max_length= 250)
 
@@ -27,6 +28,23 @@ class Product(Document):
         self.price= amount
         self.save()
         return amount
+
+    def modify(self, data: dict):
+        for key in data.keys():
+            if key=="name":
+                self.name= data[key]
+            elif key=="price":
+                self.price= data[key]
+            elif key=="brand":
+                self.brand= data[key]
+            elif key=="quantity":
+                self.quantity= data[key]
+            elif key=="description":
+                self.description= data[key]
+            else:
+                raise KeyError(f"Field {key} is not a valid field.")
+        self.change_modified_timestamp()
+        self.save()
 
     def change_modified_timestamp(self):
         self.modified_at= datetime.datetime.utcnow()
