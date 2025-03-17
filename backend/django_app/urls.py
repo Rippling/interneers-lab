@@ -59,6 +59,5 @@ urlpatterns = [
     path('hello/', hello_world),
     path('weather/', get_current_weather),
     path('api/', include('products.urls')),
-
 ]
 

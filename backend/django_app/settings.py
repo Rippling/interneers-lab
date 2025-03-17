@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles", 
     "products",
     "rest_framework",
+    "rest_framework_mongoengine",
 ]
 
 MIDDLEWARE = [
@@ -75,12 +76,22 @@ WSGI_APPLICATION = "django_app.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
+
+from mongoengine import connect
+
+connect(
+    db='product_db', 
+    host='mongodb://root:example@localhost:27018/',
+    username='root',
+    password='example',  
+    authentication_source='admin'  
+)
 
 
 # Password validation

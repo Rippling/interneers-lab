@@ -1,7 +1,7 @@
-from rest_framework import serializers
-from .models import Product
+from rest_framework_mongoengine.serializers import DocumentSerializer
+from .models import Product 
 
-class ProductSerializer(serializers.ModelSerializer):
+class ProductSerializer(DocumentSerializer):
     class Meta:
         model = Product
         fields = '__all__'
