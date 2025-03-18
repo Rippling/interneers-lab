@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-
+from mongoengine import connect
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'rest_framework', 
+    "product_app"
 ]
 
 MIDDLEWARE = [
@@ -121,3 +123,23 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 2,
+}
+
+MONGO_DB_NAME = "interneers-lab-db"
+MONGO_DB_USER = "root"  # Set to None if authentication is not used
+MONGO_DB_PASSWORD = "example"
+MONGO_DB_HOST = "localhost"
+MONGO_DB_PORT = 27018
+
+connect(
+    db=MONGO_DB_NAME,
+    username=MONGO_DB_USER,
+    password=MONGO_DB_PASSWORD,
+    host=MONGO_DB_HOST,
+    port=MONGO_DB_PORT,
+    authentication_source='admin'
+)

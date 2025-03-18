@@ -1,6 +1,7 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 from django.http import HttpResponse
+from .views import ProductListCreateView,ProductDetailView
 def hello_world(request):
     return HttpResponse("Hello, world! This is our interneers-lab Django server. THis has been edited")
 
@@ -20,9 +21,7 @@ def hello_name(request):
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    # path('hello/', hello_world),
-    path('hello/', hello_name),
-    path('product/', include('product_app.urls')),  # Include URLs from another app
+    path('', ProductListCreateView.as_view(), name='product-list-create'),
+    path('<int:product_id>/', ProductDetailView.as_view(), name='product-detail'),
 
 ]
