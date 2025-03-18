@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from mongoengine import connect
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -81,14 +82,12 @@ WSGI_APPLICATION = "django_app.wsgi.application"
 #     }
 # }
 
-
-# for in-memory operations
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": ':memory:',
-    }
+MONGODB_SETTINGS = {
+    "db": "inventory_database",
+    "host": "mongodb://root:example@localhost:27018/inventory_database?authSource=admin"
 }
+
+connect(**MONGODB_SETTINGS)
 
 
 # Password validation
