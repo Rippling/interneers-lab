@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+# from pymongo import MongoClient
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "product",
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
@@ -49,7 +50,14 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny'
+        
+    ]
+}
 ROOT_URLCONF = "django_app.urls"
 
 TEMPLATES = [
@@ -69,6 +77,17 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "django_app.wsgi.application"
+
+
+# MongoDB Connection
+from mongoengine import connect
+
+MONGO_HOST = 'localhost'
+MONGO_PORT = 27017
+MONGO_NAME = 'product_db'
+MONGO_URI = f'mongodb://{MONGO_HOST}:{MONGO_PORT}/{MONGO_NAME}'
+
+connect(MONGO_NAME, host=MONGO_URI)
 
 
 # Database
