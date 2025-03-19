@@ -30,4 +30,5 @@ urlpatterns = [
     path('details/', hello_details),
     path('api/drf/', include('products.urls')),
     path('api/classic/', include('products_classic.urls')),
+    path('api/mongo/', include('products_mongo.urls')),
 ]
