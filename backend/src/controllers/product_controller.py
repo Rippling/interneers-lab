@@ -221,7 +221,7 @@ def update_product(request: HttpRequest, request_id: int):
             details: "Product ID cannot be updated"
             suggestion: "Remove 'id' field from your request, or check if it matches the URI"
             return generate_error_response(request, 400, details, suggestion)
-    request_product.modify(data)
+    request_product.modify_fields(data)
 
     response= JsonResponse({})
     response.headers["Location"]= f"/products/{request_product.id}"  # Location of resource

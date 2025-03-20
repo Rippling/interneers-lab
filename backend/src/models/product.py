@@ -29,7 +29,7 @@ class Product(Document):
         self.save()
         return amount
 
-    def modify(self, data: dict):
+    def modify_fields(self, data: dict):
         for key in data.keys():
             if key=="name":
                 self.name= data[key]
