@@ -1,6 +1,6 @@
 from .models import Product
 from bson import ObjectId
-
+from datetime import datetime
 
 class ProductRepository:
 
@@ -23,7 +23,9 @@ class ProductRepository:
             category=product_data['category'],
             price=product_data['price'], 
             brand=product_data['brand'],
-            quantity=product_data['quantity']
+            quantity=product_data['quantity'],
+            created_at=datetime.now(),
+            updated_at=datetime.now(),
         )
         product.save()
         return product
@@ -33,7 +35,7 @@ class ProductRepository:
         for key, value in product_data.items():
             if hasattr(product, key): 
                 setattr(product, key, value)
-        
+        product['updated_at'] = datetime.now()
         product.save()
         return product
 
