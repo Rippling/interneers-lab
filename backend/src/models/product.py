@@ -1,3 +1,16 @@
+"""
+Product document schema (and associated managing functions)
+{
+    name: <str> (required) 
+    price: <int> (required) [0,inf)
+    brand: <str>
+    quantity: <int> (required) [0,inf)
+    description: <str> [max length= 250]
+    created_at: <datetime.datetime> (automatic)
+    modified_at; <datetime.datetime> (automatic)
+}
+"""
+
 import datetime
 from mongoengine import Document, StringField, IntField, DateTimeField
 
