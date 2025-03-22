@@ -21,8 +21,8 @@ class Product(Document):
     quantity= IntField(required= True)
     description= StringField(max_length= 250)
 
-    created_at= DateTimeField(default= datetime.datetime.utcnow())
-    modified_at= DateTimeField(default= datetime.datetime.utcnow())
+    created_at= DateTimeField(default= datetime.datetime.now(datetime.timezone.utc))
+    modified_at= DateTimeField(default= datetime.datetime.now(datetime.timezone.utc))
 
     def modify_stock(self, amount: int):
         assert self.quantity > -amount
