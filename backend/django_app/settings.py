@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "django.contrib.staticfiles", 
+    "django.contrib.staticfiles",
     "products",
     "rest_framework",
     "rest_framework_mongoengine",
@@ -86,7 +86,6 @@ WSGI_APPLICATION = "django_app.wsgi.application"
 #         "NAME": BASE_DIR / "db.sqlite3",
 #     }
 # }
-
 
 
 load_dotenv()
