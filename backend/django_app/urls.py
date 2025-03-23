@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.urls import path, include
-from django.http import HttpResponse
 from django.http import JsonResponse
 
 import requests
@@ -32,7 +31,7 @@ def get_current_weather(request):
     name = request.GET.get("name", "User")
     city = request.GET.get("city")
 
-    if city == None:
+    if city is None:
         return JsonResponse({"message": f"Hello, {name}!"})
 
     request_url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"

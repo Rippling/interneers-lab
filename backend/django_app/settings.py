@@ -10,6 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
+from mongoengine import connect
+from dotenv import load_dotenv
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -83,16 +87,27 @@ WSGI_APPLICATION = "django_app.wsgi.application"
 #     }
 # }
 
-from mongoengine import connect
+
+
+load_dotenv()
+# connect(
+#     db='product_db', 
+#     host='mongodb://root:example@localhost:27018/',
+#     username='root',
+#     password='example',  
+#     authentication_source='admin'  
+# )
+
+username = os.getenv("MONGO_USERNAME")
+password = os.getenv("MONGO_PASSWORD")
+
+host = f"mongodb://{username}:{password}@localhost:27018/"
 
 connect(
-    db='product_db', 
-    host='mongodb://root:example@localhost:27018/',
-    username='root',
-    password='example',  
-    authentication_source='admin'  
+    db="product_db",
+    host=host,
+    authentication_source="admin",
 )
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

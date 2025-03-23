@@ -1,4 +1,4 @@
-from mongoengine import *
+from mongoengine import Document, StringField, DecimalField, IntField
 
 class Product(Document):
     name = StringField(max_length=100, required=True)
