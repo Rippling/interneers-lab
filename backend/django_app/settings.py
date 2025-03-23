@@ -90,13 +90,6 @@ WSGI_APPLICATION = "django_app.wsgi.application"
 
 
 load_dotenv()
-# connect(
-#     db='product_db', 
-#     host='mongodb://root:example@localhost:27018/',
-#     username='root',
-#     password='example',  
-#     authentication_source='admin'  
-# )
 
 username = os.getenv("MONGO_USERNAME")
 password = os.getenv("MONGO_PASSWORD")
