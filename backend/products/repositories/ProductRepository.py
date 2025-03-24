@@ -1,4 +1,4 @@
-from .models import Product
+from ..models.ProductModel import Product
 
 class ProductRepository:
     
@@ -12,7 +12,7 @@ class ProductRepository:
 
     @staticmethod
     def getAllProd():
-        return Product.objects.all()
+        return list(Product.objects.all())
     
 
     @staticmethod

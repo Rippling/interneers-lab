@@ -1,5 +1,5 @@
-from .repositories import ProductRepository
-from .serializers import ProductSerializer
+from ..repositories.ProductRepository import ProductRepository
+from ..serializers import ProductSerializer
 from django.http import Http404
 
 
@@ -19,10 +19,9 @@ class ProductService:
 
     @staticmethod
     def getAllProds():
-
         data = ProductRepository.getAllProd()
-        return ProductSerializer(data, many= True).data
-    
+        return data
+
 
     @staticmethod
     def getProdById(prod_id):

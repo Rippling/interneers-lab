@@ -90,10 +90,20 @@ DATABASES = {
 
 
 
+
+# mongoengine.connect(
+#     db="ECommerceDB",
+#     host="mongodb://localhost:27017/",
+# )
+
+#ADDED AUTHENTICATION
+
 mongoengine.connect(
-    db="Product",
-    host="mongodb://localhost:27017/",
+    db="ECommerceDB",
+    host="mongodb://root:example@localhost:27017/ECommerceDB?authSource=admin"
 )
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
