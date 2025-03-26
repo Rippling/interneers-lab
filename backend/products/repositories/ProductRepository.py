@@ -49,5 +49,10 @@ class ProductRepository:
         
         return None
      
+
+    @staticmethod
+    def update_product_categories(product, updated_categories):
+        product.category = updated_categories
+        product.save()
         
     

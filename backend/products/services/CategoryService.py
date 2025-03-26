@@ -1,4 +1,5 @@
 from ..repositories.Category import CategoryRepository
+from django.http import Http404
 
 class CategoryService:
     @staticmethod
@@ -13,6 +14,16 @@ class CategoryService:
 
         products = CategoryRepository.get_products_by_category(category)
         return products, None
+    
+    
+    def getCategoryById(category_id):
+
+        data = CategoryRepository.getCategoryById(category_id)
+
+        if not data:
+            raise Http404(" Category not found")
+        
+        return data
     
     @staticmethod
     def get_all_categories():

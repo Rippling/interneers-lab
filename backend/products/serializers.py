@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models.ProductModel import Product
 from .models.CategoryModel import ProductCategory
+from bson import ObjectId
 
 class ProductCategorySerializer(serializers.Serializer):
     id = serializers.CharField(read_only=True)
@@ -17,7 +18,7 @@ class ProductSerializer(serializers.Serializer):
     name = serializers.CharField()
     description = serializers.CharField(required=False, allow_blank=True)
     brand = serializers.CharField(required=False, allow_blank=True)
-    category = serializers.CharField()  # Storing category as an ObjectId (string)
+    category = serializers.ListField(child=serializers.CharField())
     price = serializers.FloatField()
     quantity = serializers.IntegerField()
 
@@ -36,38 +37,56 @@ class ProductSerializer(serializers.Serializer):
             raise serializers.ValidationError("Quantity cannot be negative.")
         return value
 
-    def create(self, validated_data):
-        """Manually create a Product instance for MongoEngine"""
-        category_id = validated_data.pop("category", None)
-        category = ProductCategory.objects(id=category_id).first()
-        if not category:
-            raise serializers.ValidationError("Invalid category ID.")
+    def validate_category(self, value):
+
+        if not isinstance(value, list):
+            raise serializers.ValidationError("Category must be a list of valid category IDs.")
         
-        product = Product(category=category, **validated_data)
+        categories = ProductCategory.objects(title__in=value)
+        if len(categories) != len(value):
+            raise serializers.ValidationError("Some categories are invalid.")
+        
+        return categories
+    
+    def create(self, validated_data):
+        
+        categories = validated_data.pop("category", [])
+        product = Product(category=categories, **validated_data)
         product.save()
         return product
 
     def update(self, instance, validated_data):
-        """Manually update a Product instance"""
+    
         for key, value in validated_data.items():
             if key == "category":
-                category = ProductCategory.objects(id=value).first()
-                if not category:
-                    raise serializers.ValidationError("Invalid category ID.")
-                instance.category = category
+                if not isinstance(value, list):  # Ensure value is a list
+                    raise serializers.ValidationError("Category must be a list of ObjectIds.")
+                
+                try:
+                    # Convert category IDs to ObjectId format
+                    category_ids = [ObjectId(cid) for cid in value]
+                except Exception:
+                    raise serializers.ValidationError("Invalid category ID format.")
+                
+                categories = ProductCategory.objects(id__in=category_ids)
+                if len(categories) != len(category_ids):
+                    raise serializers.ValidationError("Some categories are invalid.")
+                
+                instance.category = list(categories)
             else:
                 setattr(instance, key, value)
+        
         instance.save()
         return instance
 
     def to_representation(self, instance):
-        """Convert MongoEngine object to a serializable format"""
+
         data = {
             "id": str(instance.id),
             "name": instance.name,
             "description": instance.description,
             "brand": instance.brand,
-            "category": instance.category.title if instance.category else None,
+            "category": [cat.title for cat in instance.category] if instance.category else [],
             "price": float(instance.price),
             "quantity": int(instance.quantity),
         }

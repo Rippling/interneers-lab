@@ -13,6 +13,16 @@ class CategoryRepository:
     def get_category_by_title(title):
         return ProductCategory.objects.filter(title=title).first()
 
+    
+    @staticmethod
+    def getCategoryById(category_id):
+        try:
+            return ProductCategory.objects.get(id = category_id)
+        
+        except Product.DoesNotExist:
+            return None
+
+
     @staticmethod
     def get_products_by_category(category):
         return Product.objects.filter(category=category)

@@ -1,6 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import generics
+from rest_framework.exceptions import NotFound
 from ..models.CategoryModel import ProductCategory
 from ..serializers import ProductCategorySerializer
 from ..serializers import ProductSerializer
@@ -27,6 +29,7 @@ class CategoryView(APIView):
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+    
     def put(self, request, title):
         category = ProductCategory.objects(title=title).first()
         if not category:
@@ -45,3 +48,15 @@ class CategoryView(APIView):
 
         category.delete()
         return Response({"message": "Category deleted successfully"}, status=status.HTTP_200_OK)
+
+class CategoryDetail(generics.RetrieveAPIView):
+        serializer_class = ProductCategorySerializer
+        lookup_field = "id"
+
+        def get_object(self):
+            category_id = self.kwargs.get("id")
+            category = CategoryService.getCategoryById(category_id)
+            print("dfdf" , category)
+            if not category:
+                raise NotFound("Category  not found") 
+            return category

@@ -20,36 +20,41 @@ class ProductPagination(PageNumberPagination):
 class ProductCreate(APIView):
     def post(self, request):
         try:
-            data = request.data.copy()  
+            data = request.data.copy()
             print("Received Data:", data)
 
-            category_obj = ProductCategory.objects(title=data["category"]).first()
+            categories = ProductCategory.objects.filter(title__in=data["category"])
 
-            if not category_obj:
-                return Response({"error": "Category not found"}, status=status.HTTP_400_BAD_REQUEST)
+            if not categories:
+                return Response({"error": "One or more categories not found"}, status=status.HTTP_400_BAD_REQUEST)
 
-            data["category"] = category_obj.id  
-            print(f"Resolved Category ID: {data['category']}") 
+            print(f"Resolved Category IDs: {[str(cat.id) for cat in categories]}")
 
             product = Product(
                 name=data["name"],
                 description=data.get("description", ""),
                 brand=data.get("brand", ""),
-                category=category_obj,  
+                category=list(categories),  
                 price=data["price"],
                 quantity=data["quantity"]
             )
-            product.save()  
+
+            product.save()
+
+            saved_product = Product.objects.get(id=product.id)
+            # print(f"Product Categories After Save: {[cat.title for cat in saved_product.category]}")
 
             return Response(
-                {"message": "Product created successfully", "data": ProductSerializer(product).data},
+                {"message": "Product created successfully", "data": ProductSerializer(saved_product).data},
                 status=status.HTTP_201_CREATED
             )
 
         except Exception as e:
             print(f"Exception Caught: {e}")
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+
+
+
 class ProductList(generics.ListAPIView):
     serializer_class = ProductSerializer
     pagination_class = ProductPagination
@@ -61,15 +66,6 @@ class ProductList(generics.ListAPIView):
             return Product.objects.none() 
         return queryset
 
-class CheckCategoryView(generics.RetrieveAPIView):
-    def get(self, request):
-        category_exists = ProductCategory.objects.filter(title="c").first()
-        
-        print(ProductCategory.objects.filter(title="c").first())
-        if category_exists:
-            return Response({"message": "Category exists", "category": category_exists.title})
-        return Response({"message": "Category does not exist"})
-    
 class ProductDetail(generics.RetrieveAPIView):
     serializer_class = ProductSerializer
     lookup_field = "id"
@@ -110,6 +106,31 @@ class ProductDelete(generics.DestroyAPIView):
             return Response({"message": "Product deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
             return handle_exception(e)
+        
 
-# class AddToCategory(generics.UpdateAPIView):
-    
+class AddCategoryToProduct(generics.UpdateAPIView):
+   
+    def put(self, request, *args, **kwargs):
+        try:
+           
+            product_id = kwargs.get("product_id")
+            category_id = kwargs.get("category_id")
+
+            response = ProductService.add_category_to_product(product_id, category_id)
+            return Response(response, status=response["status"])
+
+        except Exception as e:
+                return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+class RemoveCategoryFromProduct(generics.UpdateAPIView):
+  
+    def put(self, request, *args, **kwargs):
+        try:
+            product_id = kwargs.get("product_id")
+            category_id = kwargs.get("category_id")
+            response = ProductService.remove_category_from_product(product_id, category_id)
+            return Response({"message": response["message"]}, status=response["status"])
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

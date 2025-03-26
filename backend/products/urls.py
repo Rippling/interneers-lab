@@ -6,10 +6,13 @@ from .views.ProductView import (
     ProductDetail,
     ProductUpdate,
     ProductDelete,
-    CheckCategoryView
+    # CheckCategoryView,
+    AddCategoryToProduct,
+    RemoveCategoryFromProduct,
+    
 )
 
-from .views.CategoryView import CategoryView
+from .views.CategoryView import (CategoryView , CategoryDetail)
 
 urlpatterns = [
     path('products/create/', ProductCreate.as_view(), name='create-product'),
@@ -17,8 +20,11 @@ urlpatterns = [
     path('products/<str:id>/', ProductDetail.as_view(), name='product-detail'),  
     path('products/<str:id>/update/', ProductUpdate.as_view(), name='product-update'), 
     path('products/<str:id>/delete/', ProductDelete.as_view(), name='product-delete'),  
-    path("check-category/", CheckCategoryView.as_view(), name="check_category"),
+    # path("check-category/", CheckCategoryView.as_view(), name="check_category"),
     path('categories/', CategoryView.as_view(), name='category-list'),
-    path('categories/<str:title>/', CategoryView.as_view(), name='category-detail'),
-    # path('/products/<str:product_id>/add-to-category/' , )
+    path('categories/title/<str:title>/', CategoryView.as_view(), name='category-title-detail'),
+    path('categories/id/<str:id>/', CategoryDetail.as_view(), name='category-id-detail'),      
+    path('products/<str:product_id>/add-category/<str:category_id>/', AddCategoryToProduct.as_view(), name='add_category_to_product'),
+    path('products/<str:product_id>/remove-category/<str:category_id>/', RemoveCategoryFromProduct.as_view(), name='remove_category_from_product'),
+    
 ]
