@@ -102,20 +102,11 @@ class Product(Document):
         Raises:
             KeyError: If an invalid field is included in the update.
         """
-        for key in data.keys():
-            if key=="name":
-                self.name= data[key]
-            elif key=="price":
-                self.price= data[key]
-            elif key=="brand":
-                self.brand= data[key]
-            elif key=="quantity":
-                self.quantity= data[key]
-            elif key=="description":
-                self.description= data[key]
-            else:
+        allowed_fields = {"name", "price", "brand", "quantity", "description"}
+        for key, value in data.items():
+            if key not in allowed_fields:
                 raise KeyError(f"Field {key} is not a valid field.")
-        self.change_modified_timestamp()
+            setattr(self, key, value)
         self.save()
 
     def change_modified_timestamp(self):
