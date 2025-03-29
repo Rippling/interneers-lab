@@ -1,17 +1,22 @@
-from django.contrib import admin
 from django.urls import path
-from django.http import JsonResponse
-from .views import create_product, get_product, list_products, update_product, delete_product
-
-def hello_name(request):
-    name = request.GET.get("name", "World")
-    return JsonResponse({"message": f"Hello, {name}!"})
+from .views import (
+    create_category, get_category, list_categories, update_category, delete_category,
+    create_product, get_product, list_products, list_products_by_category, update_product, delete_product
+)
 
 urlpatterns = [
-    path('hello/', hello_name),
+    # ProductCategory APIs
+    path('categories/', list_categories),
+    path('categories/create/', create_category),
+    path('categories/<str:category_id>/', get_category),
+    path('categories/<str:category_id>/update/', update_category),
+    path('categories/<str:category_id>/delete/', delete_category),
+
+    # Product APIs
     path('products/', list_products),
-    path('products/create/', create_product,name="create_product"),
+    path('products/create/', create_product),
     path('products/<str:product_id>/', get_product),
     path('products/<str:product_id>/update/', update_product),
     path('products/<str:product_id>/delete/', delete_product),
+    path('products/category/<str:category_title>/', list_products_by_category),
 ]
