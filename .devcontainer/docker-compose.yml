@@ -11,6 +11,9 @@ services:
       - ..:/workspace
     ports:
       - "8001:8001"
+    environment:
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=27017
     depends_on:
       - mongodb
 

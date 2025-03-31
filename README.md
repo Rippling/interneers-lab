@@ -418,7 +418,7 @@ Head over to the frontend README to check it out:
 ## Dev Container Usage
 Opening this repository in VSCode, GitHub Codespaces or any other supported editor/IDE would allow the repository to be opened in a [dev container](https://containers.dev/).
 
-The Dev Container contains all the neccesaary dependencies to build, run and test all the components of the project.
+The Dev Container contains all the necessary dependencies to build, run and test all the components of the project.
 
 ### Developing from within the Container
 Ensure that you have the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension activated.
@@ -453,8 +453,53 @@ Follow the respective URLs to access the services.
 
 You can then work on the project as usual within the development container. Any changes you make will be automatically reflected in the local file system as well as in the running services (backend, frontend, etc.) through hot reloading.
 
+#### Note:
+Always keep `backend/requirements.txt` updated with any new python dependencies you use, as the Dev Container relies on it to set up the environment.
+
 ### Hot Reloading
 A quick demonstration of hot reloading in action after making changes can be found [here](https://drive.google.com/file/d/1wgNInfN2DLP7yG4mmJCZhhALhd6pw0TO/view?usp=drive_link).
+
+### MongoDB Connection
+MongoDB connections differ when running the project inside a Dev Container compared to running it locally:
+
+1. **Container Networking Differences** - When running inside a Dev Container, services communicate over Docker's internal network. The hostname must be set to the service name (i.e., `mongodb`) instead of `localhost`, as `localhost` would refer to the container itself, not the MongoDB service.
+
+2. **Port Mapping Constraints** - MongoDB inside a container typically runs on its default internal port (27017), but when running the project locally, it might be exposed on a different port (e.g., 27018 in our case). Therefore, in order to access MongoDB inside the Dev Container itself, it must be accessed on its default internal port (27017).
+
+Thus, for connecting to the MongoDB service inside the Dev Container, the connection string would look something like this:
+
+```
+mongodb://{your_username}:{your_password}@mongodb:27017
+```
+
+To ensure flexibility in all environments, the `backend` service provides two **environment variables**: `MONGO_HOST` and `MONGO_PORT` which contain the hostname and the port for connecting to MongoDB inside the Dev Container.
+
+These variables can be utilized to enable a dynamic connection approach, ensuring seamless adaptability across different environments:
+
+#### Example `settings.py` (Django + mongoengine):
+```python
+# Database
+# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+from dotenv import load_dotenv
+import os
+from mongoengine import connect
+
+# MONGO_USER and MONGO_PASS fetched through env variables
+load_dotenv()
+MONGO_USER = os.getenv("MONGO_USER")
+MONGO_PASS = os.getenv("MONGO_PASS")
+
+# Default values for local connection
+MONGO_PORT = os.getenv("MONGO_PORT", "27018")
+MONGO_HOST = os.getenv("MONGO_HOST", "localhost")
+
+connect(
+    "inventory",
+    host=f"mongodb://{MONGO_USER}:{MONGO_PASS}@{MONGO_HOST}:{MONGO_PORT}/inventory?authSource=admin",
+)
+
+DATABASES = {}
+```
 
 ## Further Reading
 
