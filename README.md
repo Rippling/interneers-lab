@@ -30,7 +30,8 @@ Welcome to the **Interneers Lab 2025** repository! This serves as a minimal star
       - [Starter 1](#starter-1-changes)
 8. [Running Tests (Optional)](#running-tests-optional)
 9. [Frontend Setup](#frontend-setup)
-10. [Further Reading](#further-reading)
+10. [Dev Container Usage](#dev-container-usage)
+11. [Further Reading](#further-reading)
 
 ---
 
@@ -46,7 +47,7 @@ Welcome to the **Interneers Lab 2025** repository! This serves as a minimal star
 2. **Configure Git** with your name and email:
    ```bash
    git config --global user.name "Your Name"
-   git config --global user.email "your.email@example.com"
+   git config --global user.email "your.email@example.com" # Use the same email you shared during onboarding
 3. What is Forking?
 
    Forking a repository on GitHub creates your own copy under your GitHub account, where you can make changes independently without affecting the original repo. Later, you can make pull requests to merge changes back if needed.
@@ -280,6 +281,9 @@ Confirm that all meet any minimum version requirements.
 - *(Optional)* **MongoDB for VSCode**  
   Lets you connect to and browse your MongoDB databases, run queries, and view results without leaving VSCode.
 
+- *(Optional)* **Dev Containers**  
+  Helps you develop and test the project inside a Dev Container.
+
 ---
 ### Making your first change
 
@@ -399,6 +403,7 @@ python manage.py test
 ```
 docker compose ps
 ```
+Note: This command displays the status of the containers, including whether they are running, their assigned ports, and their names, as defined in the docker-compose.yaml file. If you have set up a MongoDB server using Docker and connected it to your Django application, you can use this command to verify that the MongoDB container is running properly.
 
 ---
 
@@ -409,6 +414,48 @@ The frontend setup instructions are located in the `frontend` directory. You don
 Head over to the frontend README to check it out:
 [Frontend README](frontend/README.md)
 
+---
+
+## Dev Container Usage
+Opening this repository in VSCode, GitHub Codespaces or any other supported editor/IDE would allow the repository to be opened in a [dev container](https://containers.dev/).
+
+The Dev Container contains all the neccesaary dependencies to build, run and test all the components of the project.
+
+### Developing from within the Container
+Ensure that you have the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension activated.
+
+Follow these steps to develop the project from within the Dev Container:
+
+1. VSCode automatically detects the presence of a Dev Container in a project and gives an option to open it inside the container:
+
+   ![dev-container](dev-container.png)
+
+   Click on _Reopen in Container_.
+
+2. Alternatively, click on `F1` and select `Dev Containers: Reopen in Container`.
+
+3. The Dev Container will be built, started, and the project will be opened within it. All three services—_backend_, _frontend_, and _MongoDB_—will be launched.
+
+Once the Dev Container is up and running, the following services will be available:
+
+#### Backend
+- **Port:** `8001`
+- **URL:** [http://localhost:8001](http://localhost:8001)
+
+#### Frontend
+- **Port:** `3000`
+- **URL:** [http://localhost:3000](http://localhost:3000)
+
+#### MongoDB
+- **Port:** `27018`
+- **URL:** [http://localhost:27018](http://localhost:27018)
+
+Follow the respective URLs to access the services.
+
+You can then work on the project as usual within the development container. Any changes you make will be automatically reflected in the local file system as well as in the running services (backend, frontend, etc.) through hot reloading.
+
+### Hot Reloading
+A quick demonstration of hot reloading in action after making changes can be found [here](https://drive.google.com/file/d/1wgNInfN2DLP7yG4mmJCZhhALhd6pw0TO/view?usp=drive_link).
 
 ## Further Reading
 
