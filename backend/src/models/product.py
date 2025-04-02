@@ -132,7 +132,7 @@ class Product(Document):
 
 def create_product(data: dict)-> Product:
     """
-    Creates a new product instance without saving it to the database.
+    Creates a new product instance and saves it to the database.
 
     Ensures required fields are provided and assigns default values 
     to optional fields if missing.
