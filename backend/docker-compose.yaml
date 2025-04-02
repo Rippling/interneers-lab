@@ -5,8 +5,10 @@ services:
     ports:
       - '27018:27017'
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    env_file:
+      - django_app/.env
     volumes:
       - mongodb_data:/data/db
 

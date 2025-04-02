@@ -1,14 +1,33 @@
-from django.db import models
+from mongoengine import (
+    Document,
+    StringField,
+    DecimalField,
+    IntField,
+    DateTimeField,
+    signals,
+)
+from datetime import datetime, timezone
 
-# Create your models here.
 
-class Product(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
-    category = models.CharField(max_length=50)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    brand = models.CharField(max_length=50)
-    quantity = models.PositiveIntegerField(default=0)
+class Product(Document):
+    name = StringField(max_length=100, required=True)
+    description = StringField()
+    category = StringField(max_length=50)
+    price = DecimalField(precision=2)
+    brand = StringField(max_length=50)
+    quantity = IntField(default=0, min_value=0)
 
-    def __str__(self):
-        return self.name
+    # Audit fields with timezone-aware datetime
+    created_at = DateTimeField(default=lambda: datetime.now(timezone.utc))
+    updated_at = DateTimeField(default=lambda: datetime.now(timezone.utc))
+
+    meta = {"collection": "products_collection"}
+
+    @classmethod
+    def pre_save(cls, sender, document, **kwargs):
+        """Signal handler to update `updated_at` when the document is modified."""
+        if document.id:
+            document.updated_at = datetime.now(timezone.utc)
+
+
+signals.pre_save.connect(Product.pre_save, sender=Product)
