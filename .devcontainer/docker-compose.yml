@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: ./backend/Dockerfile.dev
+    container_name: dev-django
+    command: python manage.py runserver 0.0.0.0:8001
+    volumes:
+      - ..:/workspace
+    ports:
+      - "8001:8001"
+    depends_on:
+      - mongodb
+
+  frontend:
+    build: 
+      context: ..
+      dockerfile: ./frontend/Dockerfile.dev
+    container_name: dev-react
+    command: yarn start
+    volumes:
+      - ..:/workspace
+    ports:
+      - "3000:3000"
+    environment:
+      - WATCHPACK_POLLING=true
+    depends_on:
+      - backend
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:
