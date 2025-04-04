@@ -23,6 +23,7 @@ class Product(Document):
     name = StringField(required=True)
     price = FloatField(required=True)
     category = ReferenceField(ProductCategory, reverse_delete_rule=2)  # CASCADE
+```
 🔹 Reverse Delete Rule Options:
 
 reverse_delete_rule=2 (CASCADE): Deletes all related products if a category is removed.
