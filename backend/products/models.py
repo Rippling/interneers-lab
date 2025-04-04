@@ -24,7 +24,7 @@ class Product(Document):
     description = StringField()
     category = ReferenceField("ProductCategory", reverse_delete_rule=CASCADE)
     price = DecimalField(precision=2)
-    brand = StringField(max_length=50)
+    brand = StringField(max_length=50, required=True)
     quantity = IntField(default=0, min_value=0)
 
     # Audit fields with timezone-aware datetime
