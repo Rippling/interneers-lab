@@ -4,17 +4,29 @@ from mongoengine import (
     DecimalField,
     IntField,
     DateTimeField,
+    ReferenceField,
+    CASCADE,
     signals,
 )
 from datetime import datetime, timezone
 
 
+class ProductCategory(Document):
+    title = StringField(max_length=200, unique=True, required=True)
+    description = StringField()
+
+    meta = {"collection": "product_categories_collection"}
+
+    def __str__(self):
+        return self.title
+
+
 class Product(Document):
     name = StringField(max_length=100, required=True)
     description = StringField()
-    category = StringField(max_length=50)
+    category = ReferenceField("ProductCategory", reverse_delete_rule=CASCADE)
     price = DecimalField(precision=2)
-    brand = StringField(max_length=50)
+    brand = StringField(max_length=50, required=True)
     quantity = IntField(default=0, min_value=0)
 
     # Audit fields with timezone-aware datetime
