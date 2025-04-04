@@ -4,6 +4,7 @@ from decimal import Decimal, InvalidOperation
 from bson import ObjectId
 from bson.errors import InvalidId
 
+
 class ProductService:
     def __init__(self):
         self.repository = ProductRepository()
@@ -16,7 +17,7 @@ class ProductService:
         filters = filters or {}
 
         # Apply filters
-        category = filters.get('category')
+        category = filters.get("category")
         if category:
             try:
                 ObjectId(category)
@@ -24,15 +25,15 @@ class ProductService:
                 raise ValueError("Invalid category ID format")
             products = products.filter(category=category)
 
-        name = filters.get('name')
+        name = filters.get("name")
         if name:
             products = products.filter(name__icontains=name)
 
-        brand = filters.get('brand')
+        brand = filters.get("brand")
         if brand:
             products = products.filter(brand__icontains=brand)
 
-        min_price = filters.get('min_price')
+        min_price = filters.get("min_price")
         if min_price is not None:
             try:
                 min_price_decimal = Decimal(min_price)
@@ -40,7 +41,7 @@ class ProductService:
                 raise ValueError("Invalid min_price value")
             products = products.filter(price__gte=min_price_decimal)
 
-        max_price = filters.get('max_price')
+        max_price = filters.get("max_price")
         if max_price is not None:
             try:
                 max_price_decimal = Decimal(max_price)
@@ -52,12 +53,13 @@ class ProductService:
         if sort_by:
             allowed_sorts = {"created_at": "-created_at", "updated_at": "-updated_at"}
             if sort_by not in allowed_sorts:
-                raise ValueError(f"Invalid sort field. Allowed values: {', '.join(allowed_sorts.keys())}")
+                raise ValueError(
+                    f"Invalid sort field. Allowed values: {', '.join(allowed_sorts.keys())}"
+                )
             sort_field = allowed_sorts[sort_by]
             products = products.order_by(sort_field)
 
         return products
-
 
     def get_product_by_id(self, product_id):
         """

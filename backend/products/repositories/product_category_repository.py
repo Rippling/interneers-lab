@@ -1,6 +1,7 @@
 from mongoengine.errors import DoesNotExist, ValidationError, NotUniqueError
 from ..models import ProductCategory
 
+
 class ProductCategoryRepository:
     def get_all(self):
         """Get all categories"""

@@ -10,14 +10,16 @@ from mongoengine import (
 )
 from datetime import datetime, timezone
 
+
 class ProductCategory(Document):
-    title = StringField(max_length=200,unique = True, required = True)
+    title = StringField(max_length=200, unique=True, required=True)
     description = StringField()
 
     meta = {"collection": "product_categories_collection"}
 
     def __str__(self):
         return self.title
+
 
 class Product(Document):
     name = StringField(max_length=100, required=True)

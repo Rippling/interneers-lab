@@ -22,37 +22,39 @@ def productsView(request):
             filters = {}
 
             # Extract and validate category
-            category = request.query_params.get('category')
+            category = request.query_params.get("category")
             if category and category.strip():
-                filters['category'] = category.strip()
+                filters["category"] = category.strip()
 
             # Extract name filter
-            name = request.query_params.get('name')
+            name = request.query_params.get("name")
             if name and name.strip():
-                filters['name'] = name.strip()
+                filters["name"] = name.strip()
 
             # Extract brand filter
-            brand = request.query_params.get('brand')
+            brand = request.query_params.get("brand")
             if brand and brand.strip():
-                filters['brand'] = brand.strip()
+                filters["brand"] = brand.strip()
 
             # Extract min_price filter
-            min_price = request.query_params.get('min_price')
+            min_price = request.query_params.get("min_price")
             if min_price and min_price.strip():
-                filters['min_price'] = min_price.strip()
+                filters["min_price"] = min_price.strip()
 
             # Extract max_price filter
-            max_price = request.query_params.get('max_price')
+            max_price = request.query_params.get("max_price")
             if max_price and max_price.strip():
-                filters['max_price'] = max_price.strip()
+                filters["max_price"] = max_price.strip()
 
-            products = product_service.get_all_products(sort_by=sort_by, filters=filters)
+            products = product_service.get_all_products(
+                sort_by=sort_by, filters=filters
+            )
 
             paginator = ProductPagination()
             result_page = paginator.paginate_queryset(products, request)
             serializer = ProductSerializer(result_page, many=True)
             return paginator.get_paginated_response(serializer.data)
-        
+
         except ValueError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:

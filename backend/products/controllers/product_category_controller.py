@@ -5,21 +5,23 @@ from rest_framework.pagination import PageNumberPagination
 from ..serializers import ProductCategorySerializer
 from ..services.product_category_service import ProductCategoryService
 
+
 class CategoryPagination(PageNumberPagination):
     page_size = 2
     page_size_query_param = "page_size"
     max_page_size = 100
 
+
 service = ProductCategoryService()
+
 
 @api_view(["GET", "POST"])
 def productCategoryView(request):
     """Handle categories list operations"""
     if request.method == "GET":
         try:
-            
             categories = service.get_all_categories()
-            
+
             paginator = CategoryPagination()
             result_page = paginator.paginate_queryset(categories, request)
             serializer = ProductCategorySerializer(result_page, many=True)
@@ -28,23 +30,22 @@ def productCategoryView(request):
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response(
-                {"error": "Server error"}, 
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                {"error": "Server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
     elif request.method == "POST":
         serializer = ProductCategorySerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
         try:
             category = service.create_category(serializer.validated_data)
             return Response(
-                ProductCategorySerializer(category).data,
-                status=status.HTTP_201_CREATED
+                ProductCategorySerializer(category).data, status=status.HTTP_201_CREATED
             )
         except ValueError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(["GET", "PUT", "DELETE"])
 def productCategoryDetailView(request, id):
@@ -55,11 +56,12 @@ def productCategoryDetailView(request, id):
             return Response(ProductCategorySerializer(category).data)
 
         elif request.method == "PUT":
-            
-            serializer = ProductCategorySerializer(data=request.data, partial=True)  # only provided fields will be updated
-            if not serializer.is_valid(): 
+            serializer = ProductCategorySerializer(
+                data=request.data, partial=True
+            )  # only provided fields will be updated
+            if not serializer.is_valid():
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            
+
             category = service.update_category(id, serializer.validated_data)
             return Response(ProductCategorySerializer(category).data)
 
@@ -71,6 +73,5 @@ def productCategoryDetailView(request, id):
         return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         return Response(
-            {"error": "Server error"}, 
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            {"error": "Server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
