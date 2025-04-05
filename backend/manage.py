@@ -2,6 +2,7 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from src.db.db_init import init_db
 
 
 def main():
@@ -19,4 +20,5 @@ def main():
 
 
 if __name__ == "__main__":
+    init_db()
     main()

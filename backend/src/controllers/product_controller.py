@@ -5,15 +5,21 @@ All requests to the /product endpoint are to be routed to productEndpoint(reques
 Rest are functions that implement specific method endpoints, or helper functions.
 """
 
+#pylint: disable=no-member
+
 import json
 import math
 from django.http import HttpRequest, JsonResponse
 from src.utils.error import generate_error_response
 
+from src.models.product import create_product, Product
+
+from mongoengine.errors import DoesNotExist, ValidationError
+
 products= []
 
 
-def product_endpoint(request: HttpRequest, request_id: int= 0):
+def product_endpoint(request: HttpRequest, request_id: str= None):
     """
     This is the function that handles all requests to /product and /product/<id>.
 
@@ -69,16 +75,17 @@ def add_product(request: HttpRequest):
         suggestion= validation["suggestion"]
         return generate_error_response(request, 400, details, suggestion)
 
-    data["id"]= len(products)+1
-    products.append(data)
+    product= create_product(data)
 
-    response= JsonResponse(data)
+    product.save()  # TODO: validation error
+
+    response= JsonResponse(json.loads(product.to_json()), safe=False)
     response.status_code= 201
-    response.headers["Location"]= f"/products/{data["id"]}"  # Location of resource
+    response.headers["Location"]= f"/products/{product.id}"  # Location of resource
     return response
 
 
-def get_product(request: HttpRequest, request_id: int):
+def get_product(request: HttpRequest, request_id: str):
     """
     Controller to fetch a product from the database.
 
@@ -94,14 +101,14 @@ def get_product(request: HttpRequest, request_id: int):
         Successful response code is 200.
     """
 
-    if request_id!=0: # Reserve 0 id for collection requests
-        index= find_product(request_id)
-
-        if index== -1:
+    if request_id is not None: # Reserve 0 id for collection requests
+        try:
+            product= Product.objects.get(id= request_id)
+        except (DoesNotExist, ValidationError) as _:
             details= f"Product with id {request_id} does not exist"
             suggestion= "Use 'GET /products' to get a list of existing products with id"
             return generate_error_response(request, 404, details, suggestion)
-        return JsonResponse(products[index])
+        return JsonResponse(json.loads(product.to_json()), safe= False)
     return get_product_paginated(request)
 
 
@@ -155,17 +162,13 @@ def get_product_paginated(request: HttpRequest):
         return generate_error_response(request, 400, details, suggestion)
 
     # Find the index in the list to start from (if the ID exists)
-    start_index= find_product(start_id) if start_id>0 else 0
-    if start_index==-1:
-        details: f"start parameter {request.GET.get("start", "0")} is not a ID " \
-            "that exists in the database"
-        suggestion: "Check if the you have deleted the product, or omit the start " \
-            "parameter and use response navigation URIs to navigate"
-        return generate_error_response(request, 404, details, suggestion)
+    start_index= start_id
+
+    num_products= Product.objects.count()
 
     # Range ends at end_index-1
-    end_index= start_index+ limit if start_index+limit<len(products) else len(products)+1
-    pages= math.ceil(len(products)/limit)
+    end_index= start_index+ limit if start_index+limit<num_products else num_products
+    pages= math.ceil(num_products/limit)
 
     # prev link always points to a valid URI, unlike next, which can be null
     # in case there are less than limit products before the current start,
@@ -174,12 +177,12 @@ def get_product_paginated(request: HttpRequest):
     prev_index= start_index- limit if start_index>=limit else 0
 
     response= JsonResponse({
-        "data":products[start_index:end_index],
+        "data":json.loads(Product.objects[start_index:end_index].to_json()),
         "navigation":{
             "self": f"{request.path}/?start={start_id}&limit={limit}",
-            "next": f"{request.path}/?start={products[end_index]["id"]}&limit={limit}" \
+            "next": f"{request.path}/?start={end_index}&limit={limit}" \
                 if end_index<len(products) else None,
-            "prev": f"{request.path}/?start={products[prev_index]["id"]}&limit={limit}" \
+            "prev": f"{request.path}/?start={prev_index}&limit={limit}" \
                 if prev_index>-1 else None,
             "pages": pages,
             "current": math.ceil((start_index+1)/limit)
@@ -205,13 +208,12 @@ def update_product(request: HttpRequest, request_id: int):
 
     data= json.loads(request.body)
 
-    index= find_product(request_id)
-    if index== -1:
+    try:
+        request_product= Product.objects.get(id=request_id)
+    except DoesNotExist:
         details= f"Product with id {request_id} does not exist"
         suggestion= "Use 'GET /products' to get a list of existing products with id"
         return generate_error_response(request, 404, details, suggestion)
-
-    request_product= products[index]
 
     # Modify each key specified in the request
     for key in data.keys():
@@ -219,15 +221,15 @@ def update_product(request: HttpRequest, request_id: int):
             details: "Product ID cannot be updated"
             suggestion: "Remove 'id' field from your request, or check if it matches the URI"
             return generate_error_response(request, 400, details, suggestion)
-        request_product[key]= data[key]
+    request_product.modify_fields(data)
 
     response= JsonResponse({})
-    response.headers["Location"]= f"/products/{request_id}"  # Location of resource
+    response.headers["Location"]= f"/products/{request_product.id}"  # Location of resource
     response.status_code= 204  # No content in body
     return response
 
 
-def delete_product(request: HttpRequest, request_id: int):
+def delete_product(request: HttpRequest, request_id: str):
     """
     Controller to delete a product in the database.
 
@@ -240,12 +242,12 @@ def delete_product(request: HttpRequest, request_id: int):
         JsonResponse instance, with no content. Successful response code is 204.
     """
 
-    index= find_product(request_id)
-    if index== -1:
+    try:
+        Product.objects.get(id=request_id).delete()
+    except DoesNotExist:
         details= f"Product with id {request_id} does not exist"
         suggestion= "Use 'GET /products' to get a list of existing products with id"
         return generate_error_response(request, 404, details, suggestion)
-    products.pop(index)
 
     response= JsonResponse({})
     response.status_code= 204
@@ -315,29 +317,3 @@ def validate_product(data: dict) -> dict:
 
     return { "valid": True}
 
-
-def find_product(request_id: int):
-    """
-    Finds the product index in the array based on the product id
-
-    Args:
-        request_id: the integer id of the product to find
-
-    Returns:
-        the integer index of the product, if found. -1 if not found
-    """
-
-    # binary search through the products array
-
-    l= 0
-    r= len(products)
-
-    while l<r:
-        mid= (l+r)//2
-        if products[mid]["id"]== request_id:
-            return mid
-        if products[mid]["id"]< request_id:
-            l= mid+1
-        else:
-            r= mid
-    return -1
