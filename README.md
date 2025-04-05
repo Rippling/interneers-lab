@@ -1,4 +1,3 @@
-# test
 # Interneers Lab
 
 Welcome to the **Interneers Lab 2025** repository! This serves as a minimal starter kit for learning and experimenting with:
