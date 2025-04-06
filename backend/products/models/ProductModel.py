@@ -11,12 +11,13 @@ class Product(mongoengine.Document):
     )       #Use PULL when you want to remove references to a deleted document without deleting dependent documents.
     price = mongoengine.DecimalField(precision=2, required=True)
     quantity = mongoengine.IntField(default=0, min_value=0)
-    created_at = mongoengine.DateTimeField(default=datetime.datetime.utcnow)
-    updated_at = mongoengine.DateTimeField(default=datetime.datetime.utcnow)
-    meta = {'collection': 'Product'}  
+    created_at = mongoengine.DateTimeField(default=lambda: datetime.datetime.now(datetime.UTC))
+    updated_at = mongoengine.DateTimeField(default=lambda: datetime.datetime.now(datetime.UTC))
+
+    meta = {'collection': 'Product' , 'db_alias': 'default'}  
 
     def save(self, *args, **kwargs):
-        self.updated_at = datetime.datetime.utcnow()
+        self.updated_at = datetime.datetime.now(datetime.UTC)
         return super(Product, self).save(*args, **kwargs)
 
     def __str__(self):
