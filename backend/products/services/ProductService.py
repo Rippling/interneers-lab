@@ -3,6 +3,8 @@ from ..repositories.Category import CategoryRepository
 from ..serializers import ProductSerializer
 from django.http import Http404
 from bson import ObjectId
+from rest_framework.exceptions import ValidationError
+
 
 class ProductService:
 
@@ -26,13 +28,10 @@ class ProductService:
 
     @staticmethod
     def getProdById(prod_id):
-
-        data = ProductRepository.getProdById(prod_id)
-
-        if not data:
-            raise Http404("Product not found")
-        
-        return data
+        try:
+            return ProductRepository.getProdById(prod_id)
+        except ValueError as e:
+            raise ValidationError({"error": str(e)})
     
   
     @staticmethod
@@ -48,7 +47,8 @@ class ProductService:
             ser.save()  
             return prod  
         
-        raise Exception(ser.errors)  
+        raise Exception(ser.errors) 
+         
 
     
 

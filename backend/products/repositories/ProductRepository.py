@@ -1,5 +1,6 @@
 from ..models.ProductModel import Product
 from bson import ObjectId
+from bson.errors import InvalidId
 
 class ProductRepository:
     
@@ -19,8 +20,12 @@ class ProductRepository:
     @staticmethod
     def getProdById(prod_id):
         try:
-            return Product.objects.get(id = ObjectId(prod_id))
+            obj_id = ObjectId(prod_id)
+            return Product.objects.get(id=obj_id)
         
+        except InvalidId:
+            raise ValueError("Invalid ID format. Must be a 12-byte input or 24-character hex string.")
+
         except Product.DoesNotExist:
             return None
 
@@ -41,14 +46,16 @@ class ProductRepository:
 
     @staticmethod
     def deleteProd(prod_id):
-
+        print(f"Looking for product with ID: {prod_id}")
         prod = ProductRepository.getProdById(prod_id)
+        print(f"Product fetched: {prod}")
 
         if prod:
             prod.delete()
             return True
         
         return None
+        
      
 
     @staticmethod

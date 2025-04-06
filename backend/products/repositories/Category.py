@@ -11,7 +11,7 @@ class CategoryRepository:
 
     @staticmethod
     def get_category_by_title(title):
-        return ProductCategory.objects.filter(title=title).first()
+        return ProductCategory.objects.filter(title__iexact=title).first()
 
     
     @staticmethod
@@ -19,7 +19,7 @@ class CategoryRepository:
         try:
             return ProductCategory.objects.get(id = category_id)
         
-        except Product.DoesNotExist:
+        except ProductCategory.DoesNotExist:
             return None
 
 

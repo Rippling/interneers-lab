@@ -11,6 +11,11 @@ class ProductCategorySerializer(serializers.Serializer):
     def create(self, validated_data):
         return ProductCategory(**validated_data).save()
     
+    def update(self, instance, validated_data):
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+        instance.save()
+        return instance
  
 
 class ProductSerializer(serializers.Serializer):
