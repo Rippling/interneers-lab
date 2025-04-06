@@ -5,7 +5,10 @@ from rest_framework import generics, status
 from rest_framework.pagination import PageNumberPagination
 from bson import ObjectId
 from mongoengine.errors import DoesNotExist
+from rest_framework.exceptions import ValidationError
+from django.http import Http404
 
+ 
 from ..services.ProductService import ProductService
 from ..serializers import ProductSerializer
 from ..models.ProductModel import Product
@@ -20,34 +23,18 @@ class ProductPagination(PageNumberPagination):
 class ProductCreate(APIView):
     def post(self, request):
         try:
-            data = request.data.copy()
-            print("Received Data:", data)
+            print("Received Data:", request.data)
+            serializer = ProductSerializer(data=request.data)
 
-            categories = ProductCategory.objects.filter(title__in=data["category"])
-
-            if not categories:
-                return Response({"error": "One or more categories not found"}, status=status.HTTP_400_BAD_REQUEST)
-
-            print(f"Resolved Category IDs: {[str(cat.id) for cat in categories]}")
-
-            product = Product(
-                name=data["name"],
-                description=data.get("description", ""),
-                brand=data.get("brand", ""),
-                category=list(categories),  
-                price=data["price"],
-                quantity=data["quantity"]
-            )
-
-            product.save()
-
-            saved_product = Product.objects.get(id=product.id)
-            # print(f"Product Categories After Save: {[cat.title for cat in saved_product.category]}")
-
-            return Response(
-                {"message": "Product created successfully", "data": ProductSerializer(saved_product).data},
-                status=status.HTTP_201_CREATED
-            )
+            if serializer.is_valid():
+                product = serializer.save()
+                return Response(
+                    {"message": "Product created successfully", "data": ProductSerializer(product).data},
+                    status=status.HTTP_201_CREATED
+                )
+            else:
+                print("Validation Errors:", serializer.errors)
+                return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
             print(f"Exception Caught: {e}")
@@ -72,26 +59,52 @@ class ProductDetail(generics.RetrieveAPIView):
 
     def get_object(self):
         prod_id = self.kwargs.get("id")
+        print(prod_id)
         prod = ProductService.getProdById(prod_id)
         if not prod:
-            raise NotFound("Product not found") 
+            raise Http404("Product not found") 
         return prod
+
 
 class ProductUpdate(generics.UpdateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = "id"
-
+    
     def put(self, request, *args, **kwargs):
+            try:
+                prod_id = kwargs.get("id")
+                result = ProductService.updateProd(prod_id, request.data)
+
+                if result is None:
+                    return Response({"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND)
+
+                if isinstance(result, dict) and "errors" in result:
+                    return Response(result, status=status.HTTP_400_BAD_REQUEST)
+                return Response({
+                    "message": "Product updated successfully",
+                    "data": ProductSerializer(result).data
+                }, status=status.HTTP_200_OK)
+
+            except Exception as e:
+                return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, *args, **kwargs):
         try:
             prod_id = kwargs.get("id")
-            updated_prod = ProductService.updateProd(prod_id, request.data)
-            if not updated_prod:
-                raise NotFound("Product not found") 
-            return Response({"message": "Product Updated successfully", "data": ProductSerializer(updated_prod).data}, status=status.HTTP_200_OK)
-        except Exception as e:
-            return handle_exception(e)
+            updated_product = ProductService.updateProd(prod_id, request.data)
 
+            if not updated_product:
+                return Response({"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND)
+
+            return Response({
+                "message": "Product updated successfully",
+                "data": ProductSerializer(updated_product).data
+            }, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+         
 class ProductDelete(generics.DestroyAPIView):
     queryset = Product.objects.all() 
     serializer_class = ProductSerializer
@@ -101,27 +114,34 @@ class ProductDelete(generics.DestroyAPIView):
         try:
             prod_id = kwargs.get("id")
             success = ProductService.deleteProd(prod_id)
-            if not success:
-                raise Exception("Deletion failed")
             return Response({"message": "Product deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+
+        except (NotFound, Http404) as nf:
+            return Response({"error": str(nf)}, status=status.HTTP_404_NOT_FOUND)
+
         except Exception as e:
-            return handle_exception(e)
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 
 class AddCategoryToProduct(generics.UpdateAPIView):
    
     def put(self, request, *args, **kwargs):
-        try:
-           
-            product_id = kwargs.get("product_id")
-            category_id = kwargs.get("category_id")
+        product_id = kwargs.get("product_id")
+        category_id = kwargs.get("category_id")
 
-            response = ProductService.add_category_to_product(product_id, category_id)
-            return Response(response, status=response["status"])
+        try:
+            response_data = ProductService.add_category_to_product(product_id, category_id)
+
+            if response_data.get("status") == 400:
+                return Response({"error": response_data.get("message")}, status=status.HTTP_400_BAD_REQUEST)
+
+            return Response({"message": response_data.get("message")}, status=status.HTTP_200_OK)
+
+        except (NotFound, Http404) as nf:  # ✅ Catch both DRF and Django NotFound
+            return Response({"error": str(nf)}, status=status.HTTP_404_NOT_FOUND)
 
         except Exception as e:
-                return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class RemoveCategoryFromProduct(generics.UpdateAPIView):
