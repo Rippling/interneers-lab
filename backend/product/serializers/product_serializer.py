@@ -10,7 +10,7 @@ class ProductSerializer(serializers.Serializer):
     description = serializers.CharField(required=False, allow_blank=True)
     category = serializers.SerializerMethodField()    
     price_in_RS = serializers.FloatField()
-    brand = serializers.CharField(required=False, allow_blank=True)
+    brand = serializers.CharField(required=True, allow_blank=False)
     quantity = serializers.IntegerField()
     manufacture_date = serializers.DateField()
     expiry_date = serializers.DateField()
