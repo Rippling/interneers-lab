@@ -72,22 +72,30 @@ class ProductUpdate(generics.UpdateAPIView):
     lookup_field = "id"
     
     def put(self, request, *args, **kwargs):
-            try:
-                prod_id = kwargs.get("id")
-                result = ProductService.updateProd(prod_id, request.data)
+        try:
+            prod_id = kwargs.get("id")
+            result = ProductService.updateProd(prod_id, request.data)
 
-                if result is None:
-                    return Response({"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND)
+            if result is None:
+                return Response({"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND)
 
-                if isinstance(result, dict) and "errors" in result:
-                    return Response(result, status=status.HTTP_400_BAD_REQUEST)
-                return Response({
-                    "message": "Product updated successfully",
-                    "data": ProductSerializer(result).data
-                }, status=status.HTTP_200_OK)
+            # if isinstance(result, dict) and "errors" in result:
+            #     raise ValidationError(result["errors"])  
 
-            except Exception as e:
-                return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({
+                "message": "Product updated successfully",
+                "data": ProductSerializer(result).data
+            }, status=status.HTTP_200_OK)
+
+        except ValidationError as ve:
+            return Response(ve.detail, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+
+            if isinstance(e.args[0], dict):
+                return Response({"errors": e.args[0]}, status=status.HTTP_400_BAD_REQUEST)
+
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def patch(self, request, *args, **kwargs):
         try:
@@ -103,7 +111,11 @@ class ProductUpdate(generics.UpdateAPIView):
             }, status=status.HTTP_200_OK)
 
         except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            # Catch raw serializer errors raised from updateProd
+            if isinstance(e.args[0], dict):  # Serializer errors are dicts
+                return Response({"errors": e.args[0]}, status=status.HTTP_400_BAD_REQUEST)
+
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
          
 class ProductDelete(generics.DestroyAPIView):
     queryset = Product.objects.all() 
@@ -113,11 +125,16 @@ class ProductDelete(generics.DestroyAPIView):
     def delete(self, request, *args, **kwargs):
         try:
             prod_id = kwargs.get("id")
-            success = ProductService.deleteProd(prod_id)
+            product = ProductService.getProdById(prod_id)
+
+            if not product:
+                return Response({"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND)
+
+            product.delete()
             return Response({"message": "Product deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 
-        except (NotFound, Http404) as nf:
-            return Response({"error": str(nf)}, status=status.HTTP_404_NOT_FOUND)
+        except ValueError as ve:
+            return Response({"error": str(ve)}, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -137,7 +154,7 @@ class AddCategoryToProduct(generics.UpdateAPIView):
 
             return Response({"message": response_data.get("message")}, status=status.HTTP_200_OK)
 
-        except (NotFound, Http404) as nf:  # ✅ Catch both DRF and Django NotFound
+        except (NotFound, Http404) as nf:  
             return Response({"error": str(nf)}, status=status.HTTP_404_NOT_FOUND)
 
         except Exception as e:
