@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "product",
     "rest_framework",
-    "django_mongoengine"
+    "django_mongoengine",
+    "pytest",
+    # "pytest-django",
 ]
 
 MIDDLEWARE = [
