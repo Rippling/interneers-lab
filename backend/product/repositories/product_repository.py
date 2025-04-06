@@ -5,37 +5,34 @@ from mongoengine.errors import DoesNotExist
 import pytz
 
 class ProductRepository:
-    @staticmethod
-    def create_product(data):
+    def create_product(self, data):
         data["created_at"] = datetime.now(pytz.utc)
         data["updated_at"] = datetime.now(pytz.utc)
         product = Product(**data)
         product.save()
         return product
 
-    @staticmethod
-    def get_all_products():
+    def get_all_products(self):
         return list(Product.objects())
-    @staticmethod
-    def get_products_by_category(category_name):
+
+    def get_products_by_category(self, category_name):
         category = ProductCategory.objects(category_name=category_name).first()
         if not category:
             return None, "Category does not exist."
 
-        products = Product.objects(category=category)
+        products = Product.objects(self, category=category)
         if not products:
             return [], f"No products found in category '{category_name}'."
         
         return products, None
 
-    @staticmethod
-    def get_product_by_id(product_id):
+    def get_product_by_id(self, product_id):
         try:
             return Product.objects.get(id=product_id)
         except DoesNotExist:
             return None
 
-    def update_product(product_id, product_data):
+    def update_product(self, product_id, product_data):
         product = Product.objects(id=product_id).first()
         if not product:
             return None
@@ -45,16 +42,14 @@ class ProductRepository:
         product.save()
         return product
 
-    @staticmethod
-    def delete_product(product_id):
+    def delete_product(self, product_id):
         product = Product.objects(id=product_id).first()
         if product:
             product.delete()
             return True
         return False
 
-    @staticmethod
-    def add_category_to_product(product_id, category_id):
+    def add_category_to_product(self, product_id, category_id):
         """Add a category to an existing product."""
         product = Product.objects(id=product_id).first()
         category = ProductCategory.objects(id=category_id).first()
@@ -69,9 +64,8 @@ class ProductRepository:
             product.save()
 
         return product, None
-
-    @staticmethod
-    def remove_category_from_product(product_id, category_id):
+    
+    def remove_category_from_product(self, product_id, category_id):
         """Remove a category from an existing product."""
         product = Product.objects(id=product_id).first()
         category = ProductCategory.objects(id=category_id).first()
