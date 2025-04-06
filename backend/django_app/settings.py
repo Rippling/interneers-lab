@@ -90,7 +90,6 @@ DATABASES = {
 
 
 
-
 # mongoengine.connect(
 #     db="ECommerceDB",
 #     host="mongodb://localhost:27017/",
@@ -100,7 +99,8 @@ DATABASES = {
 
 mongoengine.connect(
     db="ECommerceDB",
-    host="mongodb://root:example@localhost:27017/ECommerceDB?authSource=admin"
+    host="mongodb://root:example@localhost:27017/ECommerceDB?authSource=admin" ,
+    uuidRepresentation="standard"
 )
 
 
