@@ -1,4 +1,5 @@
 from ..models.ProductModel import Product
+from bson import ObjectId
 
 class ProductRepository:
     
@@ -18,7 +19,7 @@ class ProductRepository:
     @staticmethod
     def getProdById(prod_id):
         try:
-            return Product.objects.get(id = prod_id)
+            return Product.objects.get(id = ObjectId(prod_id))
         
         except Product.DoesNotExist:
             return None
