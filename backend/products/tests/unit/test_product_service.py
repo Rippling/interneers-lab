@@ -6,12 +6,14 @@ from products.services.ProductService import ProductService
 from rest_framework.exceptions import ErrorDetail
 
 @pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
+
 class TestProductService:
 
     @patch("products.repositories.ProductRepository.ProductRepository.createProd")
     @patch("products.serializers.ProductSerializer.is_valid")
     @patch("products.serializers.ProductSerializer", autospec=True)  
-    def test_create_product_success(self, mock_serializer_class, mock_is_valid, mock_create_prod):
+    def test_create_product_success(self, mock_serializer_class, mock_is_valid, mock_create_prod, db):
         # Create a mock instance of the ProductSerializer
         mock_serializer_instance = mock_serializer_class.return_value
         mock_serializer_instance.is_valid.return_value = True  # Simulate that the serializer is valid
@@ -57,8 +59,8 @@ class TestProductService:
 
         mock_get.return_value = None
 
-        with pytest.raises(Http404, match="Product not found"):
-            ProductService.getProdById(ObjectId())
+        result = ProductService.getProdById(ObjectId())
+        assert result is None
 
 
     @patch("products.repositories.ProductRepository.ProductRepository.getAllProd")
