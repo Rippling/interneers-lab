@@ -188,10 +188,18 @@ class ProductListView(APIView):
     #create product
     def post(self, request):
         ser = ProductSerializer(data=request.data)
-        if ser.is_valid():
-            product = self.product_service.create_product(ser.validated_data)
-            return Response(ProductSerializer(product).data, status=status.HTTP_201_CREATED)
-        return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            if ser.is_valid():
+                product = self.product_service.create_product(ser.validated_data)
+                return Response(ProductSerializer(product).data, status=status.HTTP_201_CREATED)
+            return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            # Handle specific exceptions if needed
+            error_message = str(e)
+            if "ProductCategory matching query does not exist" in error_message:
+                return Response({"category": ["Invalid category ID"]}, status=status.HTTP_400_BAD_REQUEST)
+            # Re-raise other exceptions or handle them appropriately
+            return Response({"error": error_message}, status=status.HTTP_400_BAD_REQUEST)
 
 class ProductDetailView(APIView):
     def __init__(self):

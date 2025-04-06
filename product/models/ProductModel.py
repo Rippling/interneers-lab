@@ -7,7 +7,7 @@ from .CategoryModel import ProductCategory
 class Product(Document):
     name=fields.StringField(required=True,max_length=200)
     description=fields.StringField()
-    category=fields.ReferenceField(ProductCategory,reverse_delete_rule=mongoengine.PULL) #reference to the ProductCategory model
+    category=fields.ReferenceField(ProductCategory,reverse_delete_rule=mongoengine.NULLIFY) #reference to the ProductCategory model
     price=fields.DecimalField(required=True,precision=2)
     brand=fields.StringField(required=True,min_length=1)
     quantity=fields.IntField(required=True)

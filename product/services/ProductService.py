@@ -1,4 +1,5 @@
 from ..repository.ProductRepository import ProductRepository
+from bson.objectid import ObjectId
 
 class ProductService:
     def __init__(self):
@@ -13,10 +14,15 @@ class ProductService:
         return self.repository.get_all()
     
     def get_product_by_id(self,prod_id):
+        if not ObjectId.is_valid(prod_id):
+            return None  # Return None for invalid ID format
         return self.repository.get_by_id(prod_id)
+        
     
     def update_product(self,prod_id, prod_data):
         return self.repository.update(prod_id, prod_data)
     
     def delete_product(self,prod_id):
         return self.repository.delete(prod_id)
+    
+    

@@ -1,5 +1,5 @@
 from ..models.CategoryModel import ProductCategory
-from ..models.ProductModel import Product,ProductHistory
+# from ..models.ProductModel import Product,ProductHistory
 
 class ProductCategoryRepo:
     def create(self, category_data):                            #create new category
@@ -37,33 +37,33 @@ class ProductCategoryRepo:
         except ProductCategory.DoesNotExist:
             return False
         
-    def add_prod_to_category(self, category_id, product_id):   #add prod. to ca specific category
-        try:
-            category=ProductCategory.objects.get(id=category_id)
-            product=Product.objects.get(id=product_id)
+    # def add_prod_to_category(self, category_id, product_id):   #add prod. to ca specific category
+    #     try:
+    #         category=ProductCategory.objects.get(id=category_id)
+    #         product=Product.objects.get(id=product_id)
             
-            #check if product is already in this category
-            if product.category == category:
-                return False
+    #         #check if product is already in this category
+    #         if product.category == category:
+    #             return False
             
-            #update product's category
-            product.category=category
-            product.save()
-            return True
-        except (ProductCategory.DoesNotExist, Product.DoesNotExist):
-            return False
+    #         #update product's category
+    #         product.category=category
+    #         product.save()
+    #         return True
+    #     except (ProductCategory.DoesNotExist, Product.DoesNotExist):
+    #         return False
 
-    def remove_prod_from_category(self, product_id):         #remove prod. from the assigned category
-        try:
-            product=Product.objects.get(id=product_id)
+    # def remove_prod_from_category(self, product_id):         #remove prod. from the assigned category
+    #     try:
+    #         product=Product.objects.get(id=product_id)
             
-            if not product.category:
-                return False
+    #         if not product.category:
+    #             return False
             
-            #store the old version before making changes
-            ProductHistory.create_version(product)
-            product.category = None
-            product.save()
-            return True
-        except Product.DoesNotExist:
-            return False
+    #         #store the old version before making changes
+    #         ProductHistory.create_version(product)
+    #         product.category = None
+    #         product.save()
+    #         return True
+    #     except Product.DoesNotExist:
+    #         return False

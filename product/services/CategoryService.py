@@ -1,4 +1,5 @@
-from ..models.ProductModel import Product
+from ..models.ProductModel import Product,ProductHistory
+from ..models.CategoryModel import ProductCategory
 from ..repository.ProductCategoryRepo import ProductCategoryRepo
 
 class CategoryService:
@@ -32,7 +33,34 @@ class CategoryService:
         return Product.objects.filter(category=category)
     
     def add_prod_to_category(self,category_id,product_id):
-        return self.repository.add_prod_to_category(category_id,product_id)
+       try:
+            category=ProductCategory.objects.get(id=category_id)
+            product=Product.objects.get(id=product_id)
+            
+            #check if product is already in this category
+            if product.category == category:
+                return False
+            
+            #update product's category
+            product.category=category
+            product.save()
+            return True
+       except Exception:  # Catch all exceptions
+            return False
+        # return self.repository.add_prod_to_category(category_id,product_id)
 
     def remove_prod_from_category(self,product_id):
-        return self.repository.remove_prod_from_category(product_id)
+        try:
+            product=Product.objects.get(id=product_id)
+            
+            if not product.category:
+                return False
+            
+            #store the old version before making changes
+            ProductHistory.create_version(product)
+            product.category = None
+            product.save()
+            return True
+        except Exception:  # Catch all exceptions
+            return False
+        # return self.repository.remove_prod_from_category(product_id)
