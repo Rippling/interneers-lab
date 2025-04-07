@@ -1,0 +1,18 @@
+{
+    "dockerComposeFile": "./docker-compose.yml",
+    "service": "backend",
+    "workspaceFolder": "/workspace",
+    "forwardPorts": [
+        8001,
+        3000,
+        27018
+    ],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "dbaeumer.vscode-eslint"
+            ]
+        }
+    },
+    "remoteUser": "root"
+}
