@@ -10,9 +10,9 @@ Rest are functions that implement specific method endpoints, or helper functions
 import json
 import math
 from django.http import HttpRequest, JsonResponse
-from backend.src.utils.error import generate_error_response
+from src.utils.error import generate_error_response
 
-from backend.src.models.product import create_product, Product
+from src.models.product import create_product, Product
 
 from mongoengine.errors import DoesNotExist, ValidationError
 
@@ -218,8 +218,8 @@ def update_product(request: HttpRequest, request_id: int):
     # Modify each key specified in the request
     for key in data.keys():
         if key=="id":
-            details: "Product ID cannot be updated"
-            suggestion: "Remove 'id' field from your request, or check if it matches the URI"
+            details= "Product ID cannot be updated"
+            suggestion= "Remove 'id' field from your request, or check if it matches the URI"
             return generate_error_response(request, 400, details, suggestion)
     request_product.modify_fields(data)
 
