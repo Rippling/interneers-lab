@@ -13,12 +13,26 @@ Product document schema (and associated managing functions)
 
 import datetime
 from mongoengine import Document, StringField, IntField, DateTimeField
+from mongoengine.errors import ValidationError
+
+def validate_non_negative_int(num: int)-> None:
+    """
+    Used for validation of fields that should be non-negative. 
+
+    Args:
+        num: Field value
+    
+    Raises:
+        ValidationError: if validation fails (num is negative)
+    """
+    if num<0:
+        raise ValidationError("This field cannot be negative.")
 
 class Product(Document):
     name= StringField(required= True)
-    price= IntField(required= True)
+    price= IntField(required= True, validation= validate_non_negative_int)
     brand= StringField()
-    quantity= IntField(required= True)
+    quantity= IntField(required= True, validation= validate_non_negative_int)
     description= StringField(max_length= 250)
 
     created_at= DateTimeField(default= lambda: datetime.datetime.now(datetime.timezone.utc))
