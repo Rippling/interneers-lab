@@ -1,0 +1,18 @@
+[
+    {"title": "Electronics", "description": "Devices and gadgets for daily use"},
+    {"title": "Home & Kitchen", "description": "Essentials for cooking and decor"},
+    {"title": "Health & Personal Care", "description": "Products for health and hygiene"},
+    {"title": "Fashion & Apparel", "description": "Clothing and accessories"},
+    {"title": "Books & Stationery", "description": "Reading material and writing tools"},
+    {"title": "Sports & Outdoors", "description": "Gear for sports and adventures"},
+    {"title": "Beauty & Cosmetics", "description": "Makeup and skincare products"},
+    {"title": "Toys & Games", "description": "Entertainment for kids and adults"},
+    {"title": "Automotive", "description": "Car parts and accessories"},
+    {"title": "Office Supplies", "description": "Essentials for workspaces"},
+    {"title": "Pet Supplies", "description": "Products for pet care"},
+    {"title": "Baby Products", "description": "Items for infants and toddlers"},
+    {"title": "Groceries", "description": "Everyday food and drink items"},
+    {"title": "Tools & Hardware", "description": "DIY and repair equipment"},
+    {"title": "Art & Crafts", "description": "Creative supplies for projects"}
+  ]
+  

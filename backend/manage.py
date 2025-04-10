@@ -3,6 +3,7 @@
 import os
 import sys
 from src.db.db_init import init_db
+from src.utils.init_categories import initialize_categories
 
 
 def main():
@@ -21,4 +22,6 @@ def main():
 
 if __name__ == "__main__":
     init_db()
+    initialize_categories()
     main()
+
