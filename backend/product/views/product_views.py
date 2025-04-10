@@ -15,7 +15,6 @@ class ProductController(APIView):
             print("Product created:", product, type(product))
             return Response(ProductSerializer(product).data, status=status.HTTP_201_CREATED)
         except ValueError as e:
-            print("Product created:", product, type(product))
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, product_id=None):
@@ -35,8 +34,7 @@ class ProductController(APIView):
             return Response(ProductSerializer(products, many=True).data, status=status.HTTP_200_OK)
         products = self.product_service.get_all_products()
         return Response(ProductSerializer(products, many=True).data)
-        # return Response({"error": "Invalid request. Provide 'category' or 'product_id' parameter."}, status=status.HTTP_400_BAD_REQUEST)
-
+    
     def put(self, request, product_id):
         """Update a product OR add/remove a category to it."""
         category_id = request.data.get("category_id") 
