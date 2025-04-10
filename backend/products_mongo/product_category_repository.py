@@ -9,7 +9,7 @@ class ProductCategoryRepository:
         return category
 
     @staticmethod
-    def create_category():
+    def get_all_categories():
         """Retrieve all categories."""
         return list(ProductCategory.objects())
 
