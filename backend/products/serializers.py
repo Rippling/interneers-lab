@@ -1,21 +1,34 @@
 from rest_framework import serializers
-from rest_framework_mongoengine.serializers import DocumentSerializer
-from .models import Product, ProductCategory
+from rest_framework_dataclasses.serializers import DataclassSerializer
+from products.repositories.product_category_repository import ProductCategoryDetail
+from products.repositories.product_repository import ProductDetail
 
-
-class ProductSerializer(DocumentSerializer):
+class ProductCategoryDetailSerializer(DataclassSerializer):
     class Meta:
-        model = Product
-        fields = "__all__"
-        read_only_fields = ["created_at", "updated_at"]
+        dataclass = ProductCategoryDetail
 
-    def validate_brand(self, value):
-        if not value or not value.strip():
-            raise serializers.ValidationError("Brand is required.")
+        extra_kwargs = {
+            "id": {"read_only": True, "required": False},
+            "description": {"required": False},
+            "title": {"max_length": 200},
+        }
+
+    def validate_title(self, value):
+        value = value.strip()
+        if not value:
+            raise serializers.ValidationError("Title cannot be empty.")
+        if len(value) > 200:
+            raise serializers.ValidationError("Title cannot exceed 200 characters.")
         return value
 
 
-class ProductCategorySerializer(DocumentSerializer):
+class ProductDetailSerializer(DataclassSerializer):
     class Meta:
-        model = ProductCategory
-        fields = "__all__"
+        dataclass = ProductDetail
+        extra_kwargs = {
+            "id": {"read_only": True, "required": False},
+            "description": {"required": False},
+            "category": {"required": True},
+            "price": {"required": True},
+            "brand": {"max_length": 50},
+        }
