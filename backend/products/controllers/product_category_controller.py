@@ -4,15 +4,16 @@ from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
 from ..serializers import ProductCategoryDetailSerializer
 from ..services.product_category_service import ProductCategoryService
+from ..repositories.product_category_repository import ProductCategoryRepository
+
+repo = ProductCategoryRepository()
+service = ProductCategoryService(repo)
 
 
 class CategoryPagination(PageNumberPagination):
     page_size = 5
     page_size_query_param = "page_size"
     max_page_size = 100
-
-
-service = ProductCategoryService()
 
 
 @api_view(["GET", "POST"])
@@ -80,8 +81,8 @@ def productCategoryDetailView(request, id):
         elif request.method == "DELETE":
             service.delete_category(id)
             return Response(
-                {"message": "Category deleted successfully"}, 
-                status=status.HTTP_204_NO_CONTENT
+                {"message": "Category deleted successfully"},
+                status=status.HTTP_204_NO_CONTENT,
             )
 
     except ValueError as e:

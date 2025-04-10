@@ -4,14 +4,15 @@ from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
 from products.serializers import ProductDetailSerializer
 from products.services.product_service import ProductService
+from products.repositories.product_repository import ProductRepository
+
+repo = ProductRepository()
+product_service = ProductService(repo)
 
 
 class ProductPagination(PageNumberPagination):
     page_size = 5  # Set the number of products per page
     page_size_query_param = "page_size"
-
-
-product_service = ProductService()
 
 
 @api_view(["GET", "POST"])

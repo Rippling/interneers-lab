@@ -1,9 +1,6 @@
-from products.repositories.product_category_repository import ProductCategoryRepository
-
-
 class ProductCategoryService:
-    def __init__(self):
-        self.repository = ProductCategoryRepository()
+    def __init__(self, repository):
+        self.repository = repository
 
     def get_all_categories(self):
         """Get all categories"""

@@ -1,10 +1,9 @@
-from products.repositories.product_repository import ProductRepository
 from decimal import Decimal, InvalidOperation
 
 
 class ProductService:
-    def __init__(self):
-        self.repository = ProductRepository()
+    def __init__(self, repository):
+        self.repository = repository
 
     def get_all_products(self, sort_by=None, filters=None):
         """
