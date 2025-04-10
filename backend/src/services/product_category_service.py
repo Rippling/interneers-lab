@@ -38,7 +38,7 @@ class ProductCategoryService:
         return ProductCategory.objects.get(id=category_id)
 
     @staticmethod
-    def get_category_by_title(category_title: int)-> ProductCategory:
+    def get_category_by_title(category_title: str)-> ProductCategory:
         """
         Fetches a product category by title.
 
