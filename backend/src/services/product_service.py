@@ -1,4 +1,4 @@
-from backend.src.models.product import Product  # Assuming the Product model is in models/product.py
+from src.models.product import Product  # Assuming the Product model is in models/product.py
 
 #pylint: disable=no-member
 

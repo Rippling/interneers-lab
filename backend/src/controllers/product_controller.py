@@ -10,9 +10,9 @@ Rest are functions that implement specific method endpoints, or helper functions
 import json
 import math
 from django.http import HttpRequest, JsonResponse
-from backend.src.utils.error import generate_error_response
+from src.utils.error import generate_error_response
 
-from backend.src.models.product import create_product, Product
+from src.models.product import create_product, Product
 
 from mongoengine.errors import DoesNotExist, ValidationError
 

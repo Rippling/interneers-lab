@@ -1,5 +1,7 @@
-from src.services.product_category_service import ProductCategoryService
+from src.models.product_category import ProductCategory
 from mongoengine.errors import ValidationError, DoesNotExist
+
+#pylint: disable=no-member
 
 def validate_category(category_title: str):
     """
@@ -14,6 +16,6 @@ def validate_category(category_title: str):
     if not isinstance(category_title, str):
         raise ValidationError("Category title must be a string.")
     try:
-        ProductCategoryService.get_category_by_title(category_title)
+        ProductCategory.objects.get(title= category_title)
     except DoesNotExist as e:
         raise ValidationError("Category does not exist in the database.") from e
