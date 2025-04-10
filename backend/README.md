@@ -87,6 +87,27 @@ category field to a reference-based Category model.
  
 ![Database Migration Flow](migration_mechanism.png)
 
+## Migration Sequence
+The migration process follows three steps to ensure clean and safe transition of data.
+
+### 1. Create Categories
+```python
+python manage.py create_categories
+```
+Creates `ProductCategory` entries from unique category strings to enable model-based referencing.
+
+### 2. Backup Old Category Field
+```python
+python manage.py copy_categories_to_old
+```
+Backs up the original category into `old_category` and removes the old `category` field to prepare for migration.
+
+###  3. Link Categories
+```python
+python manage.py link_categories
+```
+Links products to `ProductCategory` using `old_category`, then cleans up the temporary field.
+
 ## Validation Rules
 
 ### Product Requirements
