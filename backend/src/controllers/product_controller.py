@@ -16,8 +16,6 @@ from src.models.product import create_product, Product
 
 from mongoengine.errors import DoesNotExist, ValidationError
 
-products= []
-
 
 def product_endpoint(request: HttpRequest, request_id: str= None):
     """
