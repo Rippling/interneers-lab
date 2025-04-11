@@ -93,4 +93,4 @@ class ProductCategoryRepository:
             category.delete()
             return True
         else:
-            raise ValueError(f"Category with id {category_id} not found.")
+            raise ValueError(f"Category with id {category_id} not found.")
