@@ -87,6 +87,10 @@ class ProductCategoryRepository:
 
     def delete(self, category_id):
         """Delete category from mongo database"""
-        category = ProductCategory.objects.get(id=category_id)
-        category.delete()
-        return True
+        
+        category = self.get_by_id(category_id)
+        if category:
+            category.delete()
+            return True
+        else:
+            raise ValueError(f"Category with id {category_id} not found.")
