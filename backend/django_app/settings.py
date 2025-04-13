@@ -86,7 +86,8 @@ MONGO_DB_NAME = "interneersLab"
 
 connect(
     db=MONGO_DB_NAME,
-    host=f"mongodb://localhost:27017/{MONGO_DB_NAME}"
+    host=f"mongodb://localhost:27017/{MONGO_DB_NAME}",
+    uuidRepresentation='standard'
 )
 
 

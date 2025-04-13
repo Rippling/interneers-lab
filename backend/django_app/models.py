@@ -52,7 +52,22 @@ class Product(Document):
         if "description" in fields and hasattr(self, "description"):
             data["description"] = self.description
         if "category" in fields and hasattr(self, "category"):
-            data["category"] = self.category if self.category else None
+            # Handle different types of category data
+            if self.category:
+                if isinstance(self.category, dict):
+                    # If category is a dictionary, use get()
+                    data["category"] = {
+                        "title": self.category.get("title", ""),
+                        "description": self.category.get("description", "")
+                    }
+                elif hasattr(self.category, "__iter__") and not isinstance(self.category, str):
+                    # Handle BaseList objects
+                    data["category"] = {"title": str(self.category)}
+                else:
+                    # Fall back to string representation
+                    data["category"] = str(self.category)
+            else:
+                data["category"] = None
         if "price" in fields and hasattr(self, "price"):
             data["price"] = self.price
         if "brand" in fields and hasattr(self, "brand"):
@@ -61,4 +76,5 @@ class Product(Document):
             data["quantity"] = self.quantity
 
         return data
+
 
