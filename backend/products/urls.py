@@ -6,8 +6,8 @@ from products.controllers.product_category_controller import (
 )
 
 urlpatterns = [
-    path("products/", productsView),
-    path("products/<str:id>/", productDetailView),
-    path("categories/", productCategoryView),
-    path("categories/<str:id>/", productCategoryDetailView),
+    path("products/", productsView , name='products'),
+    path("products/<str:id>/", productDetailView, name='product-detail'),
+    path("categories/", productCategoryView, name='product-categories'),
+    path("categories/<str:id>/", productCategoryDetailView, name='product-category-detail'),
 ]
