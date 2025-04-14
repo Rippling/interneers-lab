@@ -85,12 +85,15 @@ class ProductCategoryRepository:
         except ProductCategory.DoesNotExist:
             raise ValueError(f"Category with id {category_id} not found")
 
+
     def delete(self, category_id):
         """Delete category from mongo database"""
-        
-        category = self.get_by_id(category_id)
-        if category:
+        try:
+            
+            category = ProductCategory.objects.get(id=category_id)
             category.delete()
             return True
-        else:
+        except DoesNotExist:
             raise ValueError(f"Category with id {category_id} not found.")
+        except ValidationError as e:
+            raise ValueError(f"Invalid category ID: {str(e)}")
