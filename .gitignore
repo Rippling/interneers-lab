@@ -5,3 +5,7 @@ venv/
 
 .env
 *.log
+
+# coverage reports
+htmlcov/
+.coverage
