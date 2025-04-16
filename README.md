@@ -321,9 +321,24 @@ def hello_name(request):
     name = request.GET.get("name", "World")
     return JsonResponse({"message": f"Hello, {name}!"})
 
+
+
+def hello_name_age(request):
+    """
+    A simple view that returns 'Hello, {name}! You are {age} years old.' in JSON format.
+    Uses query parameters named 'name' and 'age'.
+    """
+    name = request.GET.get("name", "World")
+    age = request.GET.get("age", "unknown")  # Default to 'unknown' if age is not provided
+
+    return JsonResponse({"message": f"Hello, {name}! You are {age} years old."})
+
+# test this using -> hello_name_age/?name=John&age=25
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('hello/', hello_name), 
+    path('hello_name_age/', hello_name_age), 
     # Example usage: /hello/?name=Bob
     # returns {"message": "Hello, Bob!"}
 ]
@@ -364,6 +379,9 @@ Enter the endpoint, for example:
 ```
 http://127.0.0.1:8001/hello/?name=Bob
 ```
+### http://127.0.0.1:8000/hello_name/?name=John%20Doe!@#  
+# This shows that the API can handle special characters as well.
+
 
 Send the request. You should see a JSON response:
 ```
@@ -519,7 +537,7 @@ DATABASES = {}
 ---
 
 
-
-
-
-
+![GitHub Repo stars](https://img.shields.io/github/stars/VedanshiAwasthi/interneers-lab?style=social)  
+![GitHub forks](https://img.shields.io/github/forks/VedanshiAwasthi/interneers-lab?style=social)  
+![GitHub last commit](https://img.shields.io/github/last-commit/VedanshiAwasthi/interneers-lab)  
+![GitHub license](https://img.shields.io/github/license/VedanshiAwasthi/interneers-lab)
