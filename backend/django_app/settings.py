@@ -143,7 +143,6 @@ USE_TZ = True
 STATIC_URL = "/static/"
 
 
-Configure static file settings for frontend templates and assets.
 # For development, this is often needed
 STATICFILES_DIRS = [
     Path(BASE_DIR).parent / 'frontend' / 'static'
