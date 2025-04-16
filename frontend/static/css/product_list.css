@@ -1,0 +1,137 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  background: linear-gradient(135deg, #f0f4ff, #d9e4f5, #fef9ff);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 10px;
+}
+
+h1 {
+  margin: 40px 0 20px 0;
+  font-size: 2.2rem;
+  color: #222;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  text-align: center;
+}
+
+h1::before,
+h1::after {
+  content: "";
+  display: inline-block;
+  width: 80px;
+  height: 2px;
+  background: #ccc;
+  position: relative;
+  top: -6px;
+  margin: 0 15px;
+}
+
+#product-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 25px;
+  width: 90%;
+  max-width: 1200px;
+  padding: 20px;
+  justify-items: center;
+}
+
+.product-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  cursor: pointer;
+  width: 100%;
+  max-width: 280px;
+}
+
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.product-card h3 {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+  color: #1a1a1a;
+}
+
+.product-card p {
+  margin: 6px 0;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.product-card hr {
+  margin: 12px 0;
+  border: none;
+  border-top: 1px solid #eaeaea;
+}
+
+.product-card .category {
+  font-style: italic;
+  color: #5a5a5a;
+}
+
+.product-card .price {
+  color: #e63946;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.product-card .quantity {
+  color: #2a9d8f;
+  font-weight: 600;
+}
+
+#pagination-buttons button {
+  background-color: #333;
+  color: white;
+  border: 1px solid #333;
+  padding: 12px 24px;
+  margin: 0 8px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    transform 0.3s,
+    box-shadow 0.3s;
+}
+
+#pagination-buttons button:hover {
+  background-color: #555;
+  border-color: #555;
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#pagination-buttons button:disabled {
+  background-color: #ddd;
+  color: #888;
+  border: 1px solid #ddd;
+  cursor: not-allowed;
+}
+
+#pagination-buttons p {
+  font-size: 16px;
+  color: #888;
+}
