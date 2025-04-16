@@ -1,0 +1,102 @@
+/* General body styling */
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(
+    135deg,
+    #a1c4fd,
+    #c2e9fb
+  ); /* Beautiful gradient */
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Container that holds the product cards */
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  width: 90%;
+  max-width: 1200px;
+}
+
+/* Product list container styling */
+.product-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Adds space between the individual cards */
+  justify-content: space-around; /* Can be adjusted based on layout needs */
+  padding: 20px;
+}
+
+/* Styling for individual product cards */
+.product-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  cursor: pointer;
+  width: 300px; /* Set width for each card */
+  margin-bottom: 20px; /* Ensures space between rows */
+}
+
+/* Hover effect for product cards */
+.product-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Image styling inside the product card */
+.product-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+/* Styling for the product info container inside each card */
+.product-info {
+  padding: 15px;
+}
+
+/* Product title styling */
+.product-title {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* Product description styling */
+.product-description {
+  font-size: 0.9em;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+/* Product price styling */
+.product-price {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #4caf50;
+}
+
+/* Hidden product details section */
+.product-details {
+  display: none;
+}
+
+/* Display product details when expanded */
+.product-details.show {
+  display: block;
+  margin-top: 15px;
+  padding: 10px;
+  background: #f4f4f4;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
