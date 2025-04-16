@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Products Under Category</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/categoryDetail.css' %}" />
+  </head>
+  <body>
+    <h1>Products in this Category: {{ category_title }}</h1>
+    <div id="product-container" class="product-container"></div>
+
+    {% load static %}
+    <script src="{% static 'js/category.js' %}"></script>
+  </body>
+</html>
