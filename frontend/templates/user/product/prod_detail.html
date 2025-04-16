@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Product Details</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/prodDetail.css' %}" />
+  </head>
+  <body>
+    <div id="product-detail"></div>
+
+    <script>
+      const productId = "{{ product_id }}";
+
+      fetch(`/api/products/${productId}/`)
+        .then((response) => {
+          if (!response.ok) throw new Error("Product not found");
+          return response.json();
+        })
+        .then((product) => {
+          const container = document.getElementById("product-detail");
+          container.innerHTML = `
+                    <h1>${product.name}</h1>
+                    <p>${product.description}</p>
+                    <p>Brand: ${product.brand}</p>
+                    <p>Category: ${product.category.join(", ")}</p>
+                    <p>Price: ₹${product.price}</p>
+                    <p>Quantity: ${product.quantity}</p>
+                `;
+        })
+        .catch((error) => {
+          document.getElementById("product-detail").innerHTML =
+            `<p>${error.message}</p>`;
+        });
+    </script>
+  </body>
+</html>
