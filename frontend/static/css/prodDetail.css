@@ -1,0 +1,78 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #f0f4ff, #d9e4f5, #fef9ff);
+}
+
+#product-detail {
+  background: #fff;
+  padding: 35px;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+#product-detail:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+#product-detail h1 {
+  font-size: 2.2rem;
+  color: #222;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+#product-detail p {
+  font-size: 1.1rem;
+  margin: 10px 0;
+  color: #555;
+}
+
+#product-detail p:nth-of-type(2) {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+#product-detail p:nth-of-type(3) {
+  font-style: italic;
+  color: #5a5a5a;
+}
+
+#product-detail p:nth-of-type(4) {
+  color: #e63946;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+#product-detail p:nth-of-type(5) {
+  color: #2a9d8f;
+  font-weight: 600;
+}
+
+#error {
+  color: red;
+  font-size: 1.2rem;
+}
