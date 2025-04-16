@@ -1,0 +1,47 @@
+name: Run Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run Unit Tests
+      run: |
+        python -m unittest discover django_app/tests
+
+    - name: Run Integration Tests
+      run: |
+        python django_app/tests/test_integration.py
+
+    - name: Check Code Coverage
+      run: |
+        coverage run --source=django_app -m unittest discover django_app/tests
+        coverage report -m
+
+    - name: Enforce Coverage
+      run: |
+        coverage report -m | grep "TOTAL" | awk '{ if ($4 < 80.0) exit 1 }'
