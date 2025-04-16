@@ -16,7 +16,7 @@ from ..errorHandler import handle_exception
 from ..models.CategoryModel import ProductCategory
 
 class ProductPagination(PageNumberPagination):
-    page_size = 2
+    page_size = 6
     page_size_query_param = 'page_size'
     max_page_size = 100
 
@@ -79,9 +79,7 @@ class ProductUpdate(generics.UpdateAPIView):
             if result is None:
                 return Response({"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND)
 
-            # if isinstance(result, dict) and "errors" in result:
-            #     raise ValidationError(result["errors"])  
-
+           
             return Response({
                 "message": "Product updated successfully",
                 "data": ProductSerializer(result).data
