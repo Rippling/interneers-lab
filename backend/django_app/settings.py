@@ -25,7 +25,7 @@ SECRET_KEY = "setup key"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*', 'testserver']
 
 
 # Application definition
@@ -37,9 +37,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
+    "rest_framework_mongoengine",
+    "product",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -48,6 +53,10 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+
+CORS_ALLOW_ALL_ORIGINS = True  # 🔓 For dev only
+
 
 ROOT_URLCONF = "django_app.urls"
 
@@ -105,7 +114,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+# TIME_ZONE = "UTC"
+TIME_ZONE = 'Asia/Kolkata'
+
 
 USE_I18N = True
 
@@ -121,3 +132,18 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'product.pagination.StandardResultsSetPagination',
+    'PAGE_SIZE': 10,
+    # ... other DRF settings ...
+}
+
+
+from mongoengine import connect
+
+connect(db='product_db',
+        # host='mongodb://root:example@mongo:27017/product_db?authSource=admin',
+        # port=27017
+        )
