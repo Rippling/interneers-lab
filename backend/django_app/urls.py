@@ -1,4 +1,5 @@
-from django.contrib import admin
+#from django.contrib import admin
+from django_mongoengine import mongo_admin
 from django.urls import path,include
 from django.http import HttpResponse,JsonResponse
 
@@ -49,7 +50,8 @@ def home(request):
 
 urlpatterns = [
     path('', home),
-    path('admin/', admin.site.urls),
+    #path('admin/', admin.site.urls),
+    path('mongo-admin/', mongo_admin.site.urls),
     path('hello/', hello_world),
     path('api/',include('products.urls')),
 

@@ -20,6 +20,9 @@ MONGO_CLIENT = pymongo.MongoClient("mongodb://root:example@localhost:27018")
 MONGO_DB = MONGO_CLIENT.bmi_db  # Use your MongoDB database name
 '''
 
+
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -38,16 +41,30 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+MONGODB_DATABASES = {
+    "default": {
+        "name": "Products_db",
+        "host": "localhost",
+        "port": 27018,
+        # optional authentication
+        # "username": "your_user",
+        # "password": "your_pass",
+    }
+}
+
+
 INSTALLED_APPS = [
-    "django.contrib.admin",
+    #"django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_mongoengine",
+    "django_mongoengine.mongo_admin",
     "rest_framework",
-    "products",
-    
+    "rest_framework_mongoengine",
+    "products.apps.ProductsConfig",
 
 ]
 
