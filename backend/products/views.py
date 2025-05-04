@@ -10,9 +10,12 @@ from products.models import ProductCategory, Products
 
 class ProductView(ListCreateAPIView):
 
-    # queryset = ProductService.list_products()
-    queryset = Products.objects.all()
+    #queryset = ProductService.list_products()
+    #queryset = Products.objects.all()
     serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        return ProductService.list_products()
 
 
     def create(self, request, *args, **kwargs):
@@ -31,11 +34,14 @@ class ProductView(ListCreateAPIView):
 
 class ProductDetailView(RetrieveUpdateDestroyAPIView):
 
-    # queryset = ProductService.list_products()
-    queryset = Products.objects.all()
+    #queryset = ProductService.list_products()
+    #queryset = Products.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'product_id'       # The field in your model
     lookup_url_kwarg = 'product_id'
+
+    def get_queryset(self):
+        return ProductService.list_products()
 
 
     # def get_object(self):
@@ -53,14 +59,14 @@ class ProductDetailView(RetrieveUpdateDestroyAPIView):
 
 
 class ProductCategoryView(ListCreateAPIView):
-    # queryset = ProductCategoryService.list_products()
-    queryset = ProductCategory.objects.all()
+    #queryset = ProductCategoryService.list_products()
+    #queryset = ProductCategory.objects.all()
     serializer_class = ProductCategorySerializer
 
 
 
-    # def get_queryset(self):
-    #     return ProductCategoryService.list_products()
+    def get_queryset(self):
+         return ProductCategoryService.list_products()
 
     # def create(self, request, *args, **kwargs):
     #     product = ProductCategoryService.create_product(request.data)
@@ -68,19 +74,27 @@ class ProductCategoryView(ListCreateAPIView):
     #     return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-
-
-
 class ProductsByCategoryView(APIView):
+
     def get(self, request, category_id):
         try:
-            category = ProductCategory.objects.get(category_id=category_id)
+            category = ProductCategoryService.retrieve_category(category_id=category_id)
+            #category = ProductCategory.objects.get(category_id=category_id)
+        except ProductCategory.DoesNotExist:
+            return Response({"error": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        products = ProductCategoryService.filter_products_by_category(category=category)
+        #products = Products.objects.filter(category=category)
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def delete(self, request, category_id):
+        try:
+            ProductCategoryService.delete_category(category_id=category_id)
         except ProductCategory.DoesNotExist:
             return Response({"error": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        products = Products.objects.filter(category=category)
-        serializer = ProductSerializer(products, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     
 
