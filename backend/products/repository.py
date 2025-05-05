@@ -6,7 +6,7 @@ class ProductRepository:
     
     @staticmethod
     def get_all_products():
-        return Products.objects()
+        return Products.objects.all()
 
     @staticmethod
     def get_product_by_int_id(int_id):
@@ -29,31 +29,38 @@ class ProductRepository:
     def delete_product(product):
         product.delete()
 
+    @staticmethod
+    def filter_products_by_category(category):
+        return Products.objects.filter(category=category)
+
 
 
 class ProductCategoryRepository:
     
     @staticmethod
-    def get_all_products():
-        return ProductCategory.objects()
+    def get_all_categories():
+        return ProductCategory.objects.all()
 
     @staticmethod
-    def get_product_by_int_id(int_id):
-        return ProductCategory.objects.get(_id=int(int_id))
+    def get_category_by_id(int_id):
+        return ProductCategory.objects.get(category_id=int(int_id))
 
     @staticmethod
-    def create_product(data):
-        product = ProductCategory(**data)
-        product.save()
-        return product
+    def create_category(data):
+        category = ProductCategory(**data)
+        category.save()
+        return category
 
     @staticmethod
-    def update_product(product, data):
+    def update_category(category, data):
         for key, value in data.items():
-            setattr(product, key, value)
-        product.save()
-        return product
+            setattr(category, key, value)
+        category.save()
+        return category
 
     @staticmethod
-    def delete_product(product):
-        product.delete()
+    def delete_category(category):
+        category.delete()
+
+
+
