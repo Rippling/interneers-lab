@@ -66,7 +66,7 @@ class ProductCategoryView(ListCreateAPIView):
 
 
     def get_queryset(self):
-         return ProductCategoryService.list_products()
+         return ProductCategoryService.list_categories()
 
     # def create(self, request, *args, **kwargs):
     #     product = ProductCategoryService.create_product(request.data)

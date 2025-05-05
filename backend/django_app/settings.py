@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework_mongoengine",
     "products.apps.ProductsConfig",
+    "corsheaders",
 
 ]
 
@@ -76,9 +77,11 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "django_app.urls"
+CORS_ALLOW_ALL_ORIGINS = True  # for testing only
 
 TEMPLATES = [
     {
