@@ -1,0 +1,393 @@
+{
+	"info": {
+		"_postman_id": "302445ac-975d-43ea-9c28-54555f103f6a",
+		"name": "Product Catalog API",
+		"description": "A complete collection for testing the Product Catalog API endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32913142"
+	},
+	"item": [
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "List Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/categories",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"categories"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "",
+									"description": "Search in name and description",
+									"disabled": true
+								},
+								{
+									"key": "ordering",
+									"value": "name",
+									"description": "Order by name or created_at",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Category",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Electronics\",\n    \"description\": \"Electronic devices and accessories\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/categories/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"categories",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/categories/:slug",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"categories",
+								":slug"
+							],
+							"variable": [
+								{
+									"key": "slug",
+									"value": "electronics"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Category",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Electronics\",\n    \"description\": \"Updated description for electronic devices\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/categories/:slug/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"categories",
+								":slug",
+								""
+							],
+							"variable": [
+								{
+									"key": "slug",
+									"value": "electronics",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Category",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/categories/:slug/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"categories",
+								":slug",
+								""
+							],
+							"variable": [
+								{
+									"key": "slug",
+									"value": "electronics",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "List Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/products?ordering=name",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"products"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "",
+									"description": "Search in name, description, SKU"
+								},
+								{
+									"key": "ordering",
+									"value": "name",
+									"description": "Order by name, price, created_at"
+								},
+								{
+									"key": "category",
+									"value": "electronics",
+									"description": "Filter by category slug",
+									"disabled": true
+								},
+								{
+									"key": "min_price",
+									"value": "",
+									"description": "Minimum price filter"
+								},
+								{
+									"key": "max_price",
+									"value": "",
+									"description": "Maximum price filter"
+								},
+								{
+									"key": "stock_status",
+									"value": "",
+									"description": "Filter by stock status"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Smartphone\",\n    \"description\": \"Latest smartphone model\",\n    \"price\": 999.99,\n    \"category\": \"electronics\",\n    \"sku\": \"PHONE001\",\n    \"quantity\": 50,\n    \"brand\": \"TechBrand\",\n    \"tags\": [\"mobile\", \"electronics\"],\n    \"status\": \"active\",\n    \"featured\": true,\n    \"low_stock_threshold\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/products/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"products",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Featured Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/products/featured",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"products",
+								"featured"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Low Stock Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/products/low_stock",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"products",
+								"low_stock"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Stock",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"quantity\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/products/:slug/update_stock/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"products",
+								":slug",
+								"update_stock",
+								""
+							],
+							"variable": [
+								{
+									"key": "slug",
+									"value": "python-programming",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
