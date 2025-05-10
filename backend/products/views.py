@@ -13,6 +13,7 @@ class ProductView(ListCreateAPIView):
     #queryset = ProductService.list_products()
     #queryset = Products.objects.all()
     serializer_class = ProductSerializer
+    
 
     def get_queryset(self):
         return ProductService.list_products()
@@ -20,6 +21,7 @@ class ProductView(ListCreateAPIView):
 
     def create(self, request, *args, **kwargs):
         # Custom product creation logic (if needed)
+        print("request Data", request.data)
         return super().create(request, *args, **kwargs)
 
 
@@ -79,7 +81,7 @@ class ProductsByCategoryView(APIView):
     def get(self, request, category_id):
         try:
             category = ProductCategoryService.retrieve_category(category_id=category_id)
-            #category = ProductCategory.objects.get(category_id=category_id)
+            #category = ProductCategory.objects.get(category_Id=category_id)
         except ProductCategory.DoesNotExist:
             return Response({"error": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
         
@@ -87,6 +89,22 @@ class ProductsByCategoryView(APIView):
         #products = Products.objects.filter(category=category)
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def post(self, request, category_id):
+        try:
+            category = ProductCategoryService.retrieve_category(category_id=category_id)
+        except ProductCategory.DoesNotExist:
+            return Response({"error": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        data_with_category = request.data.copy()
+        data_with_category['category_Id'] = category_id
+
+        serializer = ProductSerializer(data=data_with_category)
+        
+        if serializer.is_valid():
+            serializer.save(category=category)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def delete(self, request, category_id):
         try:

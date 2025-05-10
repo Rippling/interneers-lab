@@ -1,9 +1,9 @@
 # backend/scripts/seed_data.py
 
 
-from backend.products.models import ProductCategory, Products
+from models import ProductCategory, Products
 
-from backend.products.connection import init_mongo
+from connection import init_mongo
 
 init_mongo()
 

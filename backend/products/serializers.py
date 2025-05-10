@@ -22,7 +22,8 @@ class ObjectIdField(serializers.Field):
 class ProductSerializer(DocumentSerializer):
 
     category = serializers.SerializerMethodField()  # for displaying category name in the response
-    category_id = serializers.IntegerField(write_only=True)  # for accepting category_id as input
+    category_Id = serializers.IntegerField(write_only=True) # for accepting category_id as input
+    category_id = serializers.SerializerMethodField() 
 
     class Meta:
         model = Products
@@ -32,19 +33,22 @@ class ProductSerializer(DocumentSerializer):
 
     def get_category(self, obj):
         return obj.category.category_name if obj.category else None
+    
+    def get_category_id(self, obj):
+        return obj.category.category_id if obj.category else None
 
     def create(self, validated_data):
         # Pull category reference
-        category_id = validated_data.pop('category_id', None)
-
+        category_Id = validated_data.pop('category_Id', None)
         try:
-            category_obj = ProductCategory.objects.get(category_id=category_id)
+            category_obj = ProductCategory.objects.get(category_id=category_Id)
         
         except ProductCategory.DoesNotExist:
-            raise ValidationError({"category_id": f"Category with id {category_id} not found."})
+            raise ValidationError({"category_id": f"Category with id {category_Id} not found."})
         
         product = Products(**validated_data)
         product.category = category_obj
+        product.category_Id = category_Id
         if not product.product_id:
             last_product = Products.objects.order_by('-product_id').first()
             product.product_id = last_product.product_id + 1 if last_product else 1
