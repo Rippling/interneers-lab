@@ -64,6 +64,6 @@ class ProductCategoryService:
     
     @staticmethod
     def delete_products_by_category(category):
-        result = Products.objects(category=category).delete()
+        result = ProductRepository.filter_products_by_category(category=category).delete()
         return result.get("n", 0)  # returns number of deleted documents
 

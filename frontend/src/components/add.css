@@ -1,0 +1,24 @@
+.add-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .form-container {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    margin-top: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .form-section {
+    width: 400px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    background: #f9f9f9;
+  }
+  
