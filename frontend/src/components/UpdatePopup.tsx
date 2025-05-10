@@ -6,6 +6,8 @@ type Product = {
   name: string;
   description: string;
   brand: string;
+  category_id: number;
+  category_Id: number;
 };
 
 interface Props {
@@ -20,6 +22,8 @@ const UpdatePopup: React.FC<Props> = ({ product, onClose, onUpdated }) => {
     description: product.description,
     brand: product.brand,
     product_id: product.product_id,
+    category_Id: product.category_id,
+    category_id: product.category_id,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,7 +75,14 @@ const UpdatePopup: React.FC<Props> = ({ product, onClose, onUpdated }) => {
       >
         <h3>Update Product</h3>
         <input
-          name="ProductID"
+          name="category_Id"
+          value={form.category_id}
+          onChange={handleChange}
+          placeholder="Name"
+        />
+        <br />
+        <input
+          name="product_id"
           value={form.product_id}
           onChange={handleChange}
           placeholder="Name"

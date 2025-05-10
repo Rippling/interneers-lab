@@ -7,6 +7,8 @@ type Product = {
   name: string;
   description: string;
   brand: string;
+  category_id: number;
+  category_Id: number;
 };
 
 const Products: React.FC = () => {
