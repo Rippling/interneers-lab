@@ -1,0 +1,46 @@
+/* Styling for form container */
+
+  /* Label styling */
+  .update-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    gap: 20px; /* space between each label-input pair */
+    margin: 20px 5px; /* center the form */
+    border:#4a90e2 1px solid;
+    border-radius: 5px;
+
+  }
+  
+  .form-group {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* space between label and input */
+  }
+  
+  .update-form label {
+    font-size: 18px;
+    font-weight: bold;
+    width: 100px; /* fixed width so all labels align */
+  }
+  
+  .update-form input {
+    padding: 7px;
+    font-size: 18px;
+    border: 0.75px solid #ccc;
+    border-radius: 3px;
+    width: 100px;
+  }
+  
+  
+  /* Optional: Button styling */
+  .update-form button {
+    padding: 10px 20px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  

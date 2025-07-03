@@ -1,4 +1,5 @@
 __pycache__/
+rippling_env
 *.py[cod]
 venv/
 *.env
