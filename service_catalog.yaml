@@ -1,0 +1,5 @@
+version: 2025-05-14-16-46-01
+services:
+  - name: interneers-lab
+    team: ben-mrkt-p-p
+    jira_project_key: BENPNP
