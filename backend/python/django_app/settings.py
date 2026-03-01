@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "warehouse",
+    "product_service",
 ]
 
 MIDDLEWARE = [
@@ -121,3 +123,12 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/6.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+from mongoengine import connect
+
+from mongoengine import connect
+
+connect(
+    db="product_db",
+    host="mongodb://root:example@localhost:27019/product_db?authSource=admin"
+)
