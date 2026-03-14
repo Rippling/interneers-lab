@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "warehouse",
     "product_service",
+    "product_category",
 ]
 
 MIDDLEWARE = [
