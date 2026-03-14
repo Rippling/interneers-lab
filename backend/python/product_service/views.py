@@ -46,6 +46,23 @@ def get_product(request, product_id):
         return JsonResponse({"error" : str(er)}, status=404)
 
 @csrf_exempt
+def list_products_by_category_id(request, category_id):
+    if request.method == "GET":
+        products = ProductServices.list_products_by_category_id(category_id)
+
+        return JsonResponse([
+            {
+                "id": str(p.id),
+                "name": p.name,
+                "description": p.description,
+                "price": p.price
+            }
+            for p in products
+        ], safe=False)
+    else:
+        return JsonResponse({"error" : "GET method not used"}, status=400)
+
+@csrf_exempt
 def delete_product(request, product_id):
     if request.method == "DELETE":
         ProductServices.delete_product(product_id)

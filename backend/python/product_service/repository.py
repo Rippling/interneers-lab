@@ -13,6 +13,10 @@ class ProductRepository:
         return Product.objects()
     
     @staticmethod
+    def get_all_by_category_id(category_id):
+        return Product.objects(category=category_id)
+    
+    @staticmethod
     def get_by_id(product_id):
         return Product.objects(id=product_id).first()
     

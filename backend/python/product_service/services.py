@@ -21,6 +21,10 @@ class ProductServices():
             raise ValueError("Product not found")
         
         return product
+   
+    @staticmethod
+    def list_products_by_category_id(category_id):
+        return ProductRepository.get_all_by_category_id(category_id)
     
     @staticmethod
     def delete_product(product_id):
