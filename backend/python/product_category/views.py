@@ -41,7 +41,7 @@ def get_product_category_by_id(request, product_category_id):
                 "description": product_category.description
             })
         except ValueError as e:
-            return {"error": str(e)}
+            return JsonResponse({"error": str(e)} , status=404)
     return {"error": "Invalid request method"}
 
 @csrf_exempt
@@ -64,8 +64,10 @@ def delete_product_category(request, product_category_id):
     if request.method == 'DELETE':
         product_category = ProductCategoryService.delete_product_category(product_category_id)
         if product_category:
-            return JsonResponse({"message": "Product category deleted"})
+            return JsonResponse({"message": "Product category deleted"}, status=200)
         else:
-            return JsonResponse({"error": "Product category not found"})
+            return JsonResponse({"error": "Product category not found"}, status=404)
     return {"error": "Invalid request method"}
+
+
     

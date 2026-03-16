@@ -84,7 +84,7 @@ def remove_category_from_product(request, product_id):
                 "description": product.description,
                 "price": product.price,
                 "category": None
-            })
+            },status=200)
         except ValueError as er:
             return JsonResponse({"error": str(er)}, status=404)
     else:
