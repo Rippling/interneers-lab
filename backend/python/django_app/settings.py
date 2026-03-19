@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "product",
     "product_csr",
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
@@ -136,9 +137,6 @@ from mongoengine import connect
 
 connect(
     db="product_db",
-    username=MONGO_USER,
-    password=MONGO_PASS,
-    host=MONGO_HOST,
-    port=int(MONGO_PORT),
-    authentication_source="admin"
+    host="localhost",
+    port=27017,
 )

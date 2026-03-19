@@ -3,14 +3,33 @@ from mongoengine import (
     StringField,
     FloatField,
     IntField,
-    DateTimeField
+    DateTimeField,
+    ReferenceField
 )
 from datetime import datetime
 
+
+class ProductCategory(Document):
+    title = StringField(required=True, unique=True)
+    description = StringField()
+    
+    meta = {
+        "collection" : "product_categories"
+    }
+    
+    def to_dict(self):
+        return{
+            "id": str(self.id),
+            "title":self.title,
+            "description": self.description
+        }
+
+
+
 class Product(Document):
     name = StringField(required=True)
-    category = StringField()
-    brand = StringField()
+    category = ReferenceField(ProductCategory)
+    brand = StringField(required=True)
     price = FloatField()
     quantity = IntField()
 
@@ -29,7 +48,7 @@ class Product(Document):
         return {
             "id": str(self.id),
             "name": self.name,
-            "category": self.category,
+            "category": str(self.category.id) if self.category else None,
             "brand": self.brand,
             "price": self.price,
             "quantity": self.quantity,
