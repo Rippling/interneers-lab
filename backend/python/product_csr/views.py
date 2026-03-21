@@ -13,8 +13,18 @@ category_service = CategoryService()
 def products(request):
 
     if request.method == "GET":
+        filters = {
+         "brand": request.GET.get("brand"),
+         "search": request.GET.get("search"),
+         "min_price": request.GET.get("min_price"),
+         "max_price": request.GET.get("max_price"),
+         "min_quantity": request.GET.get("min_quantity"),
+         "max_quantity": request.GET.get("max_quantity"),
+         "categories": request.GET.get("categories"),
+         }
+
         return JsonResponse(
-            {"products": service.get_all_products()},
+            {"products": service.get_all_products(filters)},
             safe=False
         )
 

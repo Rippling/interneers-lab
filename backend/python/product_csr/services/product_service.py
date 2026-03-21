@@ -9,6 +9,7 @@ class ProductService:
         self.repo = ProductRepository()
         self.category_repo = CategoryRepository() 
 
+
     # Get products by category
     def get_products_by_category(self, category_id):
         category = self.category_repo.get_by_id(category_id)
@@ -17,6 +18,7 @@ class ProductService:
 
         products = self.repo.get_by_category(category)
         return [p.to_dict() for p in products]
+
 
     # Add product to category
     def add_product_to_category(self, product_id, category_id):
@@ -33,6 +35,7 @@ class ProductService:
 
         return {"message": "Product added to category"}
 
+
     # Remove product from category
     def remove_product_from_category(self, product_id):
         product = self.repo.get_by_id(product_id)
@@ -45,7 +48,7 @@ class ProductService:
 
         return {"message": "Product removed from category"}
 
-    
+    # create product
     def create_product(self, data):
 
         required_fields = ["name", "price", "brand", "quantity"]
@@ -60,10 +63,19 @@ class ProductService:
         return self.repo.create(data).to_dict()
 
 
-    def get_all_products(self):
+    # get all product based on filetrs 
+    def get_all_products(self, filters=None):
+      filters = filters or {}
+
+      if not filters:
         products = self.repo.get_all()
-        return [p.to_dict() for p in products]
-    
+      else:
+        products = self.repo.filter_products(filters)
+
+      return [p.to_dict() for p in products]
+
+
+    # update product
     def update_product(self, product_id, data):
 
       product = self.repo.get_by_id(product_id)
