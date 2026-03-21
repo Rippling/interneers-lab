@@ -28,7 +28,7 @@ class ProductCategory(Document):
 
 class Product(Document):
     name = StringField(required=True)
-    category = ReferenceField(ProductCategory)
+    category = ReferenceField(ProductCategory , required=False)
     brand = StringField(required=True)
     price = FloatField()
     quantity = IntField()

@@ -37,4 +37,15 @@ class CategoryService :
         
         self.repo.delete(category)
         return {"message":"catgeory deleted successfully"}
+    
+    def create_category_if_not_exists(self,title):
+        existing = self.repo.get_by_title(title)
+
+        if existing:
+         return existing
+ 
+        return self.repo.create({
+         "title": title,
+         "description": ""
+        })
             

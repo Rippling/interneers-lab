@@ -22,4 +22,6 @@ class CategoryRepository:
         category.delete()
         return True
         
+    def get_by_title(self, title):
+        return ProductCategory.objects(title=title).first()
 
