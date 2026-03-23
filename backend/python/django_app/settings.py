@@ -9,12 +9,14 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 from mongoengine import connect
 
+TESTING = os.getenv("TESTING","false") == "true"
+
 connect(
-    db="product_database",
+    db="product_database_test" if TESTING else "product_database",
     host="localhost",
     username="root",
     password="example",
