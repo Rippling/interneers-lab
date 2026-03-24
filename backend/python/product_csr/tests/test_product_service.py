@@ -4,12 +4,11 @@ from unittest.mock import MagicMock
 from product_csr.services.product_service import ProductService
 
 
-
 class ProductServiceTests(SimpleTestCase):
     def setUp(self):
-        self.service = ProductService()
-        self.service.repo = MagicMock()
-        self.service.category_repo = MagicMock()
+        self.repo = MagicMock()
+        self.category_repo = MagicMock()
+        self.service = ProductService(self.repo, self.category_repo)
 
     def test_get_products_by_category_returns_serialized_products(self):
         category = MagicMock()
@@ -19,34 +18,34 @@ class ProductServiceTests(SimpleTestCase):
         product1.to_dict.return_value = {"id": "1", "name": "Phone"}
         product2.to_dict.return_value = {"id": "2", "name": "Laptop"}
 
-        self.service.category_repo.get_by_id.return_value = category
-        self.service.repo.get_by_category.return_value = [product1, product2]
+        self.category_repo.get_by_id.return_value = category
+        self.repo.get_by_category.return_value = [product1, product2]
 
         result = self.service.get_products_by_category("cat1")
 
-        self.service.category_repo.get_by_id.assert_called_once_with("cat1")
-        self.service.repo.get_by_category.assert_called_once_with(category)
+        self.category_repo.get_by_id.assert_called_once_with("cat1")
+        self.repo.get_by_category.assert_called_once_with(category)
         self.assertEqual(result, [
             {"id": "1", "name": "Phone"},
             {"id": "2", "name": "Laptop"},
         ])
 
     def test_get_products_by_category_raises_when_category_not_found(self):
-        self.service.category_repo.get_by_id.return_value = None
+        self.category_repo.get_by_id.return_value = None
 
         with self.assertRaisesMessage(ValueError, "Category not found"):
             self.service.get_products_by_category("cat1")
 
     def test_add_product_to_category_raises_when_product_not_found(self):
-        self.service.repo.get_by_id.return_value = None
-        self.service.category_repo.get_by_id.return_value = MagicMock()
+        self.repo.get_by_id.return_value = None
+        self.category_repo.get_by_id.return_value = MagicMock()
 
         with self.assertRaisesMessage(ValueError, "Product not found"):
             self.service.add_product_to_category("prod1", "cat1")
 
     def test_add_product_to_category_raises_when_category_not_found(self):
-        self.service.repo.get_by_id.return_value = MagicMock()
-        self.service.category_repo.get_by_id.return_value = None
+        self.repo.get_by_id.return_value = MagicMock()
+        self.category_repo.get_by_id.return_value = None
 
         with self.assertRaisesMessage(ValueError, "Category not found"):
             self.service.add_product_to_category("prod1", "cat1")
@@ -55,8 +54,8 @@ class ProductServiceTests(SimpleTestCase):
         product = MagicMock()
         category = MagicMock()
 
-        self.service.repo.get_by_id.return_value = product
-        self.service.category_repo.get_by_id.return_value = category
+        self.repo.get_by_id.return_value = product
+        self.category_repo.get_by_id.return_value = category
 
         result = self.service.add_product_to_category("prod1", "cat1")
 
@@ -65,14 +64,14 @@ class ProductServiceTests(SimpleTestCase):
         self.assertEqual(result, {"message": "Product added to category"})
 
     def test_remove_product_from_category_raises_when_product_not_found(self):
-        self.service.repo.get_by_id.return_value = None
+        self.repo.get_by_id.return_value = None
 
         with self.assertRaisesMessage(ValueError, "Product not found"):
             self.service.remove_product_from_category("prod1")
 
     def test_remove_product_from_category_success(self):
         product = MagicMock()
-        self.service.repo.get_by_id.return_value = product
+        self.repo.get_by_id.return_value = product
 
         result = self.service.remove_product_from_category("prod1")
 
@@ -126,11 +125,10 @@ class ProductServiceTests(SimpleTestCase):
             "price": 0,
             "brand": "Apple",
             "quantity": 5,
-          }
+        }
 
         with self.assertRaisesMessage(ValueError, "price is required"):
-           self.service.create_product(data)
-
+            self.service.create_product(data)
 
     def test_create_product_success(self):
         data = {
@@ -148,11 +146,11 @@ class ProductServiceTests(SimpleTestCase):
             "quantity": 5,
         }
 
-        self.service.repo.create.return_value = created_product
+        self.repo.create.return_value = created_product
 
         result = self.service.create_product(data)
 
-        self.service.repo.create.assert_called_once_with(data)
+        self.repo.create.assert_called_once_with(data)
         self.assertEqual(result, {
             "id": "1",
             "name": "Phone",
@@ -168,12 +166,12 @@ class ProductServiceTests(SimpleTestCase):
         product1.to_dict.return_value = {"id": "1", "name": "Phone"}
         product2.to_dict.return_value = {"id": "2", "name": "Laptop"}
 
-        self.service.repo.get_all.return_value = [product1, product2]
+        self.repo.get_all.return_value = [product1, product2]
 
         result = self.service.get_all_products()
 
-        self.service.repo.get_all.assert_called_once()
-        self.service.repo.filter_products.assert_not_called()
+        self.repo.get_all.assert_called_once()
+        self.repo.filter_products.assert_not_called()
         self.assertEqual(result, [
             {"id": "1", "name": "Phone"},
             {"id": "2", "name": "Laptop"},
@@ -183,12 +181,12 @@ class ProductServiceTests(SimpleTestCase):
         product = MagicMock()
         product.to_dict.return_value = {"id": "1", "name": "Phone"}
 
-        self.service.repo.get_all.return_value = [product]
+        self.repo.get_all.return_value = [product]
 
         result = self.service.get_all_products({})
 
-        self.service.repo.get_all.assert_called_once()
-        self.service.repo.filter_products.assert_not_called()
+        self.repo.get_all.assert_called_once()
+        self.repo.filter_products.assert_not_called()
         self.assertEqual(result, [{"id": "1", "name": "Phone"}])
 
     def test_get_all_products_with_filters_uses_filter_products(self):
@@ -196,28 +194,28 @@ class ProductServiceTests(SimpleTestCase):
         product = MagicMock()
         product.to_dict.return_value = {"id": "1", "name": "Phone", "brand": "Apple"}
 
-        self.service.repo.filter_products.return_value = [product]
+        self.repo.filter_products.return_value = [product]
 
         result = self.service.get_all_products(filters)
 
-        self.service.repo.filter_products.assert_called_once_with(filters)
-        self.service.repo.get_all.assert_not_called()
+        self.repo.filter_products.assert_called_once_with(filters)
+        self.repo.get_all.assert_not_called()
         self.assertEqual(result, [{"id": "1", "name": "Phone", "brand": "Apple"}])
 
     def test_update_product_raises_when_product_not_found(self):
-        self.service.repo.get_by_id.return_value = None
+        self.repo.get_by_id.return_value = None
 
         with self.assertRaisesMessage(ValueError, "Product not found"):
             self.service.update_product("prod1", {"name": "Updated"})
 
     def test_update_product_raises_when_brand_is_empty(self):
-        self.service.repo.get_by_id.return_value = MagicMock()
+        self.repo.get_by_id.return_value = MagicMock()
 
         with self.assertRaisesMessage(ValueError, "Brand cannot be empty"):
             self.service.update_product("prod1", {"brand": ""})
 
     def test_update_product_raises_when_price_not_positive(self):
-        self.service.repo.get_by_id.return_value = MagicMock()
+        self.repo.get_by_id.return_value = MagicMock()
 
         with self.assertRaisesMessage(ValueError, "Price must be positive"):
             self.service.update_product("prod1", {"price": 0})
@@ -233,8 +231,8 @@ class ProductServiceTests(SimpleTestCase):
             "quantity": 10,
         }
 
-        self.service.repo.get_by_id.return_value = product
-        self.service.repo.update.return_value = updated_product
+        self.repo.get_by_id.return_value = product
+        self.repo.update.return_value = updated_product
 
         data = {
             "name": "Updated Phone",
@@ -245,8 +243,8 @@ class ProductServiceTests(SimpleTestCase):
 
         result = self.service.update_product("prod1", data)
 
-        self.service.repo.get_by_id.assert_called_once_with("prod1")
-        self.service.repo.update.assert_called_once_with(product, data)
+        self.repo.get_by_id.assert_called_once_with("prod1")
+        self.repo.update.assert_called_once_with(product, data)
         self.assertEqual(result, {
             "id": "1",
             "name": "Updated Phone",
@@ -256,18 +254,16 @@ class ProductServiceTests(SimpleTestCase):
         })
 
     def test_delete_product_raises_when_product_not_found(self):
-        self.service.repo.get_by_id.return_value = None
+        self.repo.get_by_id.return_value = None
 
         with self.assertRaisesMessage(ValueError, "Product not found"):
             self.service.delete_product("prod1")
 
     def test_delete_product_success(self):
         product = MagicMock()
-        self.service.repo.get_by_id.return_value = product
+        self.repo.get_by_id.return_value = product
 
         result = self.service.delete_product("prod1")
 
-        self.service.repo.delete.assert_called_once_with(product)
+        self.repo.delete.assert_called_once_with(product)
         self.assertEqual(result, {"message": "Product deleted successfully"})
-
-
