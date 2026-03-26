@@ -95,8 +95,9 @@ def test_list_products_by_category_id(mock_repo):
 
 @patch("product_service.services.ProductRepository")
 def test_add_category_to_product(mock_repo):
-    product_id = "prod123"
-    category_id = "cat123"
+    #  category_id and product_id  should be a valid ObjectId, it must be a 12-byte input
+    product_id = "0000000000000000000000000"
+    category_id = "0000000000000000000000000"
     expected_product = {
         "id": product_id,
         "name": "Apple",
@@ -112,6 +113,18 @@ def test_add_category_to_product(mock_repo):
     result = ProductServices.add_category_to_product(product_id, category_id)
     assert result["category"] == expected_product["category"]
     mock_repo.add_category_to_product.assert_called_once_with(product_id, category_id)         
+
+def test_add_category_to_product_not_found():
+    with patch("product_service.services.ProductRepository") as mock_repo:
+        product_id = "0000000000000000000000000"
+        category_id = "000000000000000000000000"
+        mock_repo.add_category_to_product.return_value = None
+
+        with pytest.raises(ValueError) as excinfo:
+            ProductServices.add_category_to_product(product_id, category_id)
+        
+        assert str(excinfo.value) == "Product not found"
+        mock_repo.add_category_to_product.assert_called_once_with(product_id, category_id)
 
 @patch("product_service.services.ProductRepository")
 def test_remove_category_from_product(mock_repo):
@@ -131,3 +144,4 @@ def test_remove_category_from_product(mock_repo):
     result = ProductServices.remove_category_from_product(product_id)
     assert result["category"] is None
     mock_repo.remove_category_from_product.assert_called_once_with(product_id)    
+

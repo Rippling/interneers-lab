@@ -14,7 +14,7 @@ def create_product_category(request):
             "description": product_category.description,
             "message": "Product category created"
         })
-    return {"error": "Invalid request method"}
+    return JsonResponse({"error": "Invalid request method"},status=400)
 
 def get_all_product_categories(request):
     if request.method == 'GET':
@@ -29,7 +29,7 @@ def get_all_product_categories(request):
                 for pc in product_categories
             ]
         })
-    return {"error": "Invalid request method"}
+    return JsonResponse({"error": "Invalid request method"}, status=400)
 
 def get_product_category_by_id(request, product_category_id):
     if request.method == 'GET':
@@ -42,7 +42,7 @@ def get_product_category_by_id(request, product_category_id):
             })
         except ValueError as e:
             return JsonResponse({"error": str(e)} , status=404)
-    return {"error": "Invalid request method"}
+    return JsonResponse({"error": "Invalid request method"}, status=400)
 
 @csrf_exempt
 def update_product_category(request, product_category_id):
@@ -56,8 +56,8 @@ def update_product_category(request, product_category_id):
                 "description": product_category.description
             })
         except ValueError as e:
-            return {"error": str(e)}
-    return {"error": "Invalid request method"}
+            return JsonResponse({"error": str(e)}, status=404)
+    return JsonResponse({"error": "Invalid request method"}, status=400)
 
 @csrf_exempt
 def delete_product_category(request, product_category_id):
@@ -67,7 +67,7 @@ def delete_product_category(request, product_category_id):
             return JsonResponse({"message": "Product category deleted"}, status=200)
         else:
             return JsonResponse({"error": "Product category not found"}, status=404)
-    return {"error": "Invalid request method"}
+    return JsonResponse({"error": "Invalid request method"}, status=400)
 
 
     

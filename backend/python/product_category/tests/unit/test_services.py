@@ -47,4 +47,14 @@ def test_update_product_category(mock_repo):
     mock_repo.get_by_id.assert_called_once_with(1)
     mock_repo.update.assert_called_once_with(1, data)
 
+@patch("product_category.services.ProductCategoryRepository")
+def test_update_product_category_not_found(mock_repo):
+    mock_repo.get_by_id.return_value = None
+
+    data = {"description": "Fresh fruits"}
+    with pytest.raises(ValueError) as excinfo:
+        ProductCategoryService.update_product_category(1, data)
     
+    assert str(excinfo.value) == "Product Category not found"
+    mock_repo.get_by_id.assert_called_once_with(1)
+    mock_repo.update.assert_not_called()
