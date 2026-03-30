@@ -1,0 +1,35 @@
+serializers should include api validations - input correctness
+
+It also checks the model constraints but only for Django ORM. For any other DB like mongo, its not directly done.
+
+price = serializers.FloatField(min_value=0)
+name = serializers.CharField(max_length=100)
+
+we can write this
+
+validations should be in:
+API format / input correctness -	Serializer
+Business logic	-  Service
+DB constraints	-  Model
+
+
+Document Models:
+
+1-1, 1-N, etc
+Two types to store these: 1. using references... 2. using embeddings
+
+references: the tables are separate, each entry has a field that just references another table's document
+embedding: we combine both into one single big document.
+ex: {
+  "customer": "Aadi",
+  "items": [
+    { "name": "Pen", "price": 10 },
+    { "name": "Book", "price": 50 }
+  ]
+}                                       ----> here items references this other document, which is stored as an embedding 
+                                              in one single document
+
+just look at the codes for both types.
+
+emb is faster as we can get all the reqd data in one single query
+ref is cleaner and needs less space, but slower
