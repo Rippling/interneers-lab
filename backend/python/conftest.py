@@ -33,12 +33,12 @@ def test_db(mongo_client):
 
 @pytest.fixture
 def seeded_categories(test_db):
-    from product_category.models import ProductCategory
+    from product_service.models import Category
 
-    cat1 = ProductCategory(name="Fruits", description="Fresh fruits").save()
-    cat2 = ProductCategory(name="Vegetables", description="Fresh vegetables").save()
+    cat1 = Category(name="Fruits", description="Fresh fruits").save()
+    cat2 = Category(name="Vegetables", description="Fresh vegetables").save()
 
-    return [cat1.id, cat2.id]
+    return [str(cat1.id), str(cat2.id)]
 
 from product_service.models import Product
 
