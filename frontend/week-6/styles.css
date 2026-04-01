@@ -1,0 +1,21 @@
+#prodcard {
+    background-color: gray;
+    padding: 10px;
+    border-radius: 5px;
+    align-items: center;
+}
+
+#title{
+    background-color: yellow;
+    text-align: center;
+}
+
+#desc{
+    background-color: beige;
+    text-align: justify;
+}
+
+#brand{
+    background-color: chocolate;
+    text-align: right;
+}
