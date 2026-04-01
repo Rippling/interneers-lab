@@ -1,4 +1,4 @@
-from product_service.models import Product
+from products.models import Product
 from django.core.management.base import BaseCommand 
 
 class Command(BaseCommand):

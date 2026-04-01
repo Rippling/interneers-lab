@@ -1,8 +1,8 @@
 import pytest
 from bson import ObjectId
 
-from product_service.services.category_service import CategoryService
-from product_service.exceptions import (
+from products.services.category_service import CategoryService
+from products.exceptions import (
     InvalidCategoryId,
     CategoryNotFound
 )
