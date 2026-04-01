@@ -1,12 +1,38 @@
 from django.urls import path
-from . import views
+from .controllers import product, category
 
 urlpatterns = [
-    path("", views.list_products, name="list_products"),
-    path("create/", views.create_product, name="create_product"),
-    path("<str:product_id>/", views.get_product , name="get_product"),
-    path("delete/<str:product_id>/", views.delete_product, name="delete_product"),
-    path("products-by-category/<str:category_id>/", views.list_products_by_category_id, name="list_products_by_category_id"),
-    path("remove-category/<str:product_id>/", views.remove_category_from_product, name="remove_category_from_product"),
-    path("add-category/<str:product_id>/<str:category_id>/", views.add_category_to_product, name="add_category_to_product"),
+    path("products/", product.products, name="products"),
+    # GET  -> list products
+    # POST -> create product
+
+    path("products/<str:product_id>/", product.product_detail, name="product_detail"),
+    # GET    -> get product
+    # PUT    -> update product
+    # PATCH  -> partial update
+    # DELETE -> delete product
+
+]
+
+urlpatterns += [
+    path("categories/", category.categories, name="categories"),
+    # GET  -> list categories
+    # POST -> create category
+
+    path(
+        "categories/<str:category_id>/",
+        category.category_detail,
+        name="category_detail",
+    ),
+    # GET    -> retrieve category
+    # PUT    -> update category
+    # PATCH  -> partial update
+    # DELETE -> delete category
+
+    path(
+        "categories/<str:category_id>/products/",
+        category.list_products_by_category_id,
+        name="products_by_category",
+    ),
+    # GET -> list products by category
 ]
