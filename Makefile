@@ -1,58 +1,48 @@
+# -----------------------------
 # Variables
-VENV = venv
-VENV = venv
-BACKEND_DIR = backend\python
+# -----------------------------
+BACKEND_DIR = backend/python
 FRONTEND_DIR = frontend
-PYTHON = $(VENV)\Scripts\python
-PIP = $(VENV)\Scripts\pip
+VENV = venv
 
-# Create virtual environment
+PYTHON = $(BACKEND_DIR)/$(VENV)/Scripts/python
+PIP = $(BACKEND_DIR)/$(VENV)/Scripts/pip
+
+# -----------------------------
+# Setup
+# -----------------------------
+
 venv:
-	python -m venv $(VENV)
+	cd $(BACKEND_DIR) && python -m venv $(VENV)
 
-# Install backend dependencies
 install-backend: venv
 	$(PIP) install --upgrade pip
-	$(PIP) install -r $(BACKEND_DIR)\requirements.txt
+	$(PIP) install -r $(BACKEND_DIR)/requirements.txt
 
-# Install frontend dependencies
 install-frontend:
 	cd $(FRONTEND_DIR) && yarn install
 
-# Setup everything
 setup: install-backend install-frontend
 
-# Run backend
-backend:
-	cd $(BACKEND_DIR) && ../../$(PYTHON) manage.py runserver
+# -----------------------------
+# Run servers
+# -----------------------------
 
-# Run frontend
-frontend:
+run-backend:
+	cd $(BACKEND_DIR) && $(VENV)/Scripts/python manage.py runserver
+
+run-frontend:
 	cd $(FRONTEND_DIR) && yarn start
 
-#containerize backend
-containerize-backend:
-	cd $(BACKEND_DIR) && docker compose up --build
+# -----------------------------
+# Testing
+# -----------------------------
 
-#decontainerize backend
-decontainerize-backend:
-	cd $(BACKEND_DIR) && docker compose down	
-
-# Run tests
 test:
-	cd $(BACKEND_DIR) && $(PYTHON) -m pytest 
+	cd $(BACKEND_DIR) && $(VENV)/Scripts/python -m pytest
 
-# Run coverage
 coverage:
-	cd $(BACKEND_DIR) && $(PYTHON) -m pytest --cov=. --cov-report=term-missing
+	cd $(BACKEND_DIR) && $(VENV)/Scripts/python -m pytest --cov
 
 html-coverage:
-	cd $(BACKEND_DIR) && $(PYTHON) -m pytest --cov=. --cov-report=html	
-
-# Lint
-lint:
-	$(PYTHON) -m flake8 .
-
-# Format
-format:
-	$(PYTHON) -m black .
+	cd $(BACKEND_DIR) && $(VENV)/Scripts/python -m pytest --cov --cov-report=html
