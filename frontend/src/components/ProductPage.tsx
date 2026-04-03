@@ -36,13 +36,17 @@ function ProductPage({
     return (
       <section className="product-page">
         <h1>Product Not Found</h1>
-        <Link to="/">Back to Product List</Link>
+        <Link className="inline-link" to="/">
+          Back to Product List
+        </Link>
       </section>
     );
   }
 
   const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
   ) => {
     const { name, value } = event.target;
 
@@ -69,6 +73,13 @@ function ProductPage({
   return (
     <section className="product-page">
       <h1>Edit Product</h1>
+
+      <p className="product-page__category-link">
+        <strong>Current Category:</strong>{" "}
+        <Link className="inline-link" to={`/categories/${formData.category}`}>
+          {formData.category}
+        </Link>
+      </p>
 
       <form className="product-form" onSubmit={handleSubmit}>
         <label>
@@ -136,7 +147,9 @@ function ProductPage({
 
         <div className="product-form__actions">
           <button type="submit">Save Changes</button>
-          <Link to="/">Cancel</Link>
+          <Link className="inline-link" to="/">
+            Cancel
+          </Link>
         </div>
       </form>
     </section>
@@ -144,3 +157,4 @@ function ProductPage({
 }
 
 export default ProductPage;
+

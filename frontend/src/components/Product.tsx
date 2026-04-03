@@ -23,17 +23,24 @@ function Product({ product, categories, onMoveCategory }: ProductProps) {
   return (
     <article className="product-card">
       <h2>{product.name}</h2>
+
       <p>
         <strong>Brand:</strong> {product.brand}
       </p>
+
       <p>
         <strong>Price:</strong> Rs. {product.price}
       </p>
+
       <p>
         <strong>Quantity:</strong> {product.quantity}
       </p>
+
       <p>
-        <strong>Category:</strong> {product.category}
+        <strong>Category:</strong>{" "}
+        <Link className="inline-link" to={`/categories/${product.category}`}>
+          {product.category}
+        </Link>
       </p>
 
       <div className="product-card__actions">
