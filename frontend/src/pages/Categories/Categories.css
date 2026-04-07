@@ -1,0 +1,36 @@
+.categories-container {
+  max-width: 1000px;
+  margin: auto;
+}
+
+.categories-container h2 {
+  margin-bottom: 20px;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.category-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.2s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.category-card:hover {
+  transform: translateY(-4px);
+}
+
+.category-card h3 {
+  margin-bottom: 8px;
+}
+
+.category-card p {
+  color: #666;
+  font-size: 14px;
+}

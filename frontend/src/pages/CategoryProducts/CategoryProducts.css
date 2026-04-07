@@ -1,0 +1,19 @@
+.category-products-container {
+  max-width: 1100px;
+  margin: auto;
+}
+
+.category-products-container h2 {
+  margin-bottom: 20px;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.loading-text {
+  text-align: center;
+  margin-top: 40px;
+}

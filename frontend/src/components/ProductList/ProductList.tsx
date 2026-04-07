@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { MOCK_PRODUCTS } from "./MOCK_PRODUCTS";
 import ProductDetail from "../Product/ProductDetail";
-import { Product } from "../Product/Product";
+import { Product } from "../../types/Product";
 
 const ProductList = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
