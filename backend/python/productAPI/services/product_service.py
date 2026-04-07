@@ -35,6 +35,16 @@ class ProductService:
         return products
     
     @staticmethod
+    def list_single_product(product_id):
+        product = ProductRepository.get_by_id(product_id)
+        
+        if not product:
+            return None
+        
+        return product
+        
+    
+    @staticmethod
     def create_product(validated_data):
         return ProductRepository.create(validated_data)
     

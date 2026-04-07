@@ -6,6 +6,17 @@ from productAPI.serializers import ProductSerializer
 
 class ProductDetailController(APIView):
     
+    def get(self, request, product_id):
+        product = ProductService.list_single_product(product_id)
+        
+        if not product:
+            return None
+
+        serializer = ProductSerializer(product)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        
+    
     def put(self, request, product_id):
         serializer = ProductSerializer(data=request.data)
         
