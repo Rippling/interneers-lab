@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { ProductType } from "./Product";
+import { CategoryType, ProductType } from "./Product";
 
 interface ProductPageProps {
   products: ProductType[];
-  categories: string[];
-  onSave: (product: ProductType) => boolean;
+  categories: CategoryType[];
+  onSave: (product: ProductType) => Promise<boolean> | boolean;
   onError: (message: string) => void;
 }
 
@@ -18,7 +18,7 @@ function ProductPage({
   const { productId } = useParams();
   const navigate = useNavigate();
 
-  const product = products.find((item) => item.id === Number(productId));
+  const product = products.find((item) => item.id === productId);
 
   const [formData, setFormData] = useState<ProductType | null>(product ?? null);
 
@@ -61,10 +61,30 @@ function ProductPage({
     );
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleCategoryChange = (
+    event: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    const selectedCategory = categories.find(
+      (category) => category.id === event.target.value,
+    );
+
+    setFormData((current) =>
+      current
+        ? {
+            ...current,
+            categoryId: event.target.value || null,
+            categoryName: selectedCategory
+              ? selectedCategory.title
+              : "No Category",
+          }
+        : current,
+    );
+  };
+
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const saved = onSave(formData);
+    const saved = await onSave(formData);
     if (saved) {
       navigate("/");
     }
@@ -76,28 +96,27 @@ function ProductPage({
 
       <p className="product-page__category-link">
         <strong>Current Category:</strong>{" "}
-        <Link className="inline-link" to={`/categories/${formData.category}`}>
-          {formData.category}
-        </Link>
+        {formData.categoryId ? (
+          <Link
+            className="inline-link"
+            to={`/categories/${formData.categoryId}`}
+          >
+            {formData.categoryName}
+          </Link>
+        ) : (
+          "No Category"
+        )}
       </p>
 
       <form className="product-form" onSubmit={handleSubmit}>
         <label>
           Name
-          <input
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-          />
+          <input name="name" value={formData.name} onChange={handleChange} />
         </label>
 
         <label>
           Brand
-          <input
-            name="brand"
-            value={formData.brand}
-            onChange={handleChange}
-          />
+          <input name="brand" value={formData.brand} onChange={handleChange} />
         </label>
 
         <label>
@@ -123,13 +142,14 @@ function ProductPage({
         <label>
           Category
           <select
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
+            name="categoryId"
+            value={formData.categoryId || ""}
+            onChange={handleCategoryChange}
           >
+            <option value="">No Category</option>
             {categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
+              <option key={category.id} value={category.id}>
+                {category.title}
               </option>
             ))}
           </select>
@@ -157,4 +177,3 @@ function ProductPage({
 }
 
 export default ProductPage;
-

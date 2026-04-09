@@ -6,66 +6,92 @@ import ProductPage from "./components/ProductPage";
 import CategoryList from "./components/CategoryList";
 import CategoryPage from "./components/CategoryPage";
 import LoadingSpinner from "./components/LoadingSpinner";
-import { ProductType } from "./components/Product";
-
-const initialProducts: ProductType[] = [
-  {
-    id: 1,
-    name: "iPhone 15",
-    brand: "Apple",
-    price: 799,
-    quantity: 10,
-    category: "Electronics",
-    description: "A premium smartphone with advanced camera features.",
-  },
-  {
-    id: 2,
-    name: "Galaxy S24",
-    brand: "Samsung",
-    price: 699,
-    quantity: 8,
-    category: "Electronics",
-    description: "A flagship Android phone with a bright display.",
-  },
-  {
-    id: 3,
-    name: "T-Shirt",
-    brand: "H&M",
-    price: 19.99,
-    quantity: 25,
-    category: "Fashion",
-    description: "Comfortable cotton T-shirt for everyday wear.",
-  },
-  {
-    id: 4,
-    name: "Lamp",
-    brand: "IKEA",
-    price: 34.5,
-    quantity: 12,
-    category: "Home",
-    description: "A simple decorative lamp for home interiors.",
-  },
-];
-
-const categories = ["Electronics", "Fashion", "Home", "Books"];
+import { CategoryType, ProductType } from "./components/Product";
 
 function App() {
-  const [products, setProducts] = useState<ProductType[]>(initialProducts);
+  const [products, setProducts] = useState<ProductType[]>([]);
+  const [categories, setCategories] = useState<CategoryType[]>([]);
   const [error, setError] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const location = useLocation();
+
+  const fetchCategories = async () => {
+    const response = await fetch(
+      "http://127.0.0.1:8000/product-csr/categories/",
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch categories.");
+    }
+
+    const data = await response.json();
+    return data.categories as CategoryType[];
+  };
+
+  const fetchProducts = async (categoryList: CategoryType[]) => {
+    const response = await fetch("http://127.0.0.1:8000/product-csr/products/");
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch products.");
+    }
+
+    const data = await response.json();
+
+    const mappedProducts: ProductType[] = data.products.map((product: any) => {
+      const matchedCategory = categoryList.find(
+        (category) => category.id === product.category,
+      );
+
+      return {
+        id: product.id,
+        name: product.name,
+        brand: product.brand,
+        price: Number(product.price),
+        quantity: Number(product.quantity),
+        categoryId: product.category || null,
+        categoryName: matchedCategory ? matchedCategory.title : "No Category",
+        description: product.description || "No description available.",
+      };
+    });
+
+    return mappedProducts;
+  };
+
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const fetchedCategories = await fetchCategories();
+      const fetchedProducts = await fetchProducts(fetchedCategories);
+
+      setCategories(fetchedCategories);
+      setProducts(fetchedProducts);
+    } catch (err: any) {
+      setError(err.message || "Something went wrong while loading data.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
 
   useEffect(() => {
     setLoading(true);
 
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 500);
+    }, 300);
 
     return () => clearTimeout(timer);
   }, [location.pathname]);
 
-  const moveProductToCategory = (productId: number, newCategory: string) => {
+  const moveProductToCategory = async (
+    productId: string,
+    newCategoryId: string,
+  ) => {
     const product = products.find((item) => item.id === productId);
 
     if (!product) {
@@ -73,25 +99,46 @@ function App() {
       return;
     }
 
-    if (!newCategory) {
+    if (!newCategoryId) {
       setError("Please select a category.");
       return;
     }
 
-    if (product.category === newCategory) {
+    if (product.categoryId === newCategoryId) {
       setError("Product is already in that category.");
       return;
     }
 
-    setProducts((currentProducts) =>
-      currentProducts.map((item) =>
-        item.id === productId ? { ...item, category: newCategory } : item,
-      ),
-    );
-    setError("");
+    try {
+      setLoading(true);
+
+      const response = await fetch(
+        `http://127.0.0.1:8000/product-csr/categories/${newCategoryId}/add-product/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ product_id: productId }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to move product.");
+      }
+
+      await loadData();
+      setError("");
+    } catch (err: any) {
+      setError(err.message || "Failed to move product.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const updateProduct = (updatedProduct: ProductType) => {
+  const updateProduct = async (updatedProduct: ProductType) => {
     if (!updatedProduct.name.trim()) {
       setError("Product name is required.");
       return false;
@@ -112,13 +159,40 @@ function App() {
       return false;
     }
 
-    setProducts((currentProducts) =>
-      currentProducts.map((item) =>
-        item.id === updatedProduct.id ? updatedProduct : item,
-      ),
-    );
-    setError("");
-    return true;
+    try {
+      setLoading(true);
+
+      const response = await fetch(
+        `http://127.0.0.1:8000/product-csr/products/${updatedProduct.id}/`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: updatedProduct.name,
+            brand: updatedProduct.brand,
+            price: updatedProduct.price,
+            quantity: updatedProduct.quantity,
+          }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to update product.");
+      }
+
+      await loadData();
+      setError("");
+      return true;
+    } catch (err: any) {
+      setError(err.message || "Failed to update product.");
+      return false;
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -133,6 +207,7 @@ function App() {
 
       <main className="app-main">
         {error && <div className="error-banner">{error}</div>}
+
         {loading ? (
           <LoadingSpinner />
         ) : (
@@ -151,14 +226,11 @@ function App() {
             <Route
               path="/categories"
               element={
-                <CategoryList
-                  categories={categories}
-                  products={products}
-                />
+                <CategoryList categories={categories} products={products} />
               }
             />
             <Route
-              path="/categories/:categoryName"
+              path="/categories/:categoryId"
               element={
                 <CategoryPage
                   categories={categories}

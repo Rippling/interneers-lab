@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { ProductType } from "./Product";
+import { CategoryType, ProductType } from "./Product";
 
 interface CategoryListProps {
-  categories: string[];
+  categories: CategoryType[];
   products: ProductType[];
 }
 
@@ -15,16 +15,17 @@ function CategoryList({ categories, products }: CategoryListProps) {
       <div className="category-list">
         {categories.map((category) => {
           const count = products.filter(
-            (product) => product.category === category,
+            (product) => product.categoryId === category.id,
           ).length;
 
           return (
             <Link
-              key={category}
+              key={category.id}
               className="category-card"
-              to={`/categories/${category}`}
+              to={`/categories/${category.id}`}
             >
-              <h2>{category}</h2>
+              <h2>{category.title}</h2>
+              <p>{category.description}</p>
               <p>{count} product(s)</p>
             </Link>
           );

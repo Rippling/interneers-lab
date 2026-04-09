@@ -1,24 +1,33 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
+export interface CategoryType {
+  id: string;
+  title: string;
+  description: string;
+}
+
 export interface ProductType {
-  id: number;
+  id: string;
   name: string;
   brand: string;
   price: number;
   quantity: number;
-  category: string;
+  categoryId: string | null;
+  categoryName: string;
   description: string;
 }
 
 interface ProductProps {
   product: ProductType;
-  categories: string[];
-  onMoveCategory: (productId: number, newCategory: string) => void;
+  categories: CategoryType[];
+  onMoveCategory: (productId: string, newCategoryId: string) => void;
 }
 
 function Product({ product, categories, onMoveCategory }: ProductProps) {
-  const [selectedCategory, setSelectedCategory] = useState(product.category);
+  const [selectedCategory, setSelectedCategory] = useState(
+    product.categoryId || "",
+  );
 
   return (
     <article className="product-card">
@@ -38,9 +47,16 @@ function Product({ product, categories, onMoveCategory }: ProductProps) {
 
       <p>
         <strong>Category:</strong>{" "}
-        <Link className="inline-link" to={`/categories/${product.category}`}>
-          {product.category}
-        </Link>
+        {product.categoryId ? (
+          <Link
+            className="inline-link"
+            to={`/categories/${product.categoryId}`}
+          >
+            {product.categoryName}
+          </Link>
+        ) : (
+          "No Category"
+        )}
       </p>
 
       <div className="product-card__actions">
@@ -48,9 +64,10 @@ function Product({ product, categories, onMoveCategory }: ProductProps) {
           value={selectedCategory}
           onChange={(event) => setSelectedCategory(event.target.value)}
         >
+          <option value="">No Category</option>
           {categories.map((category) => (
-            <option key={category} value={category}>
-              {category}
+            <option key={category.id} value={category.id}>
+              {category.title}
             </option>
           ))}
         </select>

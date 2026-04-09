@@ -1,11 +1,11 @@
 import React from "react";
-import Product, { ProductType } from "./Product";
+import Product, { CategoryType, ProductType } from "./Product";
 
 interface ProductListProps {
   title?: string;
   products: ProductType[];
-  categories: string[];
-  onMoveCategory: (productId: number, newCategory: string) => void;
+  categories: CategoryType[];
+  onMoveCategory: (productId: string, newCategoryId: string) => void;
 }
 
 function ProductList({
@@ -37,4 +37,3 @@ function ProductList({
 }
 
 export default ProductList;
-
