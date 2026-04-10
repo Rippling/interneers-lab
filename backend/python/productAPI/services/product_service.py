@@ -28,7 +28,7 @@ class ProductService:
             products=products.order_by("-updated_at")
         
         if page_number:
-            paginator = Paginator(products,2)
+            paginator = Paginator(products,6)
             page=paginator.get_page(page_number)
             return page
 

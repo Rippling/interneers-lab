@@ -15,6 +15,12 @@ const Navbar = () => {
 
       <div className="navbar-links">
         <button
+          className={`nav-btn ${isActive("/products/create") ? "active" : ""}`}
+          onClick={() => navigate("/products/create")}
+        >
+          Add Product
+        </button>
+        <button
           className={`nav-btn ${isActive("/products") ? "active" : ""}`}
           onClick={() => navigate("/products")}
         >

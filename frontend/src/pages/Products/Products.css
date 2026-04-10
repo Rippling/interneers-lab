@@ -1,0 +1,147 @@
+.products-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.products-header {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.products-header h2 {
+  font-size: 26px;
+  font-weight: 600;
+  color: #222;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.controls select {
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.controls select:hover {
+  border-color: #aaa;
+}
+
+.controls select:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.filter-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.filter-form input {
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  min-width: 150px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.filter-form input::placeholder {
+  color: #aaa;
+}
+
+.filter-form input:hover {
+  border-color: #bbb;
+}
+
+.filter-form input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 22px;
+}
+
+.loading,
+.no-products {
+  text-align: center;
+  font-size: 16px;
+  color: #777;
+  margin-top: 40px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  margin-top: 36px;
+}
+
+.pagination button {
+  padding: 9px 18px;
+  border-radius: 10px;
+  border: none;
+  background-color: #111;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination button:hover {
+  background-color: #333;
+  transform: translateY(-1px);
+}
+
+.pagination button:active {
+  transform: scale(0.96);
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.pagination span {
+  font-weight: 500;
+  font-size: 15px;
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-form {
+    width: 100%;
+  }
+
+  .filter-form input {
+    flex: 1;
+    min-width: unset;
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+}

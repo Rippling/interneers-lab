@@ -13,6 +13,8 @@ const ProductDetail = () => {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const { categories, categoryMap, loading: categoryLoading } = useCategories();
 
@@ -21,11 +23,7 @@ const ProductDetail = () => {
     try {
       const res = await fetch(`${PRODUCT_URL}${id}/`);
       const data = await res.json();
-
-      setProduct({
-        ...data,
-        id: data.id || data._id,
-      });
+      setProduct({ ...data, id: data.id || data._id });
     } catch (err) {
       console.error("Error fetching product", err);
     }
@@ -38,27 +36,33 @@ const ProductDetail = () => {
 
   const handleCategoryChange = async (categoryId: string) => {
     if (!product) return;
-
     setUpdating(true);
-
     try {
       await fetch(
         `http://127.0.0.1:8001/api/categories/${categoryId}/products/`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ id: product.id }),
         },
       );
-
       fetchProduct();
     } catch (err) {
       console.error("Error updating category", err);
     }
-
     setUpdating(false);
+  };
+
+  const handleDelete = async () => {
+    if (!product) return;
+    setDeleting(true);
+    try {
+      await fetch(`${PRODUCT_URL}${product.id}/`, { method: "DELETE" });
+      navigate("/products");
+    } catch (err) {
+      console.error("Error deleting product", err);
+      setDeleting(false);
+    }
   };
 
   if (loading || categoryLoading) {
@@ -75,18 +79,14 @@ const ProductDetail = () => {
     <div className="detail-container">
       <div className="detail-card">
         <h2>{product.name}</h2>
-
         <p className="brand">{product.brand}</p>
-
         <p className="price">₹ {product.price ?? "N/A"}</p>
-
         <p className="description">
           {product.description || "No description available."}
         </p>
 
         <div className="category-section">
           <span className="label">Category:</span>
-
           {category ? (
             <span
               className="category-link"
@@ -101,7 +101,6 @@ const ProductDetail = () => {
 
         <div className="edit-section">
           <label>Change Category:</label>
-
           <select
             disabled={updating}
             value={product.category || ""}
@@ -117,6 +116,48 @@ const ProductDetail = () => {
         </div>
 
         {updating && <p className="updating-text">Updating...</p>}
+
+        <div className="danger-zone">
+          <button
+            className="btn-edit"
+            onClick={() => navigate(`/products/${product.id}/edit`)}
+          >
+            Update Product
+          </button>
+
+          {!confirmDelete ? (
+            <button
+              className="btn-delete"
+              onClick={() => setConfirmDelete(true)}
+              disabled={deleting}
+            >
+              Delete Product
+            </button>
+          ) : (
+            <div className="confirm-delete">
+              <p className="confirm-text">
+                Are you sure you want to delete <strong>{product.name}</strong>?
+                This cannot be undone.
+              </p>
+              <div className="confirm-actions">
+                <button
+                  className="btn-delete"
+                  onClick={handleDelete}
+                  disabled={deleting}
+                >
+                  {deleting ? "Deleting..." : "Yes, Delete"}
+                </button>
+                <button
+                  className="btn-cancel"
+                  onClick={() => setConfirmDelete(false)}
+                  disabled={deleting}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
