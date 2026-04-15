@@ -4,6 +4,7 @@ from io import StringIO
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.authtoken.models import Token
 
 from product_csr.repositories.category_repository import MongoCategoryRepository
 from product_csr.repositories.product_repository import MongoProductRepository
@@ -18,9 +19,27 @@ category_service = CategoryService(category_repo)
 product_service = ProductService(product_repo, category_repo)
 
 
+def require_token_auth(request):
+    auth_header = request.headers.get("Authorization", "")
+    if not auth_header.startswith("Token "):
+        return None
+
+    token_key = auth_header.split(" ", 1)[1].strip()
+
+    try:
+        return Token.objects.select_related("user").get(key=token_key)
+    except Token.DoesNotExist:
+        return None
+
+
 @csrf_exempt
 def products(request):
     if request.method == "GET":
+        token = require_token_auth(request)
+        if not token:
+            return JsonResponse({"error": "Authentication required"}, status=401)
+
+        user_id = str(token.user.id)
         filters = {
             "brand": request.GET.get("brand"),
             "search": request.GET.get("search"),
@@ -31,12 +50,16 @@ def products(request):
             "categories": request.GET.get("categories"),
         }
 
-        return JsonResponse({"products": product_service.get_all_products(filters)})
+        return JsonResponse({"products": product_service.get_all_products(user_id, filters)})
 
     if request.method == "POST":
+        token = require_token_auth(request)
+        if not token:
+            return JsonResponse({"error": "Authentication required"}, status=401)
+
         try:
             data = json.loads(request.body)
-            product = product_service.create_product(data)
+            product = product_service.create_product(data, str(token.user.id))
             return JsonResponse(product, status=201)
         except ValueError as error:
             return JsonResponse({"error": str(error)}, status=400)
@@ -47,16 +70,24 @@ def products(request):
 @csrf_exempt
 def product_detail(request, product_id):
     if request.method == "PUT":
+        token = require_token_auth(request)
+        if not token:
+            return JsonResponse({"error": "Authentication required"}, status=401)
+
         try:
             data = json.loads(request.body)
-            result = product_service.update_product(product_id, data)
+            result = product_service.update_product(product_id, data, str(token.user.id))
             return JsonResponse(result)
         except ValueError as error:
             return JsonResponse({"error": str(error)}, status=400)
 
     if request.method == "DELETE":
+        token = require_token_auth(request)
+        if not token:
+            return JsonResponse({"error": "Authentication required"}, status=401)
+
         try:
-            result = product_service.delete_product(product_id)
+            result = product_service.delete_product(product_id, str(token.user.id))
             return JsonResponse(result)
         except ValueError as error:
             return JsonResponse({"error": str(error)}, status=404)
@@ -67,12 +98,22 @@ def product_detail(request, product_id):
 @csrf_exempt
 def categories(request):
     if request.method == "GET":
-        return JsonResponse({"categories": category_service.get_all_categories()})
+        token = require_token_auth(request)
+        if not token:
+            return JsonResponse({"error": "Authentication required"}, status=401)
+
+        return JsonResponse({
+            "categories": category_service.get_all_categories(str(token.user.id))
+        })
 
     if request.method == "POST":
+        token = require_token_auth(request)
+        if not token:
+            return JsonResponse({"error": "Authentication required"}, status=401)
+
         try:
             data = json.loads(request.body)
-            category = category_service.create_category(data)
+            category = category_service.create_category(data, str(token.user.id))
             return JsonResponse(category, status=201)
         except ValueError as error:
             return JsonResponse({"error": str(error)}, status=400)
@@ -83,23 +124,39 @@ def categories(request):
 @csrf_exempt
 def category_detail(request, category_id):
     if request.method == "GET":
+        token = require_token_auth(request)
+        if not token:
+            return JsonResponse({"error": "Authentication required"}, status=401)
+
         try:
-            category = category_service.get_category(category_id)
+            category = category_service.get_category(category_id, str(token.user.id))
             return JsonResponse(category)
         except ValueError as error:
             return JsonResponse({"error": str(error)}, status=404)
 
     if request.method == "PUT":
+        token = require_token_auth(request)
+        if not token:
+            return JsonResponse({"error": "Authentication required"}, status=401)
+
         try:
             data = json.loads(request.body)
-            category = category_service.update_category(category_id, data)
+            category = category_service.update_category(
+                category_id,
+                data,
+                str(token.user.id),
+            )
             return JsonResponse(category)
         except ValueError as error:
             return JsonResponse({"error": str(error)}, status=400)
 
     if request.method == "DELETE":
+        token = require_token_auth(request)
+        if not token:
+            return JsonResponse({"error": "Authentication required"}, status=401)
+
         try:
-            result = category_service.delete_category(category_id)
+            result = category_service.delete_category(category_id, str(token.user.id))
             return JsonResponse(result)
         except ValueError as error:
             return JsonResponse({"error": str(error)}, status=404)
@@ -110,8 +167,15 @@ def category_detail(request, category_id):
 @csrf_exempt
 def category_products(request, category_id):
     if request.method == "GET":
+        token = require_token_auth(request)
+        if not token:
+            return JsonResponse({"error": "Authentication required"}, status=401)
+
         try:
-            products = product_service.get_products_by_category(category_id)
+            products = product_service.get_products_by_category(
+                category_id,
+                str(token.user.id),
+            )
             return JsonResponse({"products": products})
         except ValueError as error:
             return JsonResponse({"error": str(error)}, status=400)
@@ -122,10 +186,18 @@ def category_products(request, category_id):
 @csrf_exempt
 def add_product_to_category(request, category_id):
     if request.method == "POST":
+        token = require_token_auth(request)
+        if not token:
+            return JsonResponse({"error": "Authentication required"}, status=401)
+
         try:
             data = json.loads(request.body)
             product_id = data.get("product_id")
-            result = product_service.add_product_to_category(product_id, category_id)
+            result = product_service.add_product_to_category(
+                product_id,
+                category_id,
+                str(token.user.id),
+            )
             return JsonResponse(result)
         except ValueError as error:
             return JsonResponse({"error": str(error)}, status=400)
@@ -136,10 +208,17 @@ def add_product_to_category(request, category_id):
 @csrf_exempt
 def remove_product_from_category(request, category_id):
     if request.method == "POST":
+        token = require_token_auth(request)
+        if not token:
+            return JsonResponse({"error": "Authentication required"}, status=401)
+
         try:
             data = json.loads(request.body)
             product_id = data.get("product_id")
-            result = product_service.remove_product_from_category(product_id)
+            result = product_service.remove_product_from_category(
+                product_id,
+                str(token.user.id),
+            )
             return JsonResponse(result)
         except ValueError as error:
             return JsonResponse({"error": str(error)}, status=400)
@@ -150,6 +229,10 @@ def remove_product_from_category(request, category_id):
 @csrf_exempt
 def bulk_upload_product(request):
     if request.method == "POST":
+        token = require_token_auth(request)
+        if not token:
+            return JsonResponse({"error": "Authentication required"}, status=401)
+
         try:
             file = request.FILES.get("file")
             if not file:
@@ -182,7 +265,7 @@ def bulk_upload_product(request):
                     skipped += 1
                     continue
 
-                product = product_service.create_product(row)
+                product = product_service.create_product(row, str(token.user.id))
                 products.append(product)
 
             return JsonResponse({

@@ -7,12 +7,14 @@ interface CategoryPageProps {
   categories: CategoryType[];
   products: ProductType[];
   onMoveCategory: (productId: string, newCategoryId: string) => void;
+  onDeleteProduct: (productId: string) => void;
 }
 
 function CategoryPage({
   categories,
   products,
   onMoveCategory,
+  onDeleteProduct,
 }: CategoryPageProps) {
   const { categoryId } = useParams();
 
@@ -20,9 +22,14 @@ function CategoryPage({
 
   if (!category) {
     return (
-      <section className="category-page">
-        <h1>Category Not Found</h1>
-        <Link className="inline-link" to="/categories">
+      <section className="mx-auto max-w-3xl">
+        <h1 className="mb-4 text-3xl font-bold text-slate-900">
+          Category Not Found
+        </h1>
+        <Link
+          className="font-semibold text-cyan-700 hover:underline"
+          to="/categories"
+        >
           Back to Categories
         </Link>
       </section>
@@ -34,11 +41,19 @@ function CategoryPage({
   );
 
   return (
-    <section className="category-page">
-      <div className="category-page__header">
-        <h1>{category.title}</h1>
-        <p>{category.description}</p>
-        <Link className="inline-link" to="/categories">
+    <section>
+      <div className="mb-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <h1 className="mb-3 text-3xl font-bold text-slate-900">
+          {category.title}
+        </h1>
+        <p className="mb-3 text-slate-600">{category.description}</p>
+        <p className="mb-3 text-sm font-semibold text-slate-500">
+          Total Products: {filteredProducts.length}
+        </p>
+        <Link
+          className="font-semibold text-cyan-700 hover:underline"
+          to="/categories"
+        >
           Back to Categories
         </Link>
       </div>
@@ -48,6 +63,7 @@ function CategoryPage({
         products={filteredProducts}
         categories={categories}
         onMoveCategory={onMoveCategory}
+        onDeleteProduct={onDeleteProduct}
       />
     </section>
   );

@@ -3,11 +3,17 @@ from product_csr.ports.category_repository_port import CategoryRepositoryPort
 
 
 class MongoCategoryRepository(CategoryRepositoryPort):
-    def get_all(self):
-        return ProductCategory.objects()
+    def get_all(self, owner_id=None):
+        queryset = ProductCategory.objects()
+        if owner_id:
+            queryset = queryset.filter(owner_id=owner_id)
+        return queryset
 
-    def get_by_id(self, category_id):
-        return ProductCategory.objects(id=category_id).first()
+    def get_by_id(self, category_id, owner_id=None):
+        queryset = ProductCategory.objects(id=category_id)
+        if owner_id:
+            queryset = queryset.filter(owner_id=owner_id)
+        return queryset.first()
 
     def create(self, data):
         category = ProductCategory(**data)
@@ -24,5 +30,8 @@ class MongoCategoryRepository(CategoryRepositoryPort):
         category.delete()
         return True
 
-    def get_by_title(self, title):
-        return ProductCategory.objects(title=title).first()
+    def get_by_title(self, title, owner_id=None):
+        queryset = ProductCategory.objects(title=title)
+        if owner_id:
+            queryset = queryset.filter(owner_id=owner_id)
+        return queryset.first()

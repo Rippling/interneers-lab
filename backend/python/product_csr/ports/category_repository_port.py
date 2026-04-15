@@ -3,11 +3,11 @@ from abc import ABC, abstractmethod
 
 class CategoryRepositoryPort(ABC):
     @abstractmethod
-    def get_all(self):
+    def get_all(self, owner_id=None):
         pass
 
     @abstractmethod
-    def get_by_id(self, category_id):
+    def get_by_id(self, category_id, owner_id=None):
         pass
 
     @abstractmethod
@@ -23,5 +23,5 @@ class CategoryRepositoryPort(ABC):
         pass
 
     @abstractmethod
-    def get_by_title(self, title):
+    def get_by_title(self, title, owner_id=None):
         pass

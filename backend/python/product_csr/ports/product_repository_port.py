@@ -7,11 +7,11 @@ class ProductRepositoryPort(ABC):
         pass
 
     @abstractmethod
-    def get_all(self):
+    def get_all(self, owner_id=None):
         pass
 
     @abstractmethod
-    def filter_products(self, filters):
+    def filter_products(self, filters, owner_id=None):
         pass
 
     @abstractmethod
@@ -27,5 +27,5 @@ class ProductRepositoryPort(ABC):
         pass
 
     @abstractmethod
-    def get_by_category(self, category):
+    def get_by_category(self, category, owner_id=None):
         pass

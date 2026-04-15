@@ -1,159 +1,190 @@
 from django.test import SimpleTestCase
-from unittest.mock import MagicMock
 
+from product_csr.models import ProductCategory
+from product_csr.repositories.category_repository import MongoCategoryRepository
 from product_csr.services.category_service import CategoryService
 
 
 class CategoryServiceTests(SimpleTestCase):
     def setUp(self):
-        self.repo = MagicMock()
+        ProductCategory.objects.delete()
+        self.repo = MongoCategoryRepository()
         self.service = CategoryService(self.repo)
+        self.owner_id = "test-user-1"
 
-    def test_get_all_categories_returns_serialized_categories(self):
-        category1 = MagicMock()
-        category2 = MagicMock()
+    def tearDown(self):
+        ProductCategory.objects.delete()
 
-        category1.to_dict.return_value = {
-            "id": "1",
-            "title": "Electronics",
-            "description": "Devices",
-        }
-        category2.to_dict.return_value = {
-            "id": "2",
-            "title": "Fashion",
-            "description": "Clothes",
-        }
+    def test_create_category_success(self):
+        result = self.service.create_category(
+            {
+                "title": "Fashion",
+                "description": "Clothing products",
+            },
+            owner_id=self.owner_id,
+        )
 
-        self.repo.get_all.return_value = [category1, category2]
-
-        result = self.service.get_all_categories()
-
-        self.repo.get_all.assert_called_once()
-        self.assertEqual(result, [
-            {"id": "1", "title": "Electronics", "description": "Devices"},
-            {"id": "2", "title": "Fashion", "description": "Clothes"},
-        ])
-
-    def test_get_category_returns_serialized_category(self):
-        category = MagicMock()
-        category.to_dict.return_value = {
-            "id": "1",
-            "title": "Electronics",
-            "description": "Devices",
-        }
-
-        self.repo.get_by_id.return_value = category
-
-        result = self.service.get_category("cat1")
-
-        self.repo.get_by_id.assert_called_once_with("cat1")
-        self.assertEqual(result, {
-            "id": "1",
-            "title": "Electronics",
-            "description": "Devices",
-        })
-
-    def test_get_category_raises_when_not_found(self):
-        self.repo.get_by_id.return_value = None
-
-        with self.assertRaisesMessage(ValueError, "category not found"):
-            self.service.get_category("cat1")
+        self.assertEqual(result["title"], "Fashion")
+        self.assertEqual(result["description"], "Clothing products")
+        self.assertEqual(result["owner_id"], self.owner_id)
+        self.assertIsNotNone(ProductCategory.objects(title="Fashion").first())
 
     def test_create_category_raises_when_title_missing(self):
         with self.assertRaisesMessage(ValueError, "Title is required"):
-            self.service.create_category({"description": "Devices"})
+            self.service.create_category(
+                {"description": "Missing title"},
+                owner_id=self.owner_id,
+            )
 
-    def test_create_category_success(self):
-        data = {
-            "title": "Electronics",
-            "description": "Devices",
-        }
-        category = MagicMock()
-        category.to_dict.return_value = {
-            "id": "1",
-            "title": "Electronics",
-            "description": "Devices",
-        }
+    def test_get_all_categories_returns_only_owner_categories(self):
+        self.service.create_category(
+            {"title": "Fashion", "description": "Clothing"},
+            owner_id="user-1",
+        )
+        self.service.create_category(
+            {"title": "Electronics", "description": "Devices"},
+            owner_id="user-2",
+        )
 
-        self.repo.create.return_value = category
+        result = self.service.get_all_categories(owner_id="user-1")
 
-        result = self.service.create_category(data)
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["title"], "Fashion")
+        self.assertEqual(result[0]["owner_id"], "user-1")
 
-        self.repo.create.assert_called_once_with(data)
-        self.assertEqual(result, {
-            "id": "1",
-            "title": "Electronics",
-            "description": "Devices",
-        })
+    def test_get_category_returns_category_for_correct_owner(self):
+        created = self.service.create_category(
+            {"title": "Fashion", "description": "Clothing"},
+            owner_id=self.owner_id,
+        )
 
-    def test_update_category_raises_when_not_found(self):
-        self.repo.get_by_id.return_value = None
+        result = self.service.get_category(created["id"], owner_id=self.owner_id)
+
+        self.assertEqual(result["id"], created["id"])
+        self.assertEqual(result["title"], "Fashion")
+        self.assertEqual(result["owner_id"], self.owner_id)
+
+    def test_get_category_rejects_other_owner_category(self):
+        created = self.service.create_category(
+            {"title": "Fashion", "description": "Clothing"},
+            owner_id="user-1",
+        )
 
         with self.assertRaisesMessage(ValueError, "category not found"):
-            self.service.update_category("cat1", {"title": "Updated"})
+            self.service.get_category(created["id"], owner_id="user-2")
+
+    def test_duplicate_category_title_fails_for_same_owner(self):
+        self.service.create_category(
+            {"title": "Fashion", "description": "Clothing"},
+            owner_id="user-1",
+        )
+
+        with self.assertRaisesMessage(ValueError, "Category title already exists"):
+            self.service.create_category(
+                {"title": "Fashion", "description": "Duplicate"},
+                owner_id="user-1",
+            )
+
+    def test_same_category_title_allowed_for_different_owners(self):
+        first = self.service.create_category(
+            {"title": "Fashion", "description": "User 1 category"},
+            owner_id="user-1",
+        )
+
+        second = self.service.create_category(
+            {"title": "Fashion", "description": "User 2 category"},
+            owner_id="user-2",
+        )
+
+        self.assertEqual(first["title"], "Fashion")
+        self.assertEqual(second["title"], "Fashion")
+        self.assertNotEqual(first["owner_id"], second["owner_id"])
 
     def test_update_category_success(self):
-        category = MagicMock()
-        updated_category = MagicMock()
-        data = {
-            "title": "Updated Electronics",
-            "description": "Updated description",
-        }
+        created = self.service.create_category(
+            {"title": "Fashion", "description": "Clothing"},
+            owner_id=self.owner_id,
+        )
 
-        updated_category.to_dict.return_value = {
-            "id": "1",
-            "title": "Updated Electronics",
-            "description": "Updated description",
-        }
+        updated = self.service.update_category(
+            created["id"],
+            {"title": "Updated Fashion", "description": "Updated clothing"},
+            owner_id=self.owner_id,
+        )
 
-        self.repo.get_by_id.return_value = category
-        self.repo.update.return_value = updated_category
+        self.assertEqual(updated["title"], "Updated Fashion")
+        self.assertEqual(updated["description"], "Updated clothing")
+        self.assertEqual(updated["owner_id"], self.owner_id)
 
-        result = self.service.update_category("cat1", data)
-
-        self.repo.get_by_id.assert_called_once_with("cat1")
-        self.repo.update.assert_called_once_with(category, data)
-        self.assertEqual(result, {
-            "id": "1",
-            "title": "Updated Electronics",
-            "description": "Updated description",
-        })
-
-    def test_delete_category_raises_when_not_found(self):
-        self.repo.get_by_id.return_value = None
-
+    def test_update_category_raises_when_category_not_found(self):
         with self.assertRaisesMessage(ValueError, "category not found"):
-            self.service.delete_category("cat1")
+            self.service.update_category(
+                "507f1f77bcf86cd799439011",
+                {"title": "Updated Fashion"},
+                owner_id=self.owner_id,
+            )
+
+    def test_update_category_rejects_duplicate_title_for_same_owner(self):
+        self.service.create_category(
+            {"title": "Fashion", "description": "Clothing"},
+            owner_id=self.owner_id,
+        )
+
+        second = self.service.create_category(
+            {"title": "Electronics", "description": "Devices"},
+            owner_id=self.owner_id,
+        )
+
+        with self.assertRaisesMessage(ValueError, "Category title already exists"):
+            self.service.update_category(
+                second["id"],
+                {"title": "Fashion"},
+                owner_id=self.owner_id,
+            )
 
     def test_delete_category_success(self):
-        category = MagicMock()
-        self.repo.get_by_id.return_value = category
+        created = self.service.create_category(
+            {"title": "Fashion", "description": "Clothing"},
+            owner_id=self.owner_id,
+        )
 
-        result = self.service.delete_category("cat1")
+        result = self.service.delete_category(created["id"], owner_id=self.owner_id)
 
-        self.repo.delete.assert_called_once_with(category)
         self.assertEqual(result, {"message": "category deleted successfully"})
 
-    def test_create_category_if_not_exists_returns_existing(self):
-        existing = MagicMock()
-        self.repo.get_by_title.return_value = existing
+        with self.assertRaisesMessage(ValueError, "category not found"):
+            self.service.get_category(created["id"], owner_id=self.owner_id)
 
-        result = self.service.create_category_if_not_exists("Electronics")
+    def test_delete_category_rejects_other_owner_category(self):
+        created = self.service.create_category(
+            {"title": "Fashion", "description": "Clothing"},
+            owner_id="user-1",
+        )
 
-        self.repo.get_by_title.assert_called_once_with("Electronics")
-        self.repo.create.assert_not_called()
-        self.assertIs(result, existing)
+        with self.assertRaisesMessage(ValueError, "category not found"):
+            self.service.delete_category(created["id"], owner_id="user-2")
+
+    def test_create_category_if_not_exists_returns_existing_category(self):
+        created = self.service.create_category(
+            {"title": "Fashion", "description": "Clothing"},
+            owner_id=self.owner_id,
+        )
+
+        result = self.service.create_category_if_not_exists(
+            "Fashion",
+            owner_id=self.owner_id,
+        )
+
+        self.assertEqual(str(result.id), created["id"])
+        self.assertEqual(result.title, "Fashion")
 
     def test_create_category_if_not_exists_creates_new_category(self):
-        created = MagicMock()
-        self.repo.get_by_title.return_value = None
-        self.repo.create.return_value = created
+        result = self.service.create_category_if_not_exists(
+            "Books",
+            owner_id=self.owner_id,
+        )
 
-        result = self.service.create_category_if_not_exists("Electronics")
+        self.assertEqual(result.title, "Books")
+        self.assertEqual(result.description, "")
+        self.assertEqual(result.owner_id, self.owner_id)
 
-        self.repo.get_by_title.assert_called_once_with("Electronics")
-        self.repo.create.assert_called_once_with({
-            "title": "Electronics",
-            "description": "",
-        })
-        self.assertIs(result, created)

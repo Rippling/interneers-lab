@@ -1,269 +1,345 @@
 from django.test import SimpleTestCase
-from unittest.mock import MagicMock
 
+from product_csr.models import Product, ProductCategory
+from product_csr.repositories.category_repository import MongoCategoryRepository
+from product_csr.repositories.product_repository import MongoProductRepository
+from product_csr.services.category_service import CategoryService
 from product_csr.services.product_service import ProductService
 
 
 class ProductServiceTests(SimpleTestCase):
     def setUp(self):
-        self.repo = MagicMock()
-        self.category_repo = MagicMock()
-        self.service = ProductService(self.repo, self.category_repo)
+        Product.objects.delete()
+        ProductCategory.objects.delete()
 
-    def test_get_products_by_category_returns_serialized_products(self):
-        category = MagicMock()
-        product1 = MagicMock()
-        product2 = MagicMock()
+        self.category_repo = MongoCategoryRepository()
+        self.product_repo = MongoProductRepository(category_repo=self.category_repo)
+        self.category_service = CategoryService(self.category_repo)
+        self.service = ProductService(self.product_repo, self.category_repo)
+        self.owner_id = "test-user-1"
 
-        product1.to_dict.return_value = {"id": "1", "name": "Phone"}
-        product2.to_dict.return_value = {"id": "2", "name": "Laptop"}
+    def tearDown(self):
+        Product.objects.delete()
+        ProductCategory.objects.delete()
 
-        self.category_repo.get_by_id.return_value = category
-        self.repo.get_by_category.return_value = [product1, product2]
+    def create_category(self, title="Fashion", owner_id=None):
+        return self.category_service.create_category(
+            {
+                "title": title,
+                "description": f"{title} category",
+            },
+            owner_id=owner_id or self.owner_id,
+        )
 
-        result = self.service.get_products_by_category("cat1")
-
-        self.category_repo.get_by_id.assert_called_once_with("cat1")
-        self.repo.get_by_category.assert_called_once_with(category)
-        self.assertEqual(result, [
-            {"id": "1", "name": "Phone"},
-            {"id": "2", "name": "Laptop"},
-        ])
-
-    def test_get_products_by_category_raises_when_category_not_found(self):
-        self.category_repo.get_by_id.return_value = None
-
-        with self.assertRaisesMessage(ValueError, "Category not found"):
-            self.service.get_products_by_category("cat1")
-
-    def test_add_product_to_category_raises_when_product_not_found(self):
-        self.repo.get_by_id.return_value = None
-        self.category_repo.get_by_id.return_value = MagicMock()
-
-        with self.assertRaisesMessage(ValueError, "Product not found"):
-            self.service.add_product_to_category("prod1", "cat1")
-
-    def test_add_product_to_category_raises_when_category_not_found(self):
-        self.repo.get_by_id.return_value = MagicMock()
-        self.category_repo.get_by_id.return_value = None
-
-        with self.assertRaisesMessage(ValueError, "Category not found"):
-            self.service.add_product_to_category("prod1", "cat1")
-
-    def test_add_product_to_category_success(self):
-        product = MagicMock()
-        category = MagicMock()
-
-        self.repo.get_by_id.return_value = product
-        self.category_repo.get_by_id.return_value = category
-
-        result = self.service.add_product_to_category("prod1", "cat1")
-
-        self.assertEqual(product.category, category)
-        product.save.assert_called_once()
-        self.assertEqual(result, {"message": "Product added to category"})
-
-    def test_remove_product_from_category_raises_when_product_not_found(self):
-        self.repo.get_by_id.return_value = None
-
-        with self.assertRaisesMessage(ValueError, "Product not found"):
-            self.service.remove_product_from_category("prod1")
-
-    def test_remove_product_from_category_success(self):
-        product = MagicMock()
-        self.repo.get_by_id.return_value = product
-
-        result = self.service.remove_product_from_category("prod1")
-
-        self.assertIsNone(product.category)
-        product.save.assert_called_once()
-        self.assertEqual(result, {"message": "Product removed from category"})
-
-    def test_create_product_raises_when_name_missing(self):
+    def create_product(self, name="Hoodie", owner_id=None, category_id=None):
         data = {
-            "price": 100,
-            "brand": "Apple",
+            "name": name,
+            "brand": "Zara",
+            "price": 1499,
             "quantity": 5,
+            "description": "Comfortable fashion product",
         }
 
-        with self.assertRaisesMessage(ValueError, "name is required"):
-            self.service.create_product(data)
+        if category_id:
+            data["categoryId"] = category_id
 
-    def test_create_product_raises_when_price_missing(self):
-        data = {
-            "name": "Phone",
-            "brand": "Apple",
-            "quantity": 5,
-        }
-
-        with self.assertRaisesMessage(ValueError, "price is required"):
-            self.service.create_product(data)
-
-    def test_create_product_raises_when_brand_missing(self):
-        data = {
-            "name": "Phone",
-            "price": 100,
-            "quantity": 5,
-        }
-
-        with self.assertRaisesMessage(ValueError, "brand is required"):
-            self.service.create_product(data)
-
-    def test_create_product_raises_when_quantity_missing(self):
-        data = {
-            "name": "Phone",
-            "price": 100,
-            "brand": "Apple",
-        }
-
-        with self.assertRaisesMessage(ValueError, "quantity is required"):
-            self.service.create_product(data)
-
-    def test_create_product_raises_when_price_is_required_for_zero_value(self):
-        data = {
-            "name": "Phone",
-            "price": 0,
-            "brand": "Apple",
-            "quantity": 5,
-        }
-
-        with self.assertRaisesMessage(ValueError, "price is required"):
-            self.service.create_product(data)
+        return self.service.create_product(
+            data,
+            owner_id=owner_id or self.owner_id,
+        )
 
     def test_create_product_success(self):
-        data = {
-            "name": "Phone",
-            "price": 1000,
-            "brand": "Apple",
-            "quantity": 5,
-        }
-        created_product = MagicMock()
-        created_product.to_dict.return_value = {
-            "id": "1",
-            "name": "Phone",
-            "price": 1000,
-            "brand": "Apple",
-            "quantity": 5,
-        }
+        result = self.create_product()
 
-        self.repo.create.return_value = created_product
+        self.assertEqual(result["name"], "Hoodie")
+        self.assertEqual(result["brand"], "Zara")
+        self.assertEqual(result["price"], 1499)
+        self.assertEqual(result["quantity"], 5)
+        self.assertEqual(result["description"], "Comfortable fashion product")
+        self.assertEqual(result["owner_id"], self.owner_id)
+        self.assertIsNotNone(Product.objects(name="Hoodie").first())
 
-        result = self.service.create_product(data)
+    def test_create_product_with_category_success(self):
+        category = self.create_category()
 
-        self.repo.create.assert_called_once_with(data)
-        self.assertEqual(result, {
-            "id": "1",
-            "name": "Phone",
-            "price": 1000,
-            "brand": "Apple",
-            "quantity": 5,
-        })
+        result = self.create_product(category_id=category["id"])
 
-    def test_get_all_products_without_filters_uses_get_all(self):
-        product1 = MagicMock()
-        product2 = MagicMock()
+        self.assertEqual(result["category"], category["id"])
 
-        product1.to_dict.return_value = {"id": "1", "name": "Phone"}
-        product2.to_dict.return_value = {"id": "2", "name": "Laptop"}
+    def test_create_product_raises_when_name_missing(self):
+        with self.assertRaisesMessage(ValueError, "name is required"):
+            self.service.create_product(
+                {
+                    "brand": "Zara",
+                    "price": 1499,
+                    "quantity": 5,
+                },
+                owner_id=self.owner_id,
+            )
 
-        self.repo.get_all.return_value = [product1, product2]
+    def test_create_product_raises_when_brand_missing(self):
+        with self.assertRaisesMessage(ValueError, "brand is required"):
+            self.service.create_product(
+                {
+                    "name": "Hoodie",
+                    "price": 1499,
+                    "quantity": 5,
+                },
+                owner_id=self.owner_id,
+            )
 
-        result = self.service.get_all_products()
+    def test_create_product_raises_when_price_missing(self):
+        with self.assertRaisesMessage(ValueError, "price is required"):
+            self.service.create_product(
+                {
+                    "name": "Hoodie",
+                    "brand": "Zara",
+                    "quantity": 5,
+                },
+                owner_id=self.owner_id,
+            )
 
-        self.repo.get_all.assert_called_once()
-        self.repo.filter_products.assert_not_called()
-        self.assertEqual(result, [
-            {"id": "1", "name": "Phone"},
-            {"id": "2", "name": "Laptop"},
-        ])
+    def test_create_product_raises_when_quantity_missing(self):
+        with self.assertRaisesMessage(ValueError, "quantity is required"):
+            self.service.create_product(
+                {
+                    "name": "Hoodie",
+                    "brand": "Zara",
+                    "price": 1499,
+                },
+                owner_id=self.owner_id,
+            )
 
-    def test_get_all_products_with_empty_filters_uses_get_all(self):
-        product = MagicMock()
-        product.to_dict.return_value = {"id": "1", "name": "Phone"}
-
-        self.repo.get_all.return_value = [product]
-
-        result = self.service.get_all_products({})
-
-        self.repo.get_all.assert_called_once()
-        self.repo.filter_products.assert_not_called()
-        self.assertEqual(result, [{"id": "1", "name": "Phone"}])
-
-    def test_get_all_products_with_filters_uses_filter_products(self):
-        filters = {"brand": "Apple"}
-        product = MagicMock()
-        product.to_dict.return_value = {"id": "1", "name": "Phone", "brand": "Apple"}
-
-        self.repo.filter_products.return_value = [product]
-
-        result = self.service.get_all_products(filters)
-
-        self.repo.filter_products.assert_called_once_with(filters)
-        self.repo.get_all.assert_not_called()
-        self.assertEqual(result, [{"id": "1", "name": "Phone", "brand": "Apple"}])
-
-    def test_update_product_raises_when_product_not_found(self):
-        self.repo.get_by_id.return_value = None
-
-        with self.assertRaisesMessage(ValueError, "Product not found"):
-            self.service.update_product("prod1", {"name": "Updated"})
-
-    def test_update_product_raises_when_brand_is_empty(self):
-        self.repo.get_by_id.return_value = MagicMock()
-
-        with self.assertRaisesMessage(ValueError, "Brand cannot be empty"):
-            self.service.update_product("prod1", {"brand": ""})
-
-    def test_update_product_raises_when_price_not_positive(self):
-        self.repo.get_by_id.return_value = MagicMock()
-
+    def test_create_product_raises_when_price_is_zero(self):
         with self.assertRaisesMessage(ValueError, "Price must be positive"):
-            self.service.update_product("prod1", {"price": 0})
+            self.service.create_product(
+                {
+                    "name": "Hoodie",
+                    "brand": "Zara",
+                    "price": 0,
+                    "quantity": 5,
+                },
+                owner_id=self.owner_id,
+            )
+
+    def test_create_product_raises_when_quantity_is_negative(self):
+        with self.assertRaisesMessage(ValueError, "Quantity cannot be negative"):
+            self.service.create_product(
+                {
+                    "name": "Hoodie",
+                    "brand": "Zara",
+                    "price": 1499,
+                    "quantity": -1,
+                },
+                owner_id=self.owner_id,
+            )
+
+    def test_create_product_raises_when_category_not_found(self):
+        with self.assertRaisesMessage(ValueError, "Category not found"):
+            self.service.create_product(
+                {
+                    "name": "Hoodie",
+                    "brand": "Zara",
+                    "price": 1499,
+                    "quantity": 5,
+                    "categoryId": "507f1f77bcf86cd799439011",
+                },
+                owner_id=self.owner_id,
+            )
+
+    def test_get_all_products_returns_only_owner_products(self):
+        self.create_product(name="Hoodie", owner_id="user-1")
+        self.create_product(name="Sneakers", owner_id="user-2")
+
+        result = self.service.get_all_products(owner_id="user-1")
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["name"], "Hoodie")
+        self.assertEqual(result[0]["owner_id"], "user-1")
+
+    def test_get_all_products_with_brand_filter(self):
+        self.create_product(name="Hoodie", owner_id=self.owner_id)
+
+        self.service.create_product(
+            {
+                "name": "T-Shirt",
+                "brand": "H&M",
+                "price": 799,
+                "quantity": 10,
+            },
+            owner_id=self.owner_id,
+        )
+
+        result = self.service.get_all_products(
+            owner_id=self.owner_id,
+            filters={"brand": "H&M"},
+        )
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["name"], "T-Shirt")
+        self.assertEqual(result[0]["brand"], "H&M")
+
+    def test_get_products_by_category_success(self):
+        category = self.create_category()
+        self.create_product(category_id=category["id"])
+
+        result = self.service.get_products_by_category(
+            category["id"],
+            owner_id=self.owner_id,
+        )
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["name"], "Hoodie")
+        self.assertEqual(result[0]["category"], category["id"])
+
+    def test_get_products_by_category_raises_when_category_not_found(self):
+        with self.assertRaisesMessage(ValueError, "Category not found"):
+            self.service.get_products_by_category(
+                "507f1f77bcf86cd799439011",
+                owner_id=self.owner_id,
+            )
 
     def test_update_product_success(self):
-        product = MagicMock()
-        updated_product = MagicMock()
-        updated_product.to_dict.return_value = {
-            "id": "1",
-            "name": "Updated Phone",
-            "brand": "Apple",
-            "price": 1500,
-            "quantity": 10,
-        }
+        product = self.create_product()
 
-        self.repo.get_by_id.return_value = product
-        self.repo.update.return_value = updated_product
+        result = self.service.update_product(
+            product["id"],
+            {
+                "name": "Updated Hoodie",
+                "brand": "Zara",
+                "price": 1799,
+                "quantity": 8,
+            },
+            owner_id=self.owner_id,
+        )
 
-        data = {
-            "name": "Updated Phone",
-            "price": 1500,
-            "brand": "Apple",
-            "quantity": 10,
-        }
+        self.assertEqual(result["name"], "Updated Hoodie")
+        self.assertEqual(result["price"], 1799)
+        self.assertEqual(result["quantity"], 8)
 
-        result = self.service.update_product("prod1", data)
+    def test_update_product_rejects_other_owner(self):
+        product = self.create_product(owner_id="user-1")
 
-        self.repo.get_by_id.assert_called_once_with("prod1")
-        self.repo.update.assert_called_once_with(product, data)
-        self.assertEqual(result, {
-            "id": "1",
-            "name": "Updated Phone",
-            "brand": "Apple",
-            "price": 1500,
-            "quantity": 10,
-        })
+        with self.assertRaisesMessage(
+            ValueError,
+            "You are not allowed to update this product",
+        ):
+            self.service.update_product(
+                product["id"],
+                {"name": "Updated Hoodie"},
+                owner_id="user-2",
+            )
 
-    def test_delete_product_raises_when_product_not_found(self):
-        self.repo.get_by_id.return_value = None
+    def test_update_product_raises_when_brand_is_empty(self):
+        product = self.create_product()
 
-        with self.assertRaisesMessage(ValueError, "Product not found"):
-            self.service.delete_product("prod1")
+        with self.assertRaisesMessage(ValueError, "Brand cannot be empty"):
+            self.service.update_product(
+                product["id"],
+                {"brand": ""},
+                owner_id=self.owner_id,
+            )
+
+    def test_update_product_raises_when_price_not_positive(self):
+        product = self.create_product()
+
+        with self.assertRaisesMessage(ValueError, "Price must be positive"):
+            self.service.update_product(
+                product["id"],
+                {"price": 0},
+                owner_id=self.owner_id,
+            )
+
+    def test_update_product_raises_when_quantity_is_negative(self):
+        product = self.create_product()
+
+        with self.assertRaisesMessage(ValueError, "Quantity cannot be negative"):
+            self.service.update_product(
+                product["id"],
+                {"quantity": -1},
+                owner_id=self.owner_id,
+            )
+
+    def test_update_product_can_change_category(self):
+        product = self.create_product()
+        category = self.create_category(title="Electronics")
+
+        result = self.service.update_product(
+            product["id"],
+            {"categoryId": category["id"]},
+            owner_id=self.owner_id,
+        )
+
+        self.assertEqual(result["category"], category["id"])
+
+    def test_add_product_to_category_success(self):
+        product = self.create_product()
+        category = self.create_category()
+
+        result = self.service.add_product_to_category(
+            product["id"],
+            category["id"],
+            owner_id=self.owner_id,
+        )
+
+        updated_product = Product.objects(id=product["id"]).first()
+
+        self.assertEqual(result, {"message": "Product added to category"})
+        self.assertEqual(str(updated_product.category.id), category["id"])
+
+    def test_add_product_to_category_rejects_other_owner_product(self):
+        product = self.create_product(owner_id="user-1")
+        category = self.create_category(owner_id="user-2")
+
+        with self.assertRaisesMessage(
+            ValueError,
+            "You are not allowed to move this product",
+        ):
+            self.service.add_product_to_category(
+                product["id"],
+                category["id"],
+                owner_id="user-2",
+            )
+
+    def test_remove_product_from_category_success(self):
+        category = self.create_category()
+        product = self.create_product(category_id=category["id"])
+
+        result = self.service.remove_product_from_category(
+            product["id"],
+            owner_id=self.owner_id,
+        )
+
+        updated_product = Product.objects(id=product["id"]).first()
+
+        self.assertEqual(result, {"message": "Product removed from category"})
+        self.assertIsNone(updated_product.category)
+
+    def test_remove_product_from_category_rejects_other_owner_product(self):
+        product = self.create_product(owner_id="user-1")
+
+        with self.assertRaisesMessage(
+            ValueError,
+            "You are not allowed to modify this product",
+        ):
+            self.service.remove_product_from_category(
+                product["id"],
+                owner_id="user-2",
+            )
 
     def test_delete_product_success(self):
-        product = MagicMock()
-        self.repo.get_by_id.return_value = product
+        product = self.create_product()
 
-        result = self.service.delete_product("prod1")
+        result = self.service.delete_product(product["id"], owner_id=self.owner_id)
 
-        self.repo.delete.assert_called_once_with(product)
         self.assertEqual(result, {"message": "Product deleted successfully"})
+        self.assertIsNone(Product.objects(id=product["id"]).first())
+
+    def test_delete_product_rejects_other_owner(self):
+        product = self.create_product(owner_id="user-1")
+
+        with self.assertRaisesMessage(
+            ValueError,
+            "You are not allowed to delete this product",
+        ):
+            self.service.delete_product(product["id"], owner_id="user-2")

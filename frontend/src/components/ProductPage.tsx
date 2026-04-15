@@ -21,6 +21,7 @@ function ProductPage({
   const product = products.find((item) => item.id === productId);
 
   const [formData, setFormData] = useState<ProductType | null>(product ?? null);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (!product) {
@@ -34,9 +35,11 @@ function ProductPage({
 
   if (!product || !formData) {
     return (
-      <section className="product-page">
-        <h1>Product Not Found</h1>
-        <Link className="inline-link" to="/">
+      <section className="mx-auto max-w-3xl">
+        <h1 className="mb-4 text-3xl font-bold text-slate-900">
+          Product Not Found
+        </h1>
+        <Link className="font-semibold text-cyan-700 hover:underline" to="/">
           Back to Product List
         </Link>
       </section>
@@ -83,22 +86,25 @@ function ProductPage({
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    setSaving(true);
 
     const saved = await onSave(formData);
+    setSaving(false);
+
     if (saved) {
       navigate("/");
     }
   };
 
   return (
-    <section className="product-page">
-      <h1>Edit Product</h1>
+    <section className="mx-auto max-w-3xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <h1 className="mb-4 text-3xl font-bold text-slate-900">Edit Product</h1>
 
-      <p className="product-page__category-link">
+      <p className="mb-5 text-sm text-slate-600">
         <strong>Current Category:</strong>{" "}
         {formData.categoryId ? (
           <Link
-            className="inline-link"
+            className="font-semibold text-cyan-700 hover:underline"
             to={`/categories/${formData.categoryId}`}
           >
             {formData.categoryName}
@@ -108,20 +114,31 @@ function ProductPage({
         )}
       </p>
 
-      <form className="product-form" onSubmit={handleSubmit}>
-        <label>
+      <form className="grid gap-4" onSubmit={handleSubmit}>
+        <label className="grid gap-2 font-semibold text-slate-700">
           Name
-          <input name="name" value={formData.name} onChange={handleChange} />
+          <input
+            className="rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+          />
         </label>
 
-        <label>
+        <label className="grid gap-2 font-semibold text-slate-700">
           Brand
-          <input name="brand" value={formData.brand} onChange={handleChange} />
+          <input
+            className="rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200"
+            name="brand"
+            value={formData.brand}
+            onChange={handleChange}
+          />
         </label>
 
-        <label>
+        <label className="grid gap-2 font-semibold text-slate-700">
           Price
           <input
+            className="rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200"
             type="number"
             name="price"
             value={formData.price}
@@ -129,9 +146,10 @@ function ProductPage({
           />
         </label>
 
-        <label>
+        <label className="grid gap-2 font-semibold text-slate-700">
           Quantity
           <input
+            className="rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200"
             type="number"
             name="quantity"
             value={formData.quantity}
@@ -139,9 +157,10 @@ function ProductPage({
           />
         </label>
 
-        <label>
+        <label className="grid gap-2 font-semibold text-slate-700">
           Category
           <select
+            className="rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200"
             name="categoryId"
             value={formData.categoryId || ""}
             onChange={handleCategoryChange}
@@ -155,9 +174,10 @@ function ProductPage({
           </select>
         </label>
 
-        <label>
+        <label className="grid gap-2 font-semibold text-slate-700">
           Description
           <textarea
+            className="rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200"
             name="description"
             value={formData.description}
             onChange={handleChange}
@@ -165,9 +185,25 @@ function ProductPage({
           />
         </label>
 
-        <div className="product-form__actions">
-          <button type="submit">Save Changes</button>
-          <Link className="inline-link" to="/">
+        <label className="grid gap-2 font-semibold text-slate-700">
+          Product Image URL
+          <input
+            className="rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200"
+            name="imageUrl"
+            value={formData.imageUrl}
+            onChange={handleChange}
+          />
+        </label>
+
+        <div className="mt-2 flex items-center gap-4">
+          <button
+            className="rounded-xl bg-cyan-600 px-5 py-3 font-semibold text-white transition hover:bg-cyan-700 disabled:cursor-not-allowed disabled:bg-slate-400"
+            type="submit"
+            disabled={saving}
+          >
+            {saving ? "Saving..." : "Save Changes"}
+          </button>
+          <Link className="font-semibold text-slate-600 hover:underline" to="/">
             Cancel
           </Link>
         </div>

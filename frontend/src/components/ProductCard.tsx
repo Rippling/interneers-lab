@@ -42,7 +42,10 @@ function ProductCard({ product, isExpanded, onClick }: ProductCardProps) {
           <p>
             <strong>Category:</strong>{" "}
             {product.categoryId ? (
-              <Link className="inline-link" to={`/categories/${product.categoryId}`}>
+              <Link
+                className="inline-link"
+                to={`/categories/${product.categoryId}`}
+              >
                 {product.categoryName}
               </Link>
             ) : (
@@ -59,4 +62,3 @@ function ProductCard({ product, isExpanded, onClick }: ProductCardProps) {
 }
 
 export default ProductCard;
-
