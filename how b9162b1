@@ -1,0 +1,12 @@
+[33mb9162b1[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m added testfile for product_service and category_service
+[33me1d7a9f[m setting rich filters to fetch list of categories
+[33mc14c70f[m added seed scripts to instantiate product categories on server startup
+[33m9f2bfe5[m added categoreies functionality
+[33mb0d1ecd[m Author correction commit
+[33m8e189f0[m created product using csr archi
+[33m9f27f41[m Added product app
+[33mb00fef8[m Update .gitignore to ignore env folders
+[33m6f1d532[m Remove .env.txt from repo
+[33med4f5e2[m modify settings.py file
+[33m8ddfbc8[m first api call
+[33m517ff0e[m 
