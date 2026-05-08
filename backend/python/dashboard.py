@@ -490,6 +490,7 @@ Rules: Return ONLY a valid JSON array, no explanation, no markdown, no extra tex
                 invalid_count += 1
 
         saved = 0
+        saved_products = []
         now = datetime.now(timezone.utc)
 
         for vp in valid_products:
@@ -508,6 +509,7 @@ Rules: Return ONLY a valid JSON array, no explanation, no markdown, no extra tex
                     updated_at=now
                 ).save()
                 saved += 1
+                saved_products.append(vp)
             except Exception:
                 invalid_count += 1
 
@@ -517,7 +519,7 @@ Rules: Return ONLY a valid JSON array, no explanation, no markdown, no extra tex
 
         preview_data = [{"Name": vp.name, "Category": vp.category, "Brand": vp.brand,
                          "Price (₹)": vp.price, "Stock": vp.quantity_in_warehouse}
-                        for vp in valid_products]
+                        for vp in saved_products]
         st.dataframe(pd.DataFrame(preview_data), use_container_width=True, hide_index=True)
         st.info("🔄 Click 'Refresh Data' in the sidebar to see updated products!")
 
