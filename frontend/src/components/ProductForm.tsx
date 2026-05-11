@@ -44,18 +44,21 @@ export default function ProductForm({
   }
 
   function handleSubmit() {
+    const price = Number(form.price);
+    const quantity = Number(form.quantity);
+
     if (!form.name.trim())          return setValidationError("Name is required");
     if (!form.description.trim())   return setValidationError("Description is required");  // ← added
     if (!form.brand.trim())         return setValidationError("Brand is required");
-    if (Number(form.price) <= 0)    return setValidationError("Price must be greater than 0");
-    if (Number(form.quantity) <= 0) return setValidationError("Quantity must be greater than 0");
+    if (!Number.isFinite(price) || price <= 0)       return setValidationError("Price must be greater than 0");
+    if (!Number.isFinite(quantity) || quantity <= 0) return setValidationError("Quantity must be greater than 0");
 
     onSave({
       name:        form.name.trim(),
       description: form.description.trim(),
       brand:       form.brand.trim(),
-      price:       Number(form.price),
-      quantity:    Number(form.quantity),
+      price,
+      quantity,
       category_id: form.category || null,
     });
   }
