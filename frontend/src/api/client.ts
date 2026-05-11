@@ -18,6 +18,9 @@ import type {
 
 const API_BASE = process.env.REACT_APP_API_BASE ?? "http://localhost:8000";
 
+type ProductResponse = { message: string; product: Product };
+type CategoryResponse = { message: string; category: Category };
+
 // ── helpers ──────────────────────────────────────────────────────────
 
 async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
@@ -42,14 +45,14 @@ const jsonOptions = (method: string, body: unknown): RequestInit => ({
 export async function fetchProducts(
   page = 1,
   pageSize = 9,
-  filters: ProductFilters = {}
+  filters: ProductFilters = {},
 ): Promise<PaginatedProducts> {
   const params = new URLSearchParams();
   params.set("page", String(page));
   params.set("page_size", String(pageSize));
-  if (filters.search)     params.set("search", filters.search);
-  if (filters.minPrice)   params.set("min_price", filters.minPrice);
-  if (filters.maxPrice)   params.set("max_price", filters.maxPrice);
+  if (filters.search) params.set("search", filters.search);
+  if (filters.minPrice) params.set("min_price", filters.minPrice);
+  if (filters.maxPrice) params.set("max_price", filters.maxPrice);
   if (filters.categoryId) params.set("category_ids", filters.categoryId);
   return apiFetch<PaginatedProducts>(`/products/?${params}`);
 }
@@ -59,14 +62,22 @@ export async function fetchProduct(id: string): Promise<Product> {
 }
 
 export async function createProduct(data: ProductPayload): Promise<Product> {
-  return apiFetch<Product>("/products/", jsonOptions("POST", data));
+  const response = await apiFetch<ProductResponse>(
+    "/products/",
+    jsonOptions("POST", data),
+  );
+  return response.product;
 }
 
 export async function updateProduct(
   id: string,
-  data: Partial<ProductPayload>
+  data: Partial<ProductPayload>,
 ): Promise<Product> {
-  return apiFetch<Product>(`/products/${id}/`, jsonOptions("PUT", data));
+  const response = await apiFetch<ProductResponse>(
+    `/products/${id}/`,
+    jsonOptions("PUT", data),
+  );
+  return response.product;
 }
 
 export async function deleteProduct(id: string): Promise<void> {
@@ -75,24 +86,27 @@ export async function deleteProduct(id: string): Promise<void> {
 
 export async function moveProductCategory(
   productId: string,
-  categoryId: string
+  categoryId: string,
 ): Promise<Product> {
-  return apiFetch<Product>(
-    `/products/${productId}/`,
-    jsonOptions("PATCH", { category: categoryId })
+  const response = await apiFetch<ProductResponse>(
+    `/products/${productId}/category/`,
+    jsonOptions("PUT", { category_id: categoryId }),
   );
+  return response.product;
 }
 
-export async function fetchProductsByCategory(
-  categoryId: string
-): Promise<{ category: Category; total_products: number; products: Product[] }> {
+export async function fetchProductsByCategory(categoryId: string): Promise<{
+  category: Category;
+  total_products: number;
+  products: Product[];
+}> {
   return apiFetch(`/categories/${categoryId}/products/`);
 }
 
 // ── Categories ───────────────────────────────────────────────────────
 
 export async function fetchCategories(
-  pageSize = 50
+  pageSize = 50,
 ): Promise<PaginatedCategories> {
   return apiFetch<PaginatedCategories>(`/categories/?page_size=${pageSize}`);
 }
@@ -102,16 +116,24 @@ export async function fetchCategory(id: string): Promise<Category> {
 }
 
 export async function createCategory(
-  data: Omit<Category, "id" | "created_at" | "updated_at">
+  data: Omit<Category, "id" | "created_at" | "updated_at">,
 ): Promise<Category> {
-  return apiFetch<Category>("/categories/", jsonOptions("POST", data));
+  const response = await apiFetch<CategoryResponse>(
+    "/categories/",
+    jsonOptions("POST", data),
+  );
+  return response.category;
 }
 
 export async function updateCategory(
   id: string,
-  data: Partial<Omit<Category, "id" | "created_at" | "updated_at">>
+  data: Partial<Omit<Category, "id" | "created_at" | "updated_at">>,
 ): Promise<Category> {
-  return apiFetch<Category>(`/categories/${id}/`, jsonOptions("PUT", data));
+  const response = await apiFetch<CategoryResponse>(
+    `/categories/${id}/`,
+    jsonOptions("PUT", data),
+  );
+  return response.category;
 }
 
 export async function deleteCategory(id: string): Promise<void> {
