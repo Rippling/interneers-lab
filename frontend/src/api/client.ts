@@ -109,7 +109,7 @@ export async function createCategory(
 
 export async function updateCategory(
   id: string,
-  data: Partial<Omit<Category, "id" | "created_at" | "updated_at">>
+  data: Omit<Category, "id" | "created_at" | "updated_at">
 ): Promise<Category> {
   const res = await apiFetch<CategoryResponse>(`/categories/${id}/`, jsonOptions("PUT", data));
   return res.category;
