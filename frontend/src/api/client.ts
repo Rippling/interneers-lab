@@ -67,7 +67,7 @@ export async function createProduct(data: ProductPayload): Promise<Product> {
 
 export async function updateProduct(
   id: string,
-  data: Partial<ProductPayload>
+  data: ProductPayload
 ): Promise<Product> {
   const res = await apiFetch<ProductResponse>(`/products/${id}/`, jsonOptions("PUT", data));
   return res.product;
