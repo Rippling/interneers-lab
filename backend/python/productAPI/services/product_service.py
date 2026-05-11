@@ -2,11 +2,12 @@ from productAPI.repositories import ProductRepository, ProductCategoryRepository
 from django.core.paginator import Paginator
 import csv
 from io import StringIO
+from productAPI.constants import DEFAULT_PRODUCT_PAGE_SIZE
 
 class ProductService:
     
     @staticmethod
-    def list_products(page_number=None, sortby="desc", filters=None):
+    def list_products(filters=None):
         
         if filters:
             category_names=filters.get("categories")
@@ -21,6 +22,11 @@ class ProductService:
             products=ProductRepository.get_filtered(filters)
         else:
             products=ProductRepository.get_all()
+            
+        sortby = filters.get("sortby", "desc")
+        page_number = filters.get("page_number", 1)
+        
+        
         
         if sortby == "asc":
             products=products.order_by("updated_at")
@@ -28,7 +34,7 @@ class ProductService:
             products=products.order_by("-updated_at")
         
         if page_number:
-            paginator = Paginator(products,6)
+            paginator = Paginator(products,DEFAULT_PRODUCT_PAGE_SIZE)
             page=paginator.get_page(page_number)
             return page
 
@@ -89,6 +95,9 @@ class ProductService:
         if product is None:
             return False
         
+        if product.category is None or str(product.category.id) != category_id:
+            return False
+        
         return ProductRepository.unassign_category(product)
         
         
@@ -100,6 +109,18 @@ class ProductService:
         io_string = StringIO(file_decode)
         
         reader = csv.DictReader(io_string)
+        
+        required_headers = {'name', 'brand'}
+        
+        if not required_headers.issubset(reader.fieldnames):
+            raise ValueError(f"CSV missing required headers: {required_headers - set(reader.fieldnames)}")
+
+        for row_num, row in enumerate(reader, start=2):  
+            if not row.get('name') or not row.get('brand'):
+                raise ValueError(f"Row {row_num}: 'name' and 'brand' are required")
+            if row.get('price') and not row['price'].isdigit():
+                raise ValueError(f"Row {row_num}: 'price' must be a number")        
+                
         
         products_data = []
         

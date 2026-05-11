@@ -1,6 +1,7 @@
 from productAPI.repositories import ProductCategoryRepository
 from productAPI.repositories import ProductRepository
 from django.core.paginator import Paginator
+from productAPI.constants import DEFAULT_CATEGORY_PAGE_SIZE as pgsz
 
 
 class ProductCategoryService:
@@ -10,7 +11,7 @@ class ProductCategoryService:
         categories = ProductCategoryRepository.get_all()
         
         if page_number:
-            paginator = Paginator(categories, 2)
+            paginator = Paginator(categories, pgsz)
             page=paginator.get_page(page_number)
             return page
         return categories

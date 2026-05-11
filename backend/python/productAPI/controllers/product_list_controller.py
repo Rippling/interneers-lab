@@ -3,48 +3,20 @@ from rest_framework.response import Response
 from rest_framework import status
 from productAPI.services import ProductService
 from productAPI.serializers import ProductSerializer
+from productAPI.serializers import ProductFilterSerializer
 
 class ProductListController(APIView):
     
     def get(self, request):
-        page_number = request.GET.get("page")
-        sorting = request.GET.get("sortby","desc")
         
         filters={}
-        categories = request.GET.get("categories")
-        if categories:
-            filters["categories"] = categories.split(",")
+        serializer = ProductFilterSerializer(data = request.query_params)
+            
+        serializer.is_valid(raise_exception=True)
         
-        min_price = request.GET.get("min_price")
-        if min_price is not None:
-            try:
-                filters["min_price"]=int(min_price)
-            except ValueError:
-                return Response(
-                    {"error":"min_price muse be a valid number"},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
+        filters = serializer.validated_data
             
-        max_price = request.GET.get("max_price")
-        if max_price is not None:
-            try:
-                filters["max_price"]=int(max_price)
-            except ValueError:
-                return Response(
-                    {"error":"max_price muse be a valid number"},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            
-        brand = request.GET.get("brand")
-        if brand:
-            filters["brand"]=brand 
-        
-        name = request.GET.get("name")
-        if name:
-            filters["name"]=name
-            
-            
-        products = ProductService.list_products(page_number, sorting, filters)
+        products = ProductService.list_products(filters)
         
         
         
