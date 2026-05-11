@@ -47,7 +47,7 @@ export default function ProductForm({
     if (!form.name.trim())         return setValidationError("Name is required");
     if (!form.brand.trim())        return setValidationError("Brand is required");
     if (Number(form.price) <= 0)   return setValidationError("Price must be greater than 0");
-    if (Number(form.quantity) < 0) return setValidationError("Quantity cannot be negative");
+    if (Number(form.quantity) <= 0) return setValidationError("Quantity must be greater than 0");
 
     onSave({
       name:        form.name.trim(),

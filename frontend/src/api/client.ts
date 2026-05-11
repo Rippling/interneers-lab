@@ -19,6 +19,8 @@ import type {
 
 const API_BASE = process.env.REACT_APP_API_BASE ?? "http://localhost:8000";
 
+type CategoryResponse = { message: string; category: Category };
+
 // ── helpers ──────────────────────────────────────────────────────────
 
 async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
@@ -108,14 +110,16 @@ export async function fetchCategory(id: string): Promise<Category> {
 export async function createCategory(
   data: Omit<Category, "id" | "created_at" | "updated_at">
 ): Promise<Category> {
-  return apiFetch<Category>("/categories/", jsonOptions("POST", data));
+  const res = await apiFetch<CategoryResponse>("/categories/", jsonOptions("POST", data));
+  return res.category;
 }
 
 export async function updateCategory(
   id: string,
   data: Partial<Omit<Category, "id" | "created_at" | "updated_at">>
 ): Promise<Category> {
-  return apiFetch<Category>(`/categories/${id}/`, jsonOptions("PUT", data));
+  const res = await apiFetch<CategoryResponse>(`/categories/${id}/`, jsonOptions("PUT", data));
+  return res.category;
 }
 
 export async function deleteCategory(id: string): Promise<void> {

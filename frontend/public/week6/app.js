@@ -165,17 +165,24 @@ function buildProductCard(product) {
   card.dataset.productId = product.id;
 
   card.innerHTML = `
-    <div class="card-category">${product.category?.title || 'Uncategorized'}</div>
-    <div class="card-name">${product.name}</div>
-    <div class="card-desc">${truncate(product.description)}</div>
+    <div class="card-category"></div>
+    <div class="card-name"></div>
+    <div class="card-desc"></div>
     <div class="card-footer">
-      <span class="card-price">${formatPrice(product.price)}</span>
+      <span class="card-price"></span>
       <span class="card-stock">
-        <span class="qty-dot ${stockClass(product.quantity)}"></span>
-        ${product.quantity} in stock
+        <span class="qty-dot"></span>
+        <span class="stock-text"></span>
       </span>
     </div>
   `;
+
+  card.querySelector('.card-category').textContent = product.category?.title || 'Uncategorized';
+  card.querySelector('.card-name').textContent = product.name;
+  card.querySelector('.card-desc').textContent = truncate(product.description);
+  card.querySelector('.card-price').textContent = formatPrice(product.price);
+  card.querySelector('.qty-dot').className = 'qty-dot ' + stockClass(product.quantity);
+  card.querySelector('.stock-text').textContent = `${product.quantity} in stock`;
 
   // Click to highlight and update the featured tile
   card.addEventListener('click', () => {
