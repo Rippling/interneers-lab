@@ -736,12 +736,15 @@ if rag_ready:
                     else:
                         st.caption("No matching products found in DB")
 
-    # Chat input
-    user_question = st.chat_input(
-        "Ask anything — e.g. 'Is iPhone 14 in stock and what is its warranty?'"
+    # Chat input (using text_input so it stays inline with this section)
+    user_question = st.text_input(
+        "Ask the Expert",
+        placeholder="e.g. 'Is iPhone 14 in stock and what is its warranty?'",
+        key="expert_input"
     )
+    ask_expert_btn = st.button("🤖 Ask Expert", type="primary")
 
-    if user_question:
+    if ask_expert_btn and user_question:
         with st.chat_message("user"):
             st.write(user_question)
 
