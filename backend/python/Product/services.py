@@ -361,7 +361,7 @@ class ProductService:
             except (ValueError, TypeError):
                 pass
 
-            category_id = parsed_row.get("category_id", "").strip() or None
+            category_id = (parsed_row.get("category_id") or "").strip() or None
             parsed_row["category_id"] = category_id
 
             validation = validate_csv_row(parsed_row, row_number)
