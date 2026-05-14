@@ -371,7 +371,7 @@ else:
 
 st.markdown("---")
 
-# ─── SCENARIO SELECTOR ─────────────────────────────────────────
+      # ─── SCENARIO SELECTOR ─────────────────────────────────────────
 st.subheader("🎯 AI Scenario Selector")
 st.markdown("Choose a warehouse scenario and let AI populate the database with relevant products!")
 
@@ -380,49 +380,99 @@ SCENARIOS = {
         "description": "Festive season — high demand for gifts, decorations, and party items",
         "stock_min": 300,
         "stock_max": 500,
-        "prompt_hint": "festive holiday season products like gifts, decorations, party supplies, winter clothing, and electronics"
+        "prompt_hint": "festive holiday season products like gifts, decorations, party supplies, winter clothing, and electronics",
+        "color": "#2d4a2d"
     },
     "☀️ Summer Collection": {
         "description": "Summer season — outdoor, cooling, and seasonal products",
         "stock_min": 200,
         "stock_max": 400,
-        "prompt_hint": "summer season products like light clothing, outdoor gear, cooling appliances, summer foods and beverages"
+        "prompt_hint": "summer season products like light clothing, outdoor gear, cooling appliances, summer foods and beverages",
+        "color": "#4a3d1a"
     },
     "📚 Back to School": {
         "description": "School season — stationery, books, electronics, and essentials",
         "stock_min": 150,
         "stock_max": 350,
-        "prompt_hint": "back to school products like books, stationery, bags, electronics like laptops and calculators, and school essentials"
+        "prompt_hint": "back to school products like books, stationery, bags, electronics like laptops and calculators, and school essentials",
+        "color": "#1a2d4a"
     },
     "🎆 New Year Sale": {
         "description": "New Year — discounted items, party supplies, and fresh start products",
         "stock_min": 250,
         "stock_max": 450,
-        "prompt_hint": "new year sale products like party supplies, fitness equipment, kitchen appliances, and lifestyle products"
+        "prompt_hint": "new year sale products like party supplies, fitness equipment, kitchen appliances, and lifestyle products",
+        "color": "#3d1a4a"
     },
 }
 
-selected_scenario = st.selectbox("Select a Scenario", list(SCENARIOS.keys()))
-scenario_info = SCENARIOS[selected_scenario]
-st.info(f"📌 {scenario_info['description']}")
-st.markdown(f"**Stock levels will be:** {scenario_info['stock_min']} – {scenario_info['stock_max']} units")
-num_products = st.slider("How many products to generate?", min_value=5, max_value=30, value=10)
+# ── Initialize selected scenario in session state ───────────────
+if "selected_scenario" not in st.session_state:
+    st.session_state.selected_scenario = None
 
-if st.button("🚀 Generate & Save Products", type="primary"):
-    try:
-        from groq import Groq
-        from pydantic import BaseModel, field_validator
-        from typing import Optional
-        from datetime import datetime, timezone
-        import json
+# ── Render scenario cards ───────────────────────────────────────
+col1, col2, col3, col4 = st.columns(4)
+cols = [col1, col2, col3, col4]
 
-        client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+for i, (scenario_name, scenario_data) in enumerate(SCENARIOS.items()):
+    with cols[i]:
+        is_selected = st.session_state.selected_scenario == scenario_name
+        border_color = "#ff4b4b" if is_selected else "#333333"
+        bg_color = scenario_data["color"] if is_selected else "#1a1a1a"
 
-        all_categories = get_all_categories()
-        category_map = {cat.title: cat for cat in all_categories}
-        category_names = list(category_map.keys())
+        st.markdown(f"""
+<div style="
+    border: 2px solid {border_color};
+    border-radius: 12px;
+    padding: 20px;
+    background-color: {bg_color};
+    min-height: 160px;
+    margin-bottom: 10px;
+">
+    <h3 style="margin: 0 0 8px 0; font-size: 18px;">{scenario_name}</h3>
+    <p style="margin: 0; font-size: 13px; color: #cccccc;">{scenario_data['description']}</p>
+    <p style="margin: 8px 0 0 0; font-size: 12px; color: #aaaaaa;">
+        Stock: {scenario_data['stock_min']}–{scenario_data['stock_max']} units
+    </p>
+</div>
+""", unsafe_allow_html=True)
 
-        prompt = f"""
+        btn_label = "✅ Selected" if is_selected else "Select"
+        if st.button(btn_label, key=f"scenario_{i}", use_container_width=True):
+            st.session_state.selected_scenario = scenario_name
+            st.rerun()
+
+# ── Show number input + generate button if scenario selected ────
+if st.session_state.selected_scenario:
+    scenario_info = SCENARIOS[st.session_state.selected_scenario]
+    st.markdown(f"**Selected:** {st.session_state.selected_scenario} — {scenario_info['description']}")
+    st.markdown("---")
+
+    num_products = st.number_input(
+        "How many products to generate?",
+        min_value=1,
+        max_value=50,
+        value=10,
+        step=1,
+        key="num_products_input"
+    )
+
+    if st.button("🚀 Generate & Save Products", type="primary"):
+        try:
+            from groq import Groq
+            from pydantic import BaseModel, field_validator
+            from typing import Optional
+            from datetime import datetime, timezone
+
+            client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+
+            all_categories = get_all_categories()
+            category_map = {cat.title: cat for cat in all_categories}
+            category_names = list(category_map.keys())
+
+            selected_scenario = st.session_state.selected_scenario
+
+            prompt = f"""
 Generate exactly {num_products} realistic warehouse products for a "{selected_scenario.replace('🎄 ', '').replace('☀️ ', '').replace('📚 ', '').replace('🎆 ', '')}" scenario as a JSON array.
 Focus on: {scenario_info['prompt_hint']}
 Each product must belong to one of these categories only: {category_names}
@@ -436,94 +486,96 @@ Each product must have exactly these fields:
 Rules: Return ONLY a valid JSON array, no explanation, no markdown, no extra text
 """
 
-        with st.spinner("🤖 AI is generating products..."):
-            response = client.chat.completions.create(
-                model="llama-3.3-70b-versatile",
-                messages=[{"role": "user", "content": prompt}],
-                temperature=0.7
-            )
+            with st.spinner("🤖 AI is generating products..."):
+                response = client.chat.completions.create(
+                    model="llama-3.3-70b-versatile",
+                    messages=[{"role": "user", "content": prompt}],
+                    temperature=0.7
+                )
 
-        raw_output = response.choices[0].message.content
-        cleaned = raw_output.strip()
-        if cleaned.startswith("```json"):
-            cleaned = cleaned[7:]
-        if cleaned.startswith("```"):
-            cleaned = cleaned[3:]
-        if cleaned.endswith("```"):
-            cleaned = cleaned[:-3]
-        cleaned = cleaned.strip()
-        products_data = json.loads(cleaned)
+            raw_output = response.choices[0].message.content
+            cleaned = raw_output.strip()
+            if cleaned.startswith("```json"):
+                cleaned = cleaned[7:]
+            if cleaned.startswith("```"):
+                cleaned = cleaned[3:]
+            if cleaned.endswith("```"):
+                cleaned = cleaned[:-3]
+            cleaned = cleaned.strip()
+            products_data = json.loads(cleaned)
 
-        class ProductSchema(BaseModel):
-            name: str
-            description: Optional[str] = ""
-            category: str
-            price: float
-            brand: str
-            quantity_in_warehouse: int
+            class ProductSchema(BaseModel):
+                name: str
+                description: Optional[str] = ""
+                category: str
+                price: float
+                brand: str
+                quantity_in_warehouse: int
 
-            @field_validator('price')
-            def price_must_be_positive(cls, v):
-                if v <= 0:
-                    raise ValueError("Price must be greater than 0")
-                return round(v, 2)
+                @field_validator('price')
+                def price_must_be_positive(cls, v):
+                    if v <= 0:
+                        raise ValueError("Price must be greater than 0")
+                    return round(v, 2)
 
-            @field_validator('quantity_in_warehouse')
-            def quantity_must_be_non_negative(cls, v):
-                if v < 0:
-                    raise ValueError("Quantity cannot be negative")
-                return v
+                @field_validator('quantity_in_warehouse')
+                def quantity_must_be_non_negative(cls, v):
+                    if v < 0:
+                        raise ValueError("Quantity cannot be negative")
+                    return v
 
-            @field_validator('category')
-            def category_must_exist(cls, v):
-                if v not in category_names:
-                    raise ValueError(f"Invalid category: {v}")
-                return v
+                @field_validator('category')
+                def category_must_exist(cls, v):
+                    if v not in category_names:
+                        raise ValueError(f"Invalid category: {v}")
+                    return v
 
-        valid_products = []
-        invalid_count = 0
+            valid_products = []
+            invalid_count = 0
 
-        for product in products_data:
-            try:
-                validated = ProductSchema(**product)
-                valid_products.append(validated)
-            except Exception:
-                invalid_count += 1
+            for product in products_data:
+                try:
+                    validated = ProductSchema(**product)
+                    valid_products.append(validated)
+                except Exception:
+                    invalid_count += 1
 
-        saved = 0
-        now = datetime.now(timezone.utc)
+            saved = 0
+            now = datetime.now(timezone.utc)
 
-        for vp in valid_products:
-            try:
-                category_obj = category_map.get(vp.category)
-                if not category_obj:
-                    continue
-                Product(
-                    name=vp.name,
-                    description=vp.description,
-                    category=category_obj,
-                    price=vp.price,
-                    brand=vp.brand,
-                    quantity_in_warehouse=vp.quantity_in_warehouse,
-                    created_at=now,
-                    updated_at=now
-                ).save()
-                saved += 1
-            except Exception:
-                invalid_count += 1
+            for vp in valid_products:
+                try:
+                    category_obj = category_map.get(vp.category)
+                    if not category_obj:
+                        continue
+                    Product(
+                        name=vp.name,
+                        description=vp.description,
+                        category=category_obj,
+                        price=vp.price,
+                        brand=vp.brand,
+                        quantity_in_warehouse=vp.quantity_in_warehouse,
+                        created_at=now,
+                        updated_at=now
+                    ).save()
+                    saved += 1
+                except Exception:
+                    invalid_count += 1
 
-        st.success(f"🎉 Successfully saved {saved} products for '{selected_scenario}' scenario!")
-        if invalid_count > 0:
-            st.warning(f"⚠️ {invalid_count} products were skipped due to validation errors.")
+            st.success(f"🎉 Successfully saved {saved} products for '{st.session_state.selected_scenario}' scenario!")
+            if invalid_count > 0:
+                st.warning(f"⚠️ {invalid_count} products were skipped due to validation errors.")
 
-        preview_data = [{"Name": vp.name, "Category": vp.category, "Brand": vp.brand,
-                         "Price (₹)": vp.price, "Stock": vp.quantity_in_warehouse}
-                        for vp in valid_products]
-        st.dataframe(pd.DataFrame(preview_data), use_container_width=True, hide_index=True)
-        st.info("🔄 Click 'Refresh Data' in the sidebar to see updated products!")
+            preview_data = [{"Name": vp.name, "Category": vp.category, "Brand": vp.brand,
+                             "Price (₹)": vp.price, "Stock": vp.quantity_in_warehouse}
+                            for vp in valid_products]
+            st.dataframe(pd.DataFrame(preview_data), use_container_width=True, hide_index=True)
+            st.info("🔄 Click 'Refresh Data' in the sidebar to see updated products!")
 
-    except Exception as e:
-        st.error(f"❌ Something went wrong: {e}")
+        except Exception as e:
+            st.error(f"❌ Something went wrong: {e}")
+else:
+    st.info("👆 Select a scenario above to get started!")
 
 st.markdown("---")
 
@@ -614,11 +666,10 @@ def lookup_products_in_db(question):
     all_products = list(Product.objects.all())
     matched = []
     q_lower = question.lower()
-    q_words = [w for w in q_lower.split() if len(w) > 2]  # ← fixed: min 2 chars not 3
+    q_words = [w for w in q_lower.split() if len(w) > 2]
 
     for p in all_products:
         product_name_lower = p.name.lower()
-        # Match if ANY word from question appears in product name
         if any(word in product_name_lower for word in q_words):
             try:
                 cat = p.category.title if p.category else "Unknown"
@@ -636,21 +687,11 @@ def lookup_products_in_db(question):
 
 @traceable(name="ask_expert", run_type="chain")
 def ask_expert(question, collection, rag_model):
-    """
-    Combined RAG + MongoDB pipeline with Langsmith tracing:
-    1. Retrieve relevant doc chunks
-    2. Lookup matching products in MongoDB
-    3. Build combined prompt
-    4. Send to Groq
-    5. Return grounded answer
-    """
     from groq import Groq
 
-    # Step 1 — Retrieve doc chunks
     chunks = retrieve_chunks(question, collection, rag_model, top_k=3)
     doc_context = "\n\n".join([f"[{c['source']}]: {c['text']}" for c in chunks])
 
-    # Step 2 — Lookup MongoDB
     matched_products = lookup_products_in_db(question)
 
     if matched_products:
@@ -666,7 +707,6 @@ def ask_expert(question, collection, rag_model):
     else:
         db_context = "No matching products found in live database for this query."
 
-    # Step 3 — Build combined prompt
     prompt = f"""You are an expert assistant for a product inventory system.
 You have access to two sources of information:
 1. Documentation (warranties, return policies, vendor FAQ)
@@ -688,7 +728,6 @@ Question: {question}
 
 Answer:"""
 
-    # Step 4 — Send to Groq
     @traceable(name="groq_llm_call", run_type="llm")
     def call_groq(messages):
         client = Groq(api_key=os.getenv("GROQ_API_KEY"))
@@ -716,7 +755,6 @@ with st.spinner("⏳ Loading knowledge base..."):
         rag_ready = False
 
 if rag_ready:
-    # Display chat history
     for chat in st.session_state.chat_history:
         with st.chat_message("user"):
             st.write(chat["question"])
@@ -736,12 +774,14 @@ if rag_ready:
                     else:
                         st.caption("No matching products found in DB")
 
-    # Chat input
-    user_question = st.chat_input(
-        "Ask anything — e.g. 'Is iPhone 14 in stock and what is its warranty?'"
+    user_question = st.text_input(
+        "Ask the Expert",
+        placeholder="e.g. 'Is iPhone 14 in stock and what is its warranty?'",
+        key="expert_input"
     )
+    ask_expert_btn = st.button("🤖 Ask Expert", type="primary")
 
-    if user_question:
+    if ask_expert_btn and user_question:
         with st.chat_message("user"):
             st.write(user_question)
 
@@ -790,7 +830,7 @@ if rag_ready:
 st.subheader("💰 AI Quote Agent")
 st.markdown("Get instant quotes for any product — with automatic bulk discounts!")
 
-# ── Quote Agent Setup ───────────────────────────────────────────
+# ── Quote Agent Functions ───────────────────────────────────────
 def find_product(product_name: str):
     """Smart product search — handles plural, case, partial names"""
     product = Product.objects(name__icontains=product_name).first()
@@ -874,6 +914,52 @@ def calculate_quote(product_name: str, quantity: int) -> dict:
         "final_total": round(final_total, 2),
         "currency": "INR",
         "policy_override": False
+    }
+
+def confirm_order(product_name: str, quantity: int) -> dict:
+    """Confirm order — decreases stock in MongoDB and returns receipt"""
+    from datetime import datetime, timezone
+
+    product = find_product(product_name)
+    if not product:
+        return {"error": f"Product '{product_name}' not found"}
+
+    current_stock = product.quantity_in_warehouse
+    if current_stock < quantity:
+        return {"error": f"Insufficient stock. Available: {current_stock}, Requested: {quantity}"}
+
+    # Update stock in MongoDB
+    product.quantity_in_warehouse = current_stock - quantity
+    product.updated_at = datetime.now(timezone.utc)
+    product.save()
+
+    # Calculate final price for receipt
+    unit_price = float(str(product.price))
+    if quantity <= 10:
+        discount_pct = 0
+    elif quantity <= 50:
+        discount_pct = 10
+    else:
+        discount_pct = 20
+
+    original_total = unit_price * quantity
+    discount_amount = original_total * (discount_pct / 100)
+    final_total = original_total - discount_amount
+
+    return {
+        "success": True,
+        "order_id": f"ORD-{str(product.id)[-6:].upper()}-{quantity}",
+        "product_name": product.name,
+        "brand": product.brand,
+        "quantity": quantity,
+        "unit_price": round(unit_price, 2),
+        "discount_percentage": discount_pct,
+        "discount_amount": round(discount_amount, 2),
+        "original_total": round(original_total, 2),
+        "final_total": round(final_total, 2),
+        "stock_before": current_stock,
+        "stock_after": product.quantity_in_warehouse,
+        "order_time": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
     }
 
 QUOTE_TOOLS = [
@@ -1013,6 +1099,9 @@ Mention discount if applicable. Be friendly and professional."""
 if "quote_history" not in st.session_state:
     st.session_state.quote_history = []
 
+if "pending_order" not in st.session_state:
+    st.session_state.pending_order = None
+
 # Display discount rules
 col1, col2, col3 = st.columns(3)
 with col1:
@@ -1033,6 +1122,23 @@ for chat in st.session_state.quote_history:
                 st.caption(f"🔧 {log['tool']}({log['args']})")
                 st.caption(f"📤 Result: {log['result']}")
                 st.markdown("---")
+        # Show receipt if order was confirmed for this chat
+        if chat.get("receipt"):
+            r = chat["receipt"]
+            st.success("✅ Order Confirmed!")
+            st.markdown(f"""
+**🧾 Order Receipt**
+| Field | Details |
+|-------|---------|
+| **Order ID** | `{r['order_id']}` |
+| **Product** | {r['product_name']} ({r['brand']}) |
+| **Quantity** | {r['quantity']} units |
+| **Unit Price** | ₹{r['unit_price']} |
+| **Discount** | {r['discount_percentage']}% (saved ₹{r['discount_amount']}) |
+| **Total Paid** | ₹{r['final_total']} |
+| **Stock Update** | {r['stock_before']} → {r['stock_after']} units remaining |
+| **Order Time** | {r['order_time']} |
+""")
 
 # Chat input
 quote_question = st.text_input(
@@ -1055,17 +1161,64 @@ if get_quote_btn and quote_question:
                         st.caption(f"🔧 {log['tool']}({log['args']})")
                         st.caption(f"📤 Result: {log['result']}")
                         st.markdown("---")
+
+                # Extract product and quantity from calculate_quote tool result
+                product_name = None
+                quantity = None
+                for log in tool_log:
+                    if log["tool"] == "calculate_quote" and "error" not in log["result"]:
+                        product_name = log["result"].get("product_name")
+                        quantity = log["result"].get("quantity")
+
                 st.session_state.quote_history.append({
                     "question": quote_question,
                     "answer": answer,
-                    "tool_log": tool_log
+                    "tool_log": tool_log,
+                    "receipt": None
                 })
+
+                # Store pending order only if quote was successful
+                if product_name and quantity:
+                    st.session_state.pending_order = {
+                        "product_name": product_name,
+                        "quantity": quantity,
+                        "history_index": len(st.session_state.quote_history) - 1
+                    }
+
             except Exception as e:
                 st.error(f"❌ Error: {e}")
+
+# ── Confirm Order Section ───────────────────────────────────────
+if st.session_state.pending_order:
+    order = st.session_state.pending_order
+    st.markdown("---")
+    st.markdown(f"### 🛒 Ready to place this order?")
+    st.markdown(f"**{order['quantity']} x {order['product_name']}**")
+
+    col1, col2 = st.columns([1, 5])
+    with col1:
+        if st.button("✅ Confirm Order", type="primary", key="confirm_order_btn"):
+            with st.spinner("⏳ Processing order..."):
+                receipt = confirm_order(order["product_name"], order["quantity"])
+                if "error" in receipt:
+                    st.error(f"❌ Order failed: {receipt['error']}")
+                else:
+                    # Save receipt to chat history
+                    idx = order["history_index"]
+                    st.session_state.quote_history[idx]["receipt"] = receipt
+                    # Clear pending order
+                    st.session_state.pending_order = None
+                    st.success("🎉 Order confirmed! Inventory updated.")
+                    st.rerun()
+    with col2:
+        if st.button("❌ Cancel", key="cancel_order_btn"):
+            st.session_state.pending_order = None
+            st.rerun()
 
 if st.session_state.quote_history:
     if st.button("🗑️ Clear Quote History", key="clear_quote"):
         st.session_state.quote_history = []
+        st.session_state.pending_order = None
         st.rerun()
 
 st.caption("💡 Discount rules: 1-10 units = 0%, 11-50 units = 10%, 51+ units = 20% (max allowed by policy)")
