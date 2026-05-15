@@ -67,6 +67,7 @@ def validate_product_data(data, require_all_fields=True):
         if not isinstance(data["category_id"], str) or not data["category_id"].strip():
             errors["category_id"] = "category_id must be a non-empty string"
 
+    return errors
 
 
 def validate_category_data(data, require_all_fields=True):

@@ -23,6 +23,10 @@ export function useProducts(pageSize = 9) {
   const [tick, setTick] = useState(0);
 
   const refresh = useCallback(() => setTick((t) => t + 1), []);
+  const updateFilters = useCallback((nextFilters: ProductFilters) => {
+    setFilters(nextFilters);
+    setPage(1);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -56,7 +60,7 @@ export function useProducts(pageSize = 9) {
     totalPages,
     totalProducts,
     setPage,
-    setFilters,
+    setFilters: updateFilters,
     refresh,
   };
 }
