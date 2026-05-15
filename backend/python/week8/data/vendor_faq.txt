@@ -1,0 +1,129 @@
+Vendor FAQ
+
+This FAQ explains common vendor and supply questions related to toy inventory, restocking, packaging, damaged shipments, documentation, and replacement support.
+
+========================================
+General Supply Questions
+
+Q1. How often do vendors restock products?
+A. Restock frequency depends on the product line. Fast-moving categories such as dolls, action figures, plush toys, and outdoor toys may be replenished more often than large or specialized items.
+
+Q2. Which products usually take longer to restock?
+A. Large items, educational kits with many parts, and remote control toys often have longer lead times than small standard products.
+
+Q3. Are all products restocked automatically?
+A. No. Some products are reordered based on demand, seasonality, supplier availability, and current stock levels.
+
+Q4. Can discontinued products still be reordered?
+A. Discontinued products are generally not restocked. Vendors may instead recommend a similar replacement item in the same category.
+
+Q5. Do vendors provide expected lead times?
+A. Yes. Lead times are usually estimated, not guaranteed. Shipment delays can happen because of manufacturer schedules, customs, weather, or carrier issues.
+
+========================================
+Product Availability Questions
+
+Q6. Why is a product showing low stock?
+A. Low stock may result from high sales, delayed supplier shipments, seasonal demand, or limited production runs.
+
+Q7. Can vendors reserve stock for large orders?
+A. Reservation depends on supplier policy and available inventory. Large-volume requests may require advance notice and confirmation.
+
+Q8. Are backorders allowed?
+A. Backorder support depends on the vendor and the product. Some popular items may be backordered if the supplier confirms incoming stock.
+
+Q9. Are seasonal products harder to source?
+A. Yes. Outdoor toys and holiday gift items may experience demand spikes, which can increase lead times or reduce availability.
+
+Q10. Which categories are most affected by seasonal demand?
+A. Outdoor toys, dolls, plush toys, building blocks, and educational toys may all see seasonal demand changes depending on school periods, holidays, and weather.
+
+========================================
+Packaging and Shipment Questions
+
+Q11. What should we do if vendor cartons arrive damaged?
+A. Record the issue immediately, keep photos of the outer carton and inner packaging, and report the damage for supplier review.
+
+Q12. Can products still be accepted if only the outer carton is damaged?
+A. Yes, if the item itself is unaffected and packaging damage is minor. If retail presentation is important, the issue should still be logged.
+
+Q13. What if a shipment has missing units?
+A. Verify the packing list, recount received units, and report shortages along with purchase order details.
+
+Q14. Do vendors supply replacement parts for missing components?
+A. Some vendors support replacement parts for items such as building kits, microscopes, swing hardware, and RC accessories. Approval depends on the product line and claim window.
+
+Q15. Are shipments insured?
+A. Shipping terms vary by supplier. Some vendors offer carrier-supported claims, while others require immediate inspection and reporting after receipt.
+
+========================================
+Quality and Safety Questions
+
+Q16. Do vendors provide safety documentation?
+A. Many vendors provide safety and compliance information relevant to toys and educational products. Availability depends on supplier standards and region.
+
+Q17. What if a toy arrives with a manufacturing defect?
+A. The issue should be documented with product name, batch or shipment reference if available, photos, and a clear description of the defect.
+
+Q18. Are batteries included with electronic or remote control products?
+A. Battery inclusion depends on the supplier and the product packaging. Always verify packaging notes before customer communication.
+
+Q19. Are chemistry or science kits handled differently?
+A. Yes. Educational kits such as microscope and chemistry products may have extra handling instructions, packaging checks, or safety inserts.
+
+Q20. Can product manuals be requested from vendors?
+A. Yes. Digital manuals, instruction leaflets, or care notes may be available from the supplier for supported products.
+
+========================================
+Pricing and Ordering Questions
+
+Q21. Do vendors offer bulk discounts?
+A. Some vendors offer volume-based pricing for larger orders, especially on repeat or seasonal purchases.
+
+Q22. Can prices change after a purchase order is placed?
+A. Approved purchase orders are usually honored, but future orders may reflect updated supplier pricing, freight costs, or seasonal adjustments.
+
+Q23. Can vendors support promotional bundles?
+A. In some cases, vendors can suggest bundle-friendly products or coordinated stock planning for campaigns.
+
+Q24. Is there a minimum order quantity?
+A. Minimum order quantity varies by vendor and product category. Larger items or imported items may have stricter order thresholds.
+
+Q25. Can urgent restock requests be expedited?
+A. Some vendors can prioritize urgent restocks, but this depends on available stock, transport options, and internal supplier approval.
+
+========================================
+Product-Specific Questions
+
+Q26. Can missing block pieces be reordered for building sets?
+A. Some suppliers may support part replacement for building products if the claim is made within the allowed support window.
+
+Q27. What if a coding robot stops responding after setup?
+A. Vendors typically ask for troubleshooting first, such as checking batteries, charge state, and reset steps, before processing a defect claim.
+
+Q28. Can remote control toy accessories be replaced separately?
+A. Depending on the supplier, controllers, wheels, antenna components, or charging accessories may be available as service parts.
+
+Q29. What support exists for large outdoor items like swing sets?
+A. Vendors may provide hardware lists, assembly guidance, and missing-part support, but installation issues caused by incorrect assembly are usually excluded.
+
+Q30. Are educational products like microscopes and globes supported with instruction guides?
+A. Yes, many learning products include or can provide digital guides to help with setup and first use.
+
+========================================
+Escalation Questions
+
+Q31. When should a vendor issue be escalated?
+A. Escalate when there is repeated shipment damage, unresolved shortages, recurring defects, delayed replacements, or major lead time failures.
+
+Q32. What information should be shared during escalation?
+A. Include product name, quantity affected, shipment or order reference, photos if relevant, issue summary, and expected resolution.
+
+Q33. Can vendors replace stock instead of issuing a credit?
+A. Depending on the situation, suppliers may offer replacement units, spare parts, credit notes, or a future shipment adjustment.
+
+Q34. How quickly should shortages or damages be reported?
+A. As soon as possible after receipt, ideally within the reporting window set by the vendor or internal receiving process.
+
+Q35. Can vendor responses differ by product category?
+A. Yes. Support processes often differ for electronics, outdoor equipment, plush products, educational kits, and multi-part construction toys.

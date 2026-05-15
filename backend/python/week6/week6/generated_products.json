@@ -1,0 +1,44 @@
+{
+  "products": [
+    {
+      "name": "Starlight Princess Doll",
+      "description": "A beautiful doll with shimmering gown and magical accessories, perfect for imaginative play.",
+      "category": "Dolls",
+      "brand": "Dreamland Toys",
+      "price": 29.99,
+      "quantity": 50
+    },
+    {
+      "name": "Galactic Warrior Action Figure",
+      "description": "Highly detailed action figure with multiple points of articulation and interchangeable weapons for epic space battles.",
+      "category": "Action Figures",
+      "brand": "Cosmic Play",
+      "price": 19.5,
+      "quantity": 75
+    },
+    {
+      "name": "Enchanted Forest Jigsaw Puzzle",
+      "description": "A 1000-piece jigsaw puzzle featuring a vibrant illustration of a magical forest scene, challenging and fun for all ages.",
+      "category": "Puzzles",
+      "brand": "Mind Bender Puzzles",
+      "price": 15.75,
+      "quantity": 30
+    },
+    {
+      "name": "Robo-Racer Remote Control Car",
+      "description": "High-speed remote control car with durable design and responsive controls, ideal for indoor and outdoor racing.",
+      "category": "Remote Control Toys",
+      "brand": "Speedy Wheels",
+      "price": 45.0,
+      "quantity": 20
+    },
+    {
+      "name": "Giant Plush Teddy Bear",
+      "description": "An extra-large, super soft teddy bear, perfect for cuddling and a wonderful companion for children.",
+      "category": "Plush Toys",
+      "brand": "Cuddle Buddies",
+      "price": 35.99,
+      "quantity": 40
+    }
+  ]
+}
