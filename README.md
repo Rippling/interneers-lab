@@ -1,127 +1,203 @@
 # Interneers Lab
 
-Welcome to the **Interneers Lab** repository! This serves as a minimal starter kit for learning and experimenting with:
-- **Django** (Python)
-- **Golang** (Go)
-- **React**  (with TypeScript)
-- **MongoDB** (via Docker Compose)
-- Development environment in **VSCode** (recommended)
-
-**Important:** Use the **same email** you shared during onboarding when configuring Git and related tools. That ensures consistency across all internal systems.
-
-### Project structure
+A full-stack inventory management system built as a learning project. The backend exposes a REST API for managing products and categories, backed by MongoDB. The frontend is a React + TypeScript app that consumes it.
 
 ```
 backend/
-  go/          # Golang backend (see backend/go/README.md)
-  python/      # Django (Python) backend (see backend/python/README.md)
-frontend/      # React + TypeScript (see frontend/README.md)
+  python/      # Django REST API — products, categories, CSV import
+frontend/      # React + TypeScript inventory UI
 ```
 
 ---
 
-## Table of Contents
+## Prerequisites
 
-1. [Getting Started with Git & Forking](#getting-started-with-git-and-forking)
-2. [Prerequisites & where to find them](#prerequisites--where-to-find-them)
-3. [Setting up & running](#setting-up--running)
-4. [Development Workflow](#development-workflow)
-   - [Pushing Your First Change](#pushing-your-first-change)
-5. [Making your first change](#making-your-first-change)
-6. [Running Tests](#running-tests)
-7. [Frontend Setup](#frontend-setup)
-8. [Further Reading](#further-reading)
+| Tool | Version | Purpose |
+|------|---------|---------|
+| Python | 3.14+ | Django backend |
+| Node.js | LTS | Frontend |
+| Yarn | 1.x | Frontend package manager |
+| Docker Desktop | Latest | MongoDB via Compose |
 
 ---
 
-## Getting Started with Git and Forking
+## Quick Start
 
-### 1. Setting up Git and the Repo
+### 1. Clone
 
-1. **Install Git** (if not already):
-   - **macOS**: [Homebrew](https://brew.sh/) users can run `brew install git`.
-   - **Windows**: Use [Git for Windows](https://gitforwindows.org/).
-   - **Linux**: Install via your distro's package manager, e.g., `sudo apt-get install git` (Ubuntu/Debian).
+```bash
+git clone git@github.com:<YourUsername>/interneers-lab.git
+cd interneers-lab
+```
 
-2. **Configure Git** with your name and email:
-   ```bash
-   git config --global user.name "Your Name"
-   git config --global user.email "your.email@example.com" # Use the same email you shared during onboarding
-   ```
+### 2. Start MongoDB
 
-3. **What is Forking?**
+```bash
+cd backend/python
+docker compose up -d
+```
 
-   Forking a repository on GitHub creates your own copy under your GitHub account, where you can make changes independently without affecting the original repo. Later, you can make pull requests to merge changes back if needed.
+MongoDB runs on `localhost:27019`. Credentials are in `backend/python/.env`.
 
-4. Fork the Rippling/interneers-lab repository (ensure you're in the correct org or your personal GitHub account, as directed).
-5. **Clone** your forked repo:
-   ```bash
-   git clone git@github.com:<YourUsername>/interneers-lab.git
-   cd interneers-lab
-   ```
+### 3. Django backend
 
-## Prerequisites & where to find them
+```bash
+cd backend/python
 
-Prerequisites (Python, Go, Node, Docker, etc.) and how to verify your setup are documented in each part of the repo:
+cp .env.example .env          # edit as needed (see Environment below)
+pip install -r requirements.txt
+python manage.py runserver    # http://localhost:8000
+```
 
-- **[backend/python/README.md](backend/python/README.md)** — Python/Django, virtualenv, MongoDB
-- **[backend/go/README.md](backend/go/README.md)** — Go, MongoDB
-- **[frontend/README.md](frontend/README.md)** — Node, Yarn, React
+### 4. Frontend
 
-Use the README for the part you're working on.
-
----
-
-## Setting up & running
-
-Setup and run instructions live in the domain READMEs:
-
-- **Python backend:** [backend/python/README.md](backend/python/README.md) — venv, dependencies, `runserver`, Docker Compose for MongoDB
-- **Go backend:** [backend/go/README.md](backend/go/README.md) — `make setup`, `make build-and-run`, Docker Compose
-- **Frontend:** [frontend/README.md](frontend/README.md)
+```bash
+cd frontend
+yarn install
+yarn start                    # http://localhost:3000
+```
 
 ---
 
-## Development Workflow
+## Environment Configuration
 
-### Making your first change
+All Django runtime settings are driven by `backend/python/.env`. Copy from `.env.example` and fill in your own values:
 
-Step-by-step tutorials live in the domain READMEs:
+```env
+SECRET_KEY=                   # generate a strong random key
+DEBUG=True                    # set False in production
 
-- **[backend/python/README.md](backend/python/README.md)** — Django starters (e.g. Hello World, Hello {name} API)
-- **[backend/go/README.md](backend/go/README.md)** — Go hello-world and APIs
-- **[frontend/README.md](frontend/README.md)** — React hello-world and APIs
+MONGO_HOST=
+MONGO_PORT=
+MONGO_DB=
+MONGO_USERNAME=
+MONGO_PASSWORD=
+MONGO_AUTH_SOURCE=
+MONGO_TEST_DB=
 
-### Pushing Your First Change
+# CORS — True only for local dev
+# In production set to False and list origins below
+CORS_ALLOW_ALL_ORIGINS=True
+# CORS_ALLOWED_ORIGINS=https://your-frontend-domain.com
+```
 
-1. **Stage and commit**:
-   ```bash
-   git add .
-   git commit -m "Your descriptive commit message"
-   ```
-2. **Push to your forked repo (main branch by default):**
-   ```bash
-   git push origin main
-   ```
+---
+
+## API Overview
+
+Base URL: `http://localhost:8000`
+
+### Products
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/products/` | List products (paginated, filterable) |
+| POST | `/products/` | Create a product |
+| GET | `/products/<id>/` | Get a product |
+| PUT | `/products/<id>/` | Full update |
+| PATCH | `/products/<id>/` | Partial update |
+| DELETE | `/products/<id>/` | Delete a product |
+| POST | `/products/bulk-import/` | Bulk create from CSV |
+
+**Filters on `GET /products/`:** `search`, `brand`, `category_id`, `min_price`, `max_price`, `min_quantity`, `page`, `page_size`, `sort` (`price_asc` / `price_desc`)
+
+### Categories
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/categories/` | List all categories |
+| POST | `/categories/` | Create a category |
+| GET | `/categories/<id>/` | Get a category |
+| PUT | `/categories/<id>/` | Full update |
+| DELETE | `/categories/<id>/` | Delete a category |
+| GET | `/categories/<id>/products/` | Products in a category |
+
+---
+
+## Architecture (Django backend)
+
+The backend follows a Controller–Service–Repository (CSR) pattern:
+
+```
+views.py          → HTTP layer — parse requests, return responses
+services.py       → Business logic — validation, orchestration
+repositories.py   → Persistence — all MongoDB queries
+models.py         → Documents — MongoEngine ODM schemas
+validators.py     → Input validation — field rules
+```
+
+`Product` references `ProductCategory` as a MongoEngine `ReferenceField`. Audit fields (`created_at`, `updated_at`) are set automatically.
 
 ---
 
 ## Running Tests
 
-See the domain READMEs for how to run tests in each stack:
+### Django (Python)
 
-- [backend/python/README.md](backend/python/README.md)
-- [backend/go/README.md](backend/go/README.md)
-- [frontend/README.md](frontend/README.md)
+```bash
+cd backend/python
+python manage.py test
+```
+
+Uses a dedicated test database (`MONGO_TEST_DB`).
+
+### Frontend
+
+```bash
+cd frontend
+
+# Unit tests (Jest)
+yarn test
+
+# E2E tests (Playwright) — install browsers once
+yarn playwright install
+yarn playwright test
+yarn playwright show-report
+```
+
+Playwright CI runs automatically on push/PR via `.github/workflows/playwright.yml`.
+
+---
+
+## Project Structure
+
+```
+backend/python/
+  django_app/       # Django settings, root URLconf
+  Product/          # Product & Category app
+    models.py
+    repositories.py
+    services.py
+    views.py
+    validators.py
+    urls.py
+    migrations/
+    tests/
+
+frontend/
+  src/
+    api/            # Typed API client
+    components/     # Shared UI components
+    hooks/          # useProducts, etc.
+    pages/          # Route-level page components
+  public/
+    week6/          # Vanilla JS demo page
+  playwright/       # E2E tests
+
+.github/
+  workflows/
+    playwright.yml  # Playwright CI
+```
 
 ---
 
 ## Further Reading
 
-Each domain has detailed README with links to relevant docs. In general:
-
-- **Django:** [docs.djangoproject.com](https://docs.djangoproject.com/)
-- **React:** [react.dev](https://react.dev/learn)
-- **Go:** [go.dev/doc](https://go.dev/doc/)
-- **MongoDB:** [docs.mongodb.com](https://docs.mongodb.com/)
-- **Docker Compose:** [docs.docker.com/compose](https://docs.docker.com/compose/)
+- [Django](https://docs.djangoproject.com/)
+- [MongoEngine](https://docs.mongoengine.org/)
+- [React](https://react.dev/learn)
+- [React Router](https://reactrouter.com/home)
+- [TypeScript](https://www.typescriptlang.org/docs/)
+- [Playwright](https://playwright.dev/docs/intro)
+- [MongoDB](https://docs.mongodb.com/)
+- [Docker Compose](https://docs.docker.com/compose/)

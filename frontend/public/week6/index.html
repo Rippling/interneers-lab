@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inventory — Warehouse</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ── Header ───────────────────────────────────────────────── -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-mark">▣</span>
+        <span class="logo-text">WAREHOUSE</span>
+      </div>
+      <nav class="header-nav">
+        <span class="nav-label">Inventory Management System</span>
+        <span class="nav-status" id="api-status">● Connecting…</span>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ── Controls ─────────────────────────────────────────────── -->
+  <section class="controls-bar">
+    <div class="controls-inner">
+      <div class="search-wrap">
+        <span class="search-icon">⌕</span>
+        <input
+          type="text"
+          id="search-input"
+          class="search-input"
+          placeholder="Search products…"
+        />
+      </div>
+      <div class="filter-wrap">
+        <input
+          type="number"
+          id="filter-min-price"
+          class="filter-input"
+          placeholder="Min price"
+          min="0"
+        />
+        <span class="filter-sep">—</span>
+        <input
+          type="number"
+          id="filter-max-price"
+          class="filter-input"
+          placeholder="Max price"
+          min="0"
+        />
+        <select id="filter-category" class="filter-select">
+          <option value="">All categories</option>
+        </select>
+      </div>
+      <button id="fetch-btn" class="fetch-btn">
+        <span class="btn-text">Load Products</span>
+        <span class="btn-icon">→</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ── Stats bar ─────────────────────────────────────────────── -->
+  <div class="stats-bar" id="stats-bar" style="display:none">
+    <div class="stat">
+      <span class="stat-value" id="stat-total">—</span>
+      <span class="stat-label">Products</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <span class="stat-value" id="stat-page">—</span>
+      <span class="stat-label">Page</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <span class="stat-value" id="stat-pages">—</span>
+      <span class="stat-label">Total pages</span>
+    </div>
+    <div class="pagination-controls">
+      <button class="page-btn" id="prev-btn" disabled>← Prev</button>
+      <button class="page-btn" id="next-btn" disabled>Next →</button>
+    </div>
+  </div>
+
+  <!-- ── Main content ──────────────────────────────────────────── -->
+  <main class="main">
+
+    <!-- Featured single product tile (static, shown on load) -->
+    <section class="featured-section" id="featured-section">
+      <div class="section-label">FEATURED PRODUCT</div>
+      <div class="product-tile featured-tile" id="featured-tile">
+        <div class="tile-noise"></div>
+        <div class="tile-category-badge" id="feat-category">UNCATEGORIZED</div>
+        <div class="tile-body">
+          <h2 class="tile-name" id="feat-name">Loading…</h2>
+          <p class="tile-desc" id="feat-desc">Fetching product data from API…</p>
+        </div>
+        <div class="tile-footer">
+          <div class="tile-price-wrap">
+            <span class="tile-price-label">PRICE</span>
+            <span class="tile-price" id="feat-price">—</span>
+          </div>
+          <div class="tile-meta">
+            <div class="tile-brand" id="feat-brand">—</div>
+            <div class="tile-qty">
+              <span class="qty-dot" id="feat-qty-dot"></span>
+              <span id="feat-qty">—</span> in stock
+            </div>
+          </div>
+        </div>
+        <div class="tile-id" id="feat-id"></div>
+      </div>
+    </section>
+
+    <!-- Product grid (all products) -->
+    <section class="grid-section" id="grid-section" style="display:none">
+      <div class="section-label">ALL PRODUCTS</div>
+      <div class="product-grid" id="product-grid"></div>
+    </section>
+
+    <!-- Empty / error state -->
+    <div class="empty-state" id="empty-state" style="display:none">
+      <div class="empty-icon">◈</div>
+      <div class="empty-title" id="empty-title">No products found</div>
+      <div class="empty-sub" id="empty-sub">Try adjusting your filters</div>
+    </div>
+
+  </main>
+
+  <!-- ── Console hint ──────────────────────────────────────────── -->
+  <div class="console-hint">
+    <span>▸ Open DevTools Console to see raw API responses</span>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

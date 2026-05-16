@@ -1,0 +1,302 @@
+.filter-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
+  /* Prevent children from escaping the page width */
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* ── Row 1: Search ───────────────────────────────────────────────── */
+.filter-row--search {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.filter-search-wrap {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.filter-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-subtle);
+  font-size: 16px;
+  pointer-events: none;
+}
+
+.filter-search-clear {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-subtle);
+  font-size: 12px;
+  padding: 2px 4px;
+  line-height: 1;
+}
+.filter-search-clear:hover {
+  color: var(--text);
+}
+
+/* ── Row 2: Controls ─────────────────────────────────────────────── */
+.filter-row--controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ── Shared inputs ───────────────────────────────────────────────── */
+.filter-input {
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.filter-input:focus {
+  border-color: var(--accent);
+}
+.filter-search {
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: 36px;
+  padding-right: 32px;
+}
+.filter-select {
+  width: 100%;
+  cursor: pointer;
+}
+.filter-price {
+  width: 110px;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────── */
+.filter-btn {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: opacity 0.15s, background 0.15s;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  white-space: nowrap;
+}
+.filter-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.filter-btn-open {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface);
+  border-color: var(--border);
+}
+.filter-btn-open.has-filters {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.filter-btn-open:hover:not(:disabled) {
+  background: var(--surface-raised, #f5f5f5);
+}
+.filter-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.filter-btn-apply {
+  background: var(--accent, #3b82f6);
+  color: #fff;
+  border-color: var(--accent, #3b82f6);
+}
+.filter-btn-apply:hover:not(:disabled) {
+  opacity: 0.85;
+}
+.filter-btn-clear {
+  background: none;
+  border-color: transparent;
+  color: var(--text-subtle);
+}
+.filter-btn-clear:hover {
+  color: var(--text);
+  background: var(--surface-raised, #f5f5f5);
+}
+.filter-btn-cancel {
+  background: none;
+  border-color: var(--border);
+  color: var(--text);
+}
+.filter-btn-cancel:hover {
+  background: var(--surface-raised, #f5f5f5);
+}
+
+/* ── Chips ───────────────────────────────────────────────────────── */
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px 3px 10px;
+  border-radius: 20px;
+  background: var(--accent-subtle, #eff6ff);
+  color: var(--accent, #3b82f6);
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid var(--accent-border, #bfdbfe);
+}
+.filter-chip-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--accent, #3b82f6);
+  font-size: 10px;
+  padding: 0 0 0 2px;
+  line-height: 1;
+  opacity: 0.7;
+}
+.filter-chip-remove:hover { opacity: 1; }
+
+/* ── Price group ─────────────────────────────────────────────────── */
+.filter-price-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.filter-sep {
+  color: var(--text-subtle);
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+/* ── Modal backdrop ──────────────────────────────────────────────── */
+.filter-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: fb-fade-in 0.15s ease;
+}
+@keyframes fb-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Modal box ───────────────────────────────────────────────────── */
+.filter-modal {
+  background: var(--surface, #fff);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  animation: fb-slide-up 0.18s ease;
+  overflow: hidden;
+}
+@keyframes fb-slide-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.filter-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.filter-modal-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text);
+}
+.filter-modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-subtle);
+  padding: 4px;
+  border-radius: 4px;
+}
+.filter-modal-close:hover { color: var(--text); background: var(--surface-raised, #f5f5f5); }
+
+.filter-modal-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.filter-modal-section {
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.filter-modal-section-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0;
+}
+.filter-modal-section .filter-price-group {
+  flex-wrap: wrap;
+}
+.filter-modal-section .filter-price {
+  flex: 1;
+  min-width: 90px;
+}
+.filter-modal-section .filter-select {
+  width: 100%;
+}
+
+.filter-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  gap: 8px;
+}
+.filter-modal-footer-right {
+  display: flex;
+  gap: 8px;
+}

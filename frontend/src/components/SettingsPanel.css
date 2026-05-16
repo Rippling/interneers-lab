@@ -1,0 +1,233 @@
+.settings-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  z-index: 200;
+  display: flex;
+  justify-content: flex-end;
+  transition: background var(--transition-speed) ease;
+}
+
+.settings-panel {
+  background: var(--settings-bg);
+  color: var(--settings-text);
+  width: 320px;
+  max-width: 100vw;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -8px 0 40px rgba(0, 0, 0, 0.25);
+  animation: slideInRight 0.25s ease both;
+  transition: background var(--transition-speed) ease,
+              color var(--transition-speed) ease;
+  border-left: 1px solid var(--settings-border);
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--settings-border);
+}
+
+.settings-header h2 {
+  margin: 0;
+  font-family: "Syne", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--settings-text);
+}
+
+.settings-close {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: var(--settings-muted);
+  transition: color var(--transition-speed) ease;
+}
+
+.settings-close:hover { color: var(--settings-text); }
+
+.settings-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.settings-section-title {
+  font-family: "DM Mono", monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--settings-muted);
+}
+
+.settings-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-family: "Syne", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--settings-text);
+}
+
+.settings-toggle-group {
+  display: flex;
+  gap: 3px;
+  background: var(--settings-subtle);
+  padding: 3px;
+  border-radius: 7px;
+}
+
+.settings-toggle {
+  background: transparent;
+  border: none;
+  padding: 5px 12px;
+  font-size: 0.78rem;
+  font-family: "Syne", sans-serif;
+  font-weight: 600;
+  color: var(--settings-muted);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all var(--transition-speed) ease;
+  white-space: nowrap;
+}
+
+.settings-toggle.active {
+  background: var(--settings-bg);
+  color: var(--settings-text);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.settings-switch {
+  width: 42px;
+  height: 24px;
+  background: var(--settings-subtle);
+  border: 1px solid var(--settings-border);
+  border-radius: 100px;
+  cursor: pointer;
+  position: relative;
+  transition: background var(--transition-speed) ease,
+              border-color var(--transition-speed) ease;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.settings-switch.on {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.settings-switch-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  background: white;
+  border-radius: 50%;
+  transition: transform var(--transition-speed) ease;
+  display: block;
+}
+
+.settings-switch.on .settings-switch-thumb {
+  transform: translateX(18px);
+}
+
+.settings-select {
+  padding: 6px 10px;
+  border: 1px solid var(--settings-border);
+  border-radius: 6px;
+  font-family: "DM Mono", monospace;
+  font-size: 0.8rem;
+  background: var(--settings-subtle);
+  color: var(--settings-text);
+  cursor: pointer;
+  transition: background var(--transition-speed) ease,
+              color var(--transition-speed) ease;
+}
+
+.settings-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--settings-border);
+}
+
+.settings-footer .btn-secondary {
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+}
+/* ── Footer actions row ──────────────────────────────────────────── */
+.settings-footer-actions {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.settings-footer-actions .btn-secondary {
+  flex: 1;
+  text-align: center;
+  justify-content: center;
+}
+
+.btn-set-default {
+  flex: 2;
+  padding: 9px 16px;
+  border-radius: 7px;
+  border: none;
+  background: var(--accent, #c8ff00);
+  color: #000;
+  font-family: "Syne", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+  white-space: nowrap;
+}
+
+.btn-set-default:hover:not(:disabled) {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+.btn-set-default:disabled,
+.settings-footer-actions .btn-secondary:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Saved toast ─────────────────────────────────────────────────── */
+.settings-toast {
+  text-align: center;
+  font-family: "DM Mono", monospace;
+  font-size: 0.78rem;
+  color: var(--accent, #c8ff00);
+  padding: 6px 0 10px;
+  animation: toast-fade 2.2s ease forwards;
+}
+
+@keyframes toast-fade {
+  0%   { opacity: 0; transform: translateY(4px); }
+  15%  { opacity: 1; transform: translateY(0); }
+  75%  { opacity: 1; }
+  100% { opacity: 0; }
+}

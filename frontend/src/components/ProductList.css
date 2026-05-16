@@ -1,0 +1,258 @@
+.product-list-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.product-list-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--card-gap);
+}
+
+/* ── Card ─────────────────────────────────────────────────────────── */
+.product-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: var(--card-padding);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition:
+    border-color var(--transition-speed) ease,
+    transform var(--transition-speed) ease,
+    box-shadow var(--transition-speed) ease,
+    background var(--transition-speed) ease;
+  animation: card-in 0.35s ease both;
+  outline: none;
+}
+
+.product-card:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-dim);
+}
+
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.product-card:nth-child(1)  { animation-delay: 0s; }
+.product-card:nth-child(2)  { animation-delay: 0.04s; }
+.product-card:nth-child(3)  { animation-delay: 0.08s; }
+.product-card:nth-child(4)  { animation-delay: 0.12s; }
+.product-card:nth-child(5)  { animation-delay: 0.16s; }
+.product-card:nth-child(6)  { animation-delay: 0.2s; }
+.product-card:nth-child(7)  { animation-delay: 0.24s; }
+.product-card:nth-child(8)  { animation-delay: 0.28s; }
+.product-card:nth-child(9)  { animation-delay: 0.32s; }
+
+.product-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition-speed) ease;
+}
+
+.product-card:hover::before,
+.product-card.selected::before {
+  transform: scaleX(1);
+}
+
+.product-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.product-card.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), 0 8px 24px var(--accent-glow);
+  transform: none;
+}
+
+.product-card-category {
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+  opacity: 0.8;
+}
+
+.product-card-name {
+  font-family: "Syne", sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.product-card-desc {
+  font-family: "DM Mono", monospace;
+  font-size: 0.75rem;
+  color: var(--text-subtle);
+  line-height: 1.6;
+  margin-bottom: 16px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.product-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  margin-bottom: 10px;
+}
+
+.product-card-price {
+  font-family: "Syne", sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--accent);
+}
+
+.product-card-stock {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "DM Mono", monospace;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.stock-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--success);
+  animation: blink 2s ease-in-out infinite;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.product-card-stock.low .stock-dot {
+  background: var(--danger);
+  animation: none;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+.product-card-expand-hint {
+  font-size: 0.65rem;
+  color: var(--text-subtle);
+  font-family: "DM Mono", monospace;
+  text-align: right;
+  transition: color var(--transition-speed) ease;
+}
+
+.product-card:hover .product-card-expand-hint,
+.product-card.selected .product-card-expand-hint {
+  color: var(--text-muted);
+}
+
+/* ── Skeleton ──────────────────────────────────────────────────────── */
+.product-card-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface) 25%,
+    var(--border) 50%,
+    var(--surface) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 8px;
+  height: 180px;
+}
+
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}
+
+/* ── Empty ─────────────────────────────────────────────────────────── */
+.product-list-empty {
+  text-align: center;
+  padding: 80px 32px;
+}
+
+.product-list-empty-icon {
+  font-size: 40px;
+  color: var(--border-hover);
+  margin-bottom: 16px;
+  animation: spin 8s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.product-list-empty-text {
+  font-family: "Syne", sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+}
+
+@media (max-width: 600px) {
+  .product-list-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .product-card {
+    padding: 16px;
+  }
+}
+/* ── Card image thumbnail ─────────────────────────────────────────── */
+.product-card-image-wrap {
+  /* Bleed the image to the card edges by countering the card's padding.
+     This works because the card already has overflow:hidden so the
+     negative margin + rounded-top corners clip cleanly. */
+  width: calc(100% + 2 * var(--card-padding, 20px));
+  height: 140px;
+  margin-top: calc(-1 * var(--card-padding, 20px));
+  margin-left: calc(-1 * var(--card-padding, 20px));
+  margin-right: calc(-1 * var(--card-padding, 20px));
+  margin-bottom: 14px;
+  background: var(--surface-raised, #1e1e1e);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--border);
+  /* No border-radius here — the parent card clips the top corners */
+  flex-shrink: 0;
+}
+
+.product-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.product-card-image-placeholder {
+  font-size: 2.2rem;
+  opacity: 0.2;
+  user-select: none;
+}

@@ -1,0 +1,394 @@
+.cats-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 32px 80px;
+}
+
+/* ── Header ──────────────────────────────────────────────────────── */
+.cats-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.cats-page-title-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.cats-page-title {
+  font-family: "Syne", sans-serif;
+  font-weight: 800;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  color: var(--text);
+  margin: 0;
+  line-height: 1;
+}
+
+.cats-page-count {
+  font-family: "DM Mono", monospace;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.cats-page-new-btn {
+  background: var(--accent);
+  color: #0a0a0a;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 4px;
+  font-family: "Syne", sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: opacity var(--transition-speed) ease,
+              transform var(--transition-speed) ease;
+}
+
+.cats-page-new-btn:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+/* ── Inline form ─────────────────────────────────────────────────── */
+.cats-form-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: fadeUp 0.2s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.cats-form-title {
+  font-family: "Syne", sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text);
+  margin: 0;
+}
+
+.cats-form-error {
+  background: rgba(220, 38, 38, 0.1);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  color: var(--danger);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+}
+
+.cats-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.cats-form-label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-family: "DM Mono", monospace;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.cats-form-input {
+  padding: 9px 12px;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: var(--input-text);
+  font-family: "DM Mono", monospace;
+  transition: border-color var(--transition-speed) ease;
+  box-sizing: border-box;
+}
+
+.cats-form-input::placeholder { color: var(--input-placeholder); }
+
+.cats-form-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.cats-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.cats-btn-primary {
+  background: var(--accent);
+  color: #0a0a0a;
+  border: none;
+  padding: 9px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: "Syne", sans-serif;
+  font-weight: 700;
+  transition: opacity var(--transition-speed) ease;
+}
+
+.cats-btn-primary:hover    { opacity: 0.88; }
+.cats-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.cats-btn-secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 9px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: "Syne", sans-serif;
+  transition: background var(--transition-speed) ease;
+}
+
+.cats-btn-secondary:hover { background: var(--surface); }
+
+/* ── Error / Empty ───────────────────────────────────────────────── */
+.cats-error {
+  background: rgba(220, 38, 38, 0.08);
+  border: 1px solid rgba(220, 38, 38, 0.25);
+  color: var(--danger);
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cats-error-retry {
+  background: none;
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  margin-left: auto;
+  transition: background var(--transition-speed) ease;
+}
+
+.cats-error-retry:hover { background: rgba(220, 38, 38, 0.1); }
+
+.cats-empty {
+  text-align: center;
+  padding: 80px 32px;
+}
+
+.cats-empty-icon {
+  font-size: 40px;
+  color: var(--border-hover);
+  margin-bottom: 16px;
+}
+
+.cats-empty-text {
+  font-family: "Syne", sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+}
+
+/* ── Category grid ───────────────────────────────────────────────── */
+.cats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--card-gap);
+  margin-bottom: 40px;
+}
+
+/* ── Category card ───────────────────────────────────────────────── */
+.cat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  transition:
+    border-color var(--transition-speed) ease,
+    box-shadow var(--transition-speed) ease,
+    transform var(--transition-speed) ease,
+    background var(--transition-speed) ease;
+  animation: card-in 0.3s ease both;
+  position: relative;
+}
+
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.cat-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition-speed) ease;
+}
+
+.cat-card:hover::before,
+.cat-card--expanded::before {
+  transform: scaleX(1);
+}
+
+.cat-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.cat-card--expanded {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), 0 8px 24px var(--accent-glow);
+  transform: none;
+}
+
+.cat-card-body {
+  padding: var(--card-padding);
+  cursor: pointer;
+}
+
+.cat-card-title {
+  font-family: "Syne", sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.cat-card-desc {
+  font-family: "DM Mono", monospace;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 16px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cat-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.cat-card-hint {
+  font-family: "DM Mono", monospace;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.cat-card-date {
+  font-family: "DM Mono", monospace;
+  font-size: 0.68rem;
+  color: var(--text-subtle);
+}
+
+.cat-card-actions {
+  display: flex;
+  gap: 1px;
+  border-top: 1px solid var(--border);
+}
+
+.cat-card-action-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 8px 12px;
+  font-family: "DM Mono", monospace;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background var(--transition-speed) ease,
+              color var(--transition-speed) ease;
+}
+
+.cat-card-action-btn:hover {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.cat-card-action-btn--danger:hover {
+  background: rgba(220, 38, 38, 0.1);
+  color: var(--danger);
+}
+
+/* ── Skeleton ────────────────────────────────────────────────────── */
+.cat-card-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface) 25%,
+    var(--border) 50%,
+    var(--surface) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 8px;
+  height: 140px;
+}
+
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}
+
+/* ── Products section ────────────────────────────────────────────── */
+.cats-products-section {
+  border-top: 1px solid var(--border);
+  padding-top: 32px;
+  animation: fadeUp 0.25s ease both;
+}
+
+.cats-products-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.cats-products-label {
+  font-family: "DM Mono", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+}
+
+.cats-products-cat-name {
+  color: var(--accent);
+}
+
+.cats-products-count {
+  font-family: "DM Mono", monospace;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+@media (max-width: 600px) {
+  .cats-page { padding: 24px 16px 60px; }
+  .cats-form-row { grid-template-columns: 1fr; }
+  .cats-grid { grid-template-columns: 1fr; }
+}

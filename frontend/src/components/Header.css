@@ -1,0 +1,104 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  height: 56px;
+  transition: background var(--transition-speed) ease,
+              border-color var(--transition-speed) ease;
+}
+
+.header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 32px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--header-text);
+  flex-shrink: 0;
+}
+
+.header-logo-mark {
+  font-size: 1rem;
+  color: var(--accent);
+}
+
+.header-logo-text {
+  font-family: "Syne", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: var(--header-text);
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.header-nav-link {
+  font-family: "Syne", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--header-text);
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  opacity: 0.5;
+  transition: opacity var(--transition-speed) ease,
+              background var(--transition-speed) ease;
+}
+
+.header-nav-link:hover {
+  opacity: 0.85;
+  background: var(--accent-dim);
+}
+
+.header-nav-link.active {
+  opacity: 1;
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+
+.header-settings-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--header-text);
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-speed) ease,
+              transform 0.3s ease;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.header-settings-btn:hover {
+  background: var(--accent-dim);
+  transform: rotate(30deg);
+}
+
+@media (max-width: 600px) {
+  .header-inner { padding: 0 16px; gap: 12px; }
+  .header-logo-text { font-size: 0.7rem; }
+  .header-nav { gap: 4px; }
+  .header-nav-link { font-size: 0.72rem; padding: 4px 8px; }
+}
