@@ -42,7 +42,10 @@ export default function ProductsPage({ pageSize = 9 }: Props) {
   const [actionError, setActionError] = useState<string | null>(null);
   const [extraCategories, setExtraCategories] = useState<Category[]>([]);
 
-  const allCategories = [...categories, ...extraCategories];
+  const allCategories = [
+    ...categories,
+    ...extraCategories.filter((extra) => !categories.some((category) => category.id === extra.id)),
+  ];
 
   async function handleSave(data: ProductPayload) {
     setSaving(true);

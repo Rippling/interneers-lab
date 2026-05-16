@@ -218,7 +218,7 @@ def make_services():
     cat_repo = FakeCategoryRepository()
     prod_repo = FakeProductRepository()
 
-    from backend.python.Product.services.services import ProductCategoryService, ProductService
+    from Product.services.services import ProductCategoryService, ProductService
     cat_service = ProductCategoryService(
         category_repository=cat_repo,
         product_repository=prod_repo,
