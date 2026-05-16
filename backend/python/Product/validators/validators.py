@@ -109,3 +109,4 @@ def validate_csv_row(row: dict, row_number: int) -> dict:
       - "row": the row number (1-indexed, excluding header) for error reporting
     """
     errors = validate_product_data(row, require_all_fields=True)
+    return {"row": row_number, "errors": errors}

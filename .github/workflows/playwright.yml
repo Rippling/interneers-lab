@@ -6,6 +6,9 @@ on:
     branches: [ main, master ]
 jobs:
   test:
+    defaults:
+      run:
+        working-directory: frontend
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
@@ -23,5 +26,5 @@ jobs:
       if: ${{ !cancelled() }}
       with:
         name: playwright-report
-        path: playwright-report/
+        path: frontend/playwright-report/
         retention-days: 30
