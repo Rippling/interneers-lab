@@ -98,7 +98,11 @@ def lookup_products_in_db(question):
     all_products = list(Product.objects.all())
     matched = []
     q_lower = question.lower()
-    q_words = [w for w in q_lower.split() if len(w) > 2]
+    STOP_WORDS = {"the", "is", "are", "in", "stock", "what", "its",
+              "and", "for", "how", "many", "does", "can", "get",
+              "have", "has", "was", "this", "that", "with", "from",
+              "about", "tell", "show", "give", "check", "currently"}
+    q_words = [w for w in q_lower.split() if len(w) > 2 and w not in STOP_WORDS]
 
     for p in all_products:
         product_name_lower = p.name.lower()
