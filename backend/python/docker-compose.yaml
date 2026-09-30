@@ -3,10 +3,10 @@ services:
     image: mongo:8.0
     container_name: interneers_lab_2026_mongodb
     ports:
-      - '27019:27017'
+      - '127.0.0.1:${MONGO_PORT:-27019}:27017'
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_ROOT_USERNAME: '${MONGO_USER:?Set MONGO_USER in .env}'
+      MONGO_INITDB_ROOT_PASSWORD: '${MONGO_PASSWORD:?Set MONGO_PASSWORD in .env}'
     volumes:
       - mongodb_data:/data/db
 

@@ -201,7 +201,13 @@ Open [http://127.0.0.1:8001/hello/](http://127.0.0.1:8001/hello/) to see the **"
 
 Inside `backend/python`, you'll find a `docker-compose.yaml`.
 
-To start MongoDB via Docker Compose:
+Create an ignored local environment file and set unique MongoDB credentials:
+
+```bash
+cp .env.example .env
+```
+
+Set non-empty values for `MONGO_USER` and `MONGO_PASSWORD` in `.env`, then start MongoDB:
 
 ```bash
 docker compose up -d
@@ -213,7 +219,16 @@ Verify with:
 docker compose ps
 ```
 
-MongoDB is now running on `localhost:27019`. Connect using `root` / `example` or update credentials as needed.
+MongoDB is now running on `127.0.0.1:27019` and is not reachable from other machines. Use the credentials from `.env` when connecting.
+
+If you previously started MongoDB with the committed credentials, recreate the local volume after setting new credentials:
+
+```bash
+docker compose down -v
+docker compose up -d
+```
+
+This deletes any data stored in the local development volume.
 
 ---
 
@@ -384,11 +399,7 @@ MongoDB connections differ depending on your setup:
 
 ### Local Development
 
-When running the project locally, MongoDB is exposed on port **27019**:
-
-```
-mongodb://root:example@localhost:27019/?authSource=admin
-```
+When running the project locally, MongoDB is available only on `127.0.0.1:27019`. Credentials come from the ignored `.env` file.
 
 ### Using Environment Variables
 
@@ -403,13 +414,13 @@ import os
 from pymongo import MongoClient
 
 load_dotenv()
-MONGO_USER = os.getenv("MONGO_USER", "root")
-MONGO_PASS = os.getenv("MONGO_PASS", "example")
-MONGO_PORT = os.getenv("MONGO_PORT", "27019")
-MONGO_HOST = os.getenv("MONGO_HOST", "localhost")
 
 client = MongoClient(
-    f"mongodb://{MONGO_USER}:{MONGO_PASS}@{MONGO_HOST}:{MONGO_PORT}/?authSource=admin"
+    host="127.0.0.1",
+    port=int(os.environ.get("MONGO_PORT", "27019")),
+    username=os.environ["MONGO_USER"],
+    password=os.environ["MONGO_PASSWORD"],
+    authSource="admin",
 )
 
 DATABASES = {}

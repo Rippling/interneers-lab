@@ -2,11 +2,13 @@ services:
   mongo:
     image: mongo:7
     ports:
-      - "${MONGO_PORT:-27019}:27017"
+      - "127.0.0.1:${MONGO_PORT:-27019}:27017"
     volumes:
       - mongo-data:/data/db
     environment:
-      - MONGO_INITDB_DATABASE=app
+      MONGO_INITDB_DATABASE: app
+      MONGO_INITDB_ROOT_USERNAME: "${MONGO_USER:?Set MONGO_USER in .env.local}"
+      MONGO_INITDB_ROOT_PASSWORD: "${MONGO_PASSWORD:?Set MONGO_PASSWORD in .env.local}"
 
 volumes:
   mongo-data:

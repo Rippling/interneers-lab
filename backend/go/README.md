@@ -93,10 +93,10 @@ After running `make build-and-run`, the Go backend is running. You can test the 
 
 ### Database: MongoDB via Docker Compose
 
-Inside `backend/go`, you'll find a `docker-compose.yaml`. To start the application and the database, run:
+Inside `backend/go`, you'll find a `docker-compose.yml`. After running `make setup`, set unique values for `MONGO_USER` and `MONGO_PASSWORD` in the ignored `.env.local` file. Then start MongoDB with:
 
 ```bash
-docker compose up -d --env-file .env.local
+docker compose --env-file .env.local up -d
 ```
 
 You can test the Mongo connection with the following command:
@@ -106,6 +106,15 @@ make mongo-login
 ```
 
 Or connect to Mongo directly using a UI tool like MongoDB Compass.
+
+MongoDB is bound to `127.0.0.1`, so it is not reachable from other machines. If you previously started MongoDB without authentication, recreate the local volume after setting credentials:
+
+```bash
+docker compose --env-file .env.local down -v
+docker compose --env-file .env.local up -d
+```
+
+This deletes any data stored in the local development volume.
 
 ---
 
@@ -166,13 +175,13 @@ The project uses Docker and Docker Compose to run the application and the databa
 To see the logs you can run the following command:
 
 ```bash
-docker compose logs -f
+docker compose --env-file .env.local logs -f
 ```
 
 To stop you can run the following command:
 
 ```bash
-docker compose down
+docker compose --env-file .env.local down
 ```
 
 ---
@@ -198,9 +207,9 @@ make test                                 # Run tests
 make welcome "John Doe"                   # Test API with a name
 
 # Docker / MongoDB
-docker compose up -d --env-file .env.local   # Start application and database
-docker compose down                         # Stop containers
-docker compose ps                            # List running containers
-docker compose logs -f                       # View logs
+docker compose --env-file .env.local up -d   # Start application and database
+docker compose --env-file .env.local down    # Stop containers
+docker compose --env-file .env.local ps      # List running containers
+docker compose --env-file .env.local logs -f # View logs
 make mongo-login                            # Test MongoDB connection
 ```
