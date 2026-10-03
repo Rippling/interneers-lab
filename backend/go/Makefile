@@ -30,7 +30,7 @@ welcome:
 
 
 mongo-login:
-	mongosh mongodb://127.0.0.1:${MONGO_PORT}  
+	mongosh --host 127.0.0.1 --port ${MONGO_PORT} --username ${MONGO_USER} --password --authenticationDatabase admin
 # Catch-all target to handle positional arguments (prevents "No rule to make target" error)
 %:
 	@:
