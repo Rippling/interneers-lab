@@ -1,0 +1,5 @@
+version: 2026-10-05-12-38-23
+services:
+  - name: interneers-lab
+    team: fp-kyc-onboarding
+    jira_project_key: FP
