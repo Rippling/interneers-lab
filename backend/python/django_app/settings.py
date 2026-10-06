@@ -37,6 +37,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
+    "week2",
+    "week3.apps.Week3Config",
+    "django_filters",
+    "week4.apps.Week4Config"
 ]
 
 MIDDLEWARE = [
@@ -121,3 +126,8 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/6.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS": "week4.pagination.Week4Pagination",
+    "PAGE_SIZE": 5,
+}

@@ -1,0 +1,84 @@
+{
+  "events": [
+    {
+      "title": "Action Figures Q4 Restock",
+      "event_type": "incoming_shipment",
+      "expected_date": "2023-11-05",
+      "product_name": "Galaxy Guardians Action Figure Set",
+      "quantity_change": 300,
+      "note": "Expected delivery from distributor. High demand item."
+    },
+    {
+      "title": "Holiday Building Blocks Rush",
+      "event_type": "seasonal_spike",
+      "expected_date": "2023-12-10",
+      "product_name": "MegaBuild Creator Blocks 1000pc",
+      "quantity_change": 500,
+      "note": "Anticipating increased sales for holiday season."
+    },
+    {
+      "title": "Critical Stock: Strategy Board Game",
+      "event_type": "low_stock_warning",
+      "expected_date": "2023-11-01",
+      "product_name": "Quest for the Crystal Throne",
+      "quantity_change": 100,
+      "note": "Current stock levels are critically low. Reorder immediately."
+    },
+    {
+      "title": "New Doll Series Preorder Fulfillment",
+      "event_type": "preorder_arrival",
+      "expected_date": "2023-11-15",
+      "product_name": "Enchanted Friends Collectible Doll",
+      "quantity_change": 250,
+      "note": "All preorders for Wave 1 ready for dispatch."
+    },
+    {
+      "title": "Electronic Gadget Shipment Delay",
+      "event_type": "supplier_delay",
+      "expected_date": "2023-11-20",
+      "product_name": "RoboPet Interactive Companion",
+      "quantity_change": 0,
+      "note": "Original delivery date of 2023-11-10 pushed back due to manufacturing issues."
+    },
+    {
+      "title": "Plush Toy Transfer from Warehouse B",
+      "event_type": "warehouse_transfer",
+      "expected_date": "2023-11-07",
+      "product_name": "CuddleBuddy Plush Bear",
+      "quantity_change": 100,
+      "note": "Moving excess stock from off-site warehouse to main store."
+    },
+    {
+      "title": "Educational Toys New Arrivals",
+      "event_type": "incoming_shipment",
+      "expected_date": "2023-11-25",
+      "product_name": "STEM Explorer Science Kit",
+      "quantity_change": 180,
+      "note": "New line of educational toys arriving for holiday season."
+    },
+    {
+      "title": "Spring Outdoor Play Equipment Demand",
+      "event_type": "seasonal_spike",
+      "expected_date": "2024-03-15",
+      "product_name": "Adventure Playground Swing Set",
+      "quantity_change": 75,
+      "note": "Forecasting high demand for outdoor items in early spring."
+    },
+    {
+      "title": "Low Stock: Premium Art Supplies",
+      "event_type": "low_stock_warning",
+      "expected_date": "2023-11-03",
+      "product_name": "Artist's Deluxe Paint Set",
+      "quantity_change": 50,
+      "note": "Running low on popular art sets. Need to reorder."
+    },
+    {
+      "title": "Limited Edition Model Car Preorder",
+      "event_type": "preorder_arrival",
+      "expected_date": "2023-12-01",
+      "product_name": "Vintage Racer Die-Cast Model",
+      "quantity_change": 50,
+      "note": "Exclusive release, all preorders allocated."
+    }
+  ]
+}

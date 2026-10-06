@@ -1,0 +1,444 @@
+{
+  "products": [
+    {
+      "name": "Deluxe City Building Blocks Set",
+      "description": "A large set of colorful interlocking blocks for creative construction, perfect for developing motor skills and imagination.",
+      "category": "building blocks",
+      "brand": "BlockMaster",
+      "price": 49.99,
+      "quantity": 75
+    },
+    {
+      "name": "Mini Robot Construction Kit",
+      "description": "Build your own small, functional robot with this engaging construction kit, featuring easy-to-follow instructions.",
+      "category": "building blocks",
+      "brand": "RoboBuild",
+      "price": 29.5,
+      "quantity": 120
+    },
+    {
+      "name": "Wooden Farm Animal Blocks",
+      "description": "Chunky wooden blocks shaped like farm animals, ideal for toddlers to stack, sort, and play.",
+      "category": "building blocks",
+      "brand": "EcoPlay",
+      "price": 22.75,
+      "quantity": 90
+    },
+    {
+      "name": "Magnetic Tile Creativity Set",
+      "description": "Geometric magnetic tiles that connect to build 2D and 3D structures, fostering STEM learning.",
+      "category": "building blocks",
+      "brand": "MagnaTiles",
+      "price": 65.0,
+      "quantity": 60
+    },
+    {
+      "name": "Interlocking Gear System",
+      "description": "A set of colorful gears and connectors to create intricate moving machines, promoting understanding of mechanics.",
+      "category": "building blocks",
+      "brand": "GearWorks",
+      "price": 35.25,
+      "quantity": 85
+    },
+    {
+      "name": "Princess Royal Doll",
+      "description": "A beautiful doll with a shimmering gown and accessories, ready for imaginative royal adventures.",
+      "category": "dolls",
+      "brand": "Dreamland Dolls",
+      "price": 18.99,
+      "quantity": 150
+    },
+    {
+      "name": "Doctor Play Doll Set",
+      "description": "An articulated doll dressed as a doctor, complete with medical tools for role-playing and learning.",
+      "category": "dolls",
+      "brand": "Career Dolls",
+      "price": 24.5,
+      "quantity": 110
+    },
+    {
+      "name": "Baby Cuddle Doll",
+      "description": "A soft-bodied baby doll perfect for cuddling and nurturing play, comes with a pacifier and blanket.",
+      "category": "dolls",
+      "brand": "Sweet Dreams Babies",
+      "price": 15.75,
+      "quantity": 130
+    },
+    {
+      "name": "Fashionista Doll Collection",
+      "description": "A stylish doll with multiple outfits and accessories for endless fashion fun and creative styling.",
+      "category": "dolls",
+      "brand": "Glamour Girls",
+      "price": 29.0,
+      "quantity": 95
+    },
+    {
+      "name": "Fantasy Fairy Doll",
+      "description": "A magical fairy doll with sparkling wings and a whimsical outfit, inspiring enchanting stories.",
+      "category": "dolls",
+      "brand": "Enchanted Toys",
+      "price": 21.25,
+      "quantity": 105
+    },
+    {
+      "name": "Superhero Action Figure",
+      "description": "Highly detailed action figure of a popular superhero, featuring multiple points of articulation and accessories.",
+      "category": "action figures",
+      "brand": "Heroic Legends",
+      "price": 14.99,
+      "quantity": 180
+    },
+    {
+      "name": "Space Explorer Figure",
+      "description": "An astronaut action figure with a removable helmet and space tools, perfect for cosmic adventures.",
+      "category": "action figures",
+      "brand": "Galaxy Quest",
+      "price": 12.5,
+      "quantity": 160
+    },
+    {
+      "name": "Mythical Beast Figure",
+      "description": "A fearsome mythical creature action figure with intricate sculpting and dynamic pose.",
+      "category": "action figures",
+      "brand": "Fantasy Fighters",
+      "price": 17.0,
+      "quantity": 140
+    },
+    {
+      "name": "Ninja Warrior Figure",
+      "description": "Agile ninja action figure with authentic weapons and martial arts poses for epic battles.",
+      "category": "action figures",
+      "brand": "Shadow Strike",
+      "price": 13.75,
+      "quantity": 170
+    },
+    {
+      "name": "Robot Defender Figure",
+      "description": "A futuristic robot action figure with light-up features and interchangeable weapon attachments.",
+      "category": "action figures",
+      "brand": "Mech Warriors",
+      "price": 19.25,
+      "quantity": 125
+    },
+    {
+      "name": "Classic Family Board Game",
+      "description": "A timeless board game for 2-4 players, involving strategy and luck, fun for all ages.",
+      "category": "board games",
+      "brand": "GameNight Classics",
+      "price": 25.99,
+      "quantity": 100
+    },
+    {
+      "name": "Mystery Detective Game",
+      "description": "Solve a thrilling mystery by gathering clues and interrogating suspects in this engaging board game.",
+      "category": "board games",
+      "brand": "Whodunit Games",
+      "price": 32.0,
+      "quantity": 80
+    },
+    {
+      "name": "Fantasy Adventure Board Game",
+      "description": "Embark on an epic quest in a magical land, battling monsters and collecting treasures.",
+      "category": "board games",
+      "brand": "Epic Journeys",
+      "price": 45.5,
+      "quantity": 55
+    },
+    {
+      "name": "Strategy City Builder Game",
+      "description": "Build and manage your own city, making strategic decisions to grow your empire.",
+      "category": "board games",
+      "brand": "Urban Planners",
+      "price": 38.75,
+      "quantity": 70
+    },
+    {
+      "name": "Cooperative Storytelling Game",
+      "description": "Work together with friends to create a unique story, fostering creativity and teamwork.",
+      "category": "board games",
+      "brand": "Narrative Play",
+      "price": 28.0,
+      "quantity": 90
+    },
+    {
+      "name": "Animal Kingdom Puzzle (1000 pieces)",
+      "description": "A challenging 1000-piece jigsaw puzzle featuring a vibrant illustration of various animals in their habitat.",
+      "category": "puzzles",
+      "brand": "PuzzleMania",
+      "price": 19.99,
+      "quantity": 110
+    },
+    {
+      "name": "World Map Floor Puzzle (50 pieces)",
+      "description": "A large, durable floor puzzle depicting a colorful world map, perfect for young learners.",
+      "category": "puzzles",
+      "brand": "GeoPuzzles",
+      "price": 15.5,
+      "quantity": 130
+    },
+    {
+      "name": "3D Eiffel Tower Puzzle",
+      "description": "Construct a detailed 3D model of the Eiffel Tower using interlocking plastic pieces.",
+      "category": "puzzles",
+      "brand": "Structure Puzzles",
+      "price": 27.0,
+      "quantity": 80
+    },
+    {
+      "name": "Alphabet Learning Puzzle",
+      "description": "A wooden peg puzzle designed to help toddlers learn letters and improve fine motor skills.",
+      "category": "puzzles",
+      "brand": "SmartStart Toys",
+      "price": 12.25,
+      "quantity": 150
+    },
+    {
+      "name": "Space Exploration Jigsaw (500 pieces)",
+      "description": "A captivating 500-piece puzzle showcasing astronauts and celestial bodies in outer space.",
+      "category": "puzzles",
+      "brand": "Cosmic Puzzles",
+      "price": 16.75,
+      "quantity": 120
+    },
+    {
+      "name": "Kids First Microscope Kit",
+      "description": "An easy-to-use microscope designed for children to explore the micro-world, includes slides and tools.",
+      "category": "educational toys",
+      "brand": "Science Explorers",
+      "price": 39.99,
+      "quantity": 70
+    },
+    {
+      "name": "Coding Robot for Kids",
+      "description": "Introduce basic coding concepts with this programmable robot, featuring interactive challenges.",
+      "category": "educational toys",
+      "brand": "Code & Play",
+      "price": 55.0,
+      "quantity": 45
+    },
+    {
+      "name": "Human Anatomy Model Kit",
+      "description": "A detailed, buildable model of the human body, helping children understand biology.",
+      "category": "educational toys",
+      "brand": "BodyWorks",
+      "price": 34.5,
+      "quantity": 60
+    },
+    {
+      "name": "Chemistry Lab Set",
+      "description": "Perform safe and exciting experiments with this comprehensive chemistry set, includes goggles and chemicals.",
+      "category": "educational toys",
+      "brand": "Mad Scientist Labs",
+      "price": 48.25,
+      "quantity": 50
+    },
+    {
+      "name": "Interactive Globe with Pen",
+      "description": "A talking globe that provides facts about countries, capitals, and cultures when touched with a special pen.",
+      "category": "educational toys",
+      "brand": "World Discoverer",
+      "price": 69.99,
+      "quantity": 35
+    },
+    {
+      "name": "Giant Teddy Bear",
+      "description": "An extra-large, super soft teddy bear, perfect for big hugs and comforting companionship.",
+      "category": "plush toys",
+      "brand": "Cuddle Buddies",
+      "price": 45.0,
+      "quantity": 65
+    },
+    {
+      "name": "Unicorn Plush Toy",
+      "description": "A magical plush unicorn with a rainbow mane and sparkling horn, soft and cuddly.",
+      "category": "plush toys",
+      "brand": "Fantasy Friends",
+      "price": 22.5,
+      "quantity": 100
+    },
+    {
+      "name": "Puppy Dog Plush",
+      "description": "An adorable plush puppy dog with floppy ears and a wagging tail, realistic and huggable.",
+      "category": "plush toys",
+      "brand": "Pet Pals",
+      "price": 18.0,
+      "quantity": 120
+    },
+    {
+      "name": "Dinosaur Stuffed Animal",
+      "description": "A friendly plush dinosaur, soft and colorful, great for prehistoric adventures.",
+      "category": "plush toys",
+      "brand": "Dino Buddies",
+      "price": 25.75,
+      "quantity": 90
+    },
+    {
+      "name": "Mini Animal Plush Assortment",
+      "description": "A collection of small, cute plush animals, perfect for party favors or collecting.",
+      "category": "plush toys",
+      "brand": "Tiny Treasures",
+      "price": 9.99,
+      "quantity": 200
+    },
+    {
+      "name": "High-Speed RC Race Car",
+      "description": "A fast and agile remote control race car with full-function steering and durable design.",
+      "category": "remote control toys",
+      "brand": "Speed Racers",
+      "price": 39.99,
+      "quantity": 80
+    },
+    {
+      "name": "Flying Drone with Camera",
+      "description": "An easy-to-fly drone equipped with a camera for aerial photography and video recording.",
+      "category": "remote control toys",
+      "brand": "SkyView Drones",
+      "price": 75.0,
+      "quantity": 40
+    },
+    {
+      "name": "RC Monster Truck",
+      "description": "A rugged remote control monster truck with oversized tires, capable of tackling various terrains.",
+      "category": "remote control toys",
+      "brand": "Off-Road RCs",
+      "price": 55.25,
+      "quantity": 60
+    },
+    {
+      "name": "Remote Control Helicopter",
+      "description": "A stable and easy-to-control RC helicopter, perfect for indoor flying fun.",
+      "category": "remote control toys",
+      "brand": "Heli-Fun",
+      "price": 29.5,
+      "quantity": 95
+    },
+    {
+      "name": "RC Robot Fighter",
+      "description": "A remote control robot that can walk, talk, and even battle other robots with soft projectiles.",
+      "category": "remote control toys",
+      "brand": "Robot Rumble",
+      "price": 62.0,
+      "quantity": 50
+    },
+    {
+      "name": "Kids Outdoor Swing Set",
+      "description": "A sturdy and safe swing set for backyard fun, includes two swings and a glider.",
+      "category": "outdoor toys",
+      "brand": "Backyard Adventures",
+      "price": 199.99,
+      "quantity": 20
+    },
+    {
+      "name": "Water Blaster Super Soaker",
+      "description": "A powerful water blaster for epic water fights, featuring a large capacity tank.",
+      "category": "outdoor toys",
+      "brand": "AquaBlast",
+      "price": 14.99,
+      "quantity": 150
+    },
+    {
+      "name": "Giant Bubble Wand Kit",
+      "description": "Create enormous bubbles with this special wand and solution, perfect for outdoor play.",
+      "category": "outdoor toys",
+      "brand": "Bubble Magic",
+      "price": 12.5,
+      "quantity": 180
+    },
+    {
+      "name": "Kids Soccer Goal Set",
+      "description": "A portable soccer goal set, easy to assemble and perfect for practicing soccer skills in the yard.",
+      "category": "outdoor toys",
+      "brand": "Sporty Kids",
+      "price": 35.0,
+      "quantity": 70
+    },
+    {
+      "name": "Flying Disc Set",
+      "description": "A set of durable flying discs for throwing and catching games, ideal for parks and beaches.",
+      "category": "outdoor toys",
+      "brand": "Disc Fun",
+      "price": 8.75,
+      "quantity": 200
+    },
+    {
+      "name": "Sand Play Set with Molds",
+      "description": "A complete sand play set including buckets, shovels, and various molds for creative sandcastles.",
+      "category": "outdoor toys",
+      "brand": "Beach Builders",
+      "price": 16.0,
+      "quantity": 130
+    },
+    {
+      "name": "Jump Rope with Counter",
+      "description": "A classic jump rope with a built-in counter to track jumps, great for exercise and coordination.",
+      "category": "outdoor toys",
+      "brand": "Active Play",
+      "price": 9.5,
+      "quantity": 160
+    },
+    {
+      "name": "Kite Flying Kit",
+      "description": "An easy-to-assemble kite with a long string, perfect for windy days at the park.",
+      "category": "outdoor toys",
+      "brand": "Wind Riders",
+      "price": 11.25,
+      "quantity": 140
+    },
+    {
+      "name": "Hula Hoop Assortment",
+      "description": "Colorful hula hoops in various sizes, promoting active play and coordination.",
+      "category": "outdoor toys",
+      "brand": "Hoop Stars",
+      "price": 7.99,
+      "quantity": 220
+    },
+    {
+      "name": "Outdoor Ring Toss Game",
+      "description": "A fun and simple ring toss game for all ages, perfect for picnics and backyard parties.",
+      "category": "outdoor toys",
+      "brand": "Garden Games",
+      "price": 19.0,
+      "quantity": 100
+    },
+    {
+      "name": "Starlight Princess Doll",
+      "description": "A beautiful doll with shimmering gown and magical accessories, perfect for imaginative play.",
+      "category": "Dolls",
+      "brand": "Dreamland Toys",
+      "price": 29.99,
+      "quantity": 50
+    },
+    {
+      "name": "Galactic Warrior Action Figure",
+      "description": "Highly detailed action figure with multiple points of articulation and interchangeable weapons for epic space battles.",
+      "category": "Action Figures",
+      "brand": "Cosmic Play",
+      "price": 19.5,
+      "quantity": 75
+    },
+    {
+      "name": "Enchanted Forest Jigsaw Puzzle",
+      "description": "A 1000-piece jigsaw puzzle featuring a vibrant illustration of a magical forest scene, challenging and fun for all ages.",
+      "category": "Puzzles",
+      "brand": "Mind Bender Puzzles",
+      "price": 15.75,
+      "quantity": 30
+    },
+    {
+      "name": "Robo-Racer Remote Control Car",
+      "description": "High-speed remote control car with durable design and responsive controls, ideal for indoor and outdoor racing.",
+      "category": "Remote Control Toys",
+      "brand": "Speedy Wheels",
+      "price": 45.0,
+      "quantity": 20
+    },
+    {
+      "name": "Giant Plush Teddy Bear",
+      "description": "An extra-large, super soft teddy bear, perfect for cuddling and a wonderful companion for children.",
+      "category": "Plush Toys",
+      "brand": "Cuddle Buddies",
+      "price": 35.99,
+      "quantity": 40
+    }
+  ]
+}

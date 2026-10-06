@@ -1,0 +1,4 @@
+name,description,price,brand,quantity,category_id
+Demo Teddy Bear,Soft plush bear for kids,499,DemoToys,15,1
+Demo Wooden Puzzle,Educational 25-piece puzzle,299,DemoToys,30,1
+Demo Toy Drum,Mini hand drum for toddlers,199,DemoToys,20,1
