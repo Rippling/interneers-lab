@@ -466,3 +466,4 @@ docker compose down                          # Stop MongoDB
 docker compose ps                            # List running containers
 docker compose logs -f                       # View logs
 ```
+<!-- Starting Django -->
