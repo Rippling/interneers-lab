@@ -1,6 +1,6 @@
 module github.com/Rippling/interneers-lab-2026
 
-go 1.23.6
+go 1.26.10
 
 require github.com/rs/zerolog v1.34.0
 
