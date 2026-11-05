@@ -32,7 +32,7 @@ Welcome to the **Interneers Lab 2026** Golang backend! This serves as a minimal 
 
 These are the essential tools you need:
 
-1. **Golang 1.23.6**
+1. **Golang 1.26.10**
 
    **Why?**
 
@@ -120,7 +120,7 @@ This deletes any data stored in the local development volume.
 
 ## Verification of Installation
 
-- **Go**: `go version` (should be 1.23.6 or compatible)
+- **Go**: `go version` (should be 1.26.10 or compatible)
 - **Docker**: `docker --version`
 - **Docker Compose**: `docker compose version`
 
